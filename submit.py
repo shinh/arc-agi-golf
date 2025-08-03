@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+import sys
 
 import code_golf_utils
 
@@ -57,6 +58,7 @@ def submit(task_id, skip_verify=False):
         examples = code_golf_utils.load_examples(int(task_id))
         if code_golf_utils.verify_program(task_id, examples, task_path):
             open(f"reports/task{task_id:03d}.txt", "w").write(str(2500 - len(code)))
+            return True
         else:
             open(f"reports/task{task_id:03d}.txt", "w").write("FAIL")
     except:
@@ -100,7 +102,9 @@ def main():
             submit(task_id, args.skip_verify)
         report()
     else:
-        submit(int(args.task_id))
+        if not submit(int(args.task_id)):
+            print("FAIL!!")
+            sys.exit(1)
 
 
 if __name__ == "__main__":

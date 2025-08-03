@@ -14,12 +14,18 @@ except Exception:  # pragma: no cover - fallback if matplotlib unavailable
 def main():
     parser = argparse.ArgumentParser(description="Show code golf examples.")
     parser.add_argument("task_id")
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
 
     task_id = "%03d" % int(args.task_id)
 
     code = open("logic/core.py").read()
     code += "\n"
+
+    if args.debug:
+        code += open("logic/debug.py").read()
+        code += "\n"
+
     code += open(f"logic/task{task_id}.py").read()
     open("task.py", "w").write(code)
 
