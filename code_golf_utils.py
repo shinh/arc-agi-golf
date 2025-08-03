@@ -15,6 +15,7 @@
 """Module containing utilities for the 2025 Google Code Golf Championship."""
 
 import copy
+import gzip
 import importlib.util
 import json
 import os
@@ -126,7 +127,7 @@ def load_examples(task_num):
   """Loads relevant data from ARC-AGI and ARC-GEN."""
   if not task_num:
     return task_zero
-  with open(code_golf_dir + f"task{task_num:03d}.json.gz") as f:
+  with gzip.open(code_golf_dir + f"task{task_num:03d}.json.gz") as f:
     examples = json.load(f)
   return examples
 
@@ -192,8 +193,9 @@ def show_examples(examples, bgcolor=(255, 255, 255)):
 
 
 def verify_program(task_num, examples):
-  task_name, task_path = "task_with_imports", "/kaggle/working/task.py"
-  module_path = "/kaggle/working/task_with_imports.py"
+  #task_name, task_path = "task_with_imports", "/kaggle/working/task.py"
+  task_name, task_path = "task_with_imports", "task.py"
+  module_path = "task_with_imports.py"
   with open(task_path, "r") as file:
     file_content = file.read()
     if "import" in file_content:
