@@ -105,8 +105,12 @@ def show(task_id):
 def instruction(task_id, out_dir):
     task_id = "%03d" % int(task_id)
     comment = ""
-    with open(os.path.join(out_dir, f"{task_id}.txt")) as f:
-        comment = f.read().strip()
+    if os.path.exists(os.path.join(out_dir, f"{task_id}.txt")):
+        with open(os.path.join(out_dir, f"{task_id}.txt")) as f:
+            comment = f.read().strip()
+    else:
+        comment = "期待されいている変化を読み取って実装してください"
+
     print(f"logic/task001.pyを参考に、logic/task{task_id}.pyを作成してください。まず")
     print("```")
     print(f"$ python3 describe.py {int(task_id)}")
