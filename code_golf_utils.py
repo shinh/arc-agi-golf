@@ -245,6 +245,7 @@ def verify_program(task_num, examples):
     print(" * Copy it into a file named task{:03d}.py on your local machine.".format(task_num))
     print(" * Create a zip file containing that program along with all others.")
     print(" * Submit that zip file to the Kaggle competition so that it can be officially scored.")
+    return True
   else:
     print("Your code IS NOT ready for submission.")
     expected = arc_agi_expected if arc_agi_expected else arc_gen_expected
@@ -255,3 +256,4 @@ def verify_program(task_num, examples):
     print("The expected result is shown in green; your actual result is shown in red.")
     show_examples([expected], bgcolor=(200, 255, 200))
     show_examples([actual], bgcolor=(255, 200, 200))
+    return False

@@ -1,6 +1,7 @@
 import argparse
 import code_golf_utils
 
+import matplotlib.pyplot as plt
 
 def main():
     parser = argparse.ArgumentParser(description="Show code golf examples.")
@@ -15,7 +16,8 @@ def main():
     open("task.py", "w").write(code)
 
     examples = code_golf_utils.load_examples(int(task_id))
-    code_golf_utils.verify_program(int(task_id), examples)
+    if not code_golf_utils.verify_program(int(task_id), examples):
+        plt.savefig("error.png")
 
 
 if __name__ == "__main__":
