@@ -29,6 +29,22 @@ def reindent(code):
     return "\n".join(lines)
 
 
+def sq(s):
+    W='if for while try with class def else elif except finally'.split()
+    L=s.split('\n');R=[];i=0
+    while i<len(L):
+        a=L[i];n=len(a)-len(a.lstrip());j=i+1;B=[];ok=1
+        while j<len(L):
+            c=L[j];m=len(c)-len(c.lstrip())
+            if m<=n:break
+            d=c.lstrip();w=d.split()
+            if m>n+1 or ':'in d or w[:1]and w[0]in W:ok=0;break
+            B+=[d];j+=1
+        if ok and B and m<=n:R+=[a+B[0]+''.join(';'+x for x in B[1:])];i=j
+        else:R+=[a];i+=1
+    return'\n'.join(R)
+
+
 def inline_create(code):
     return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
@@ -49,7 +65,7 @@ def submit(task_id, skip_verify=False):
         logic = open(f"logic/task{task_id:03d}.py").read()
 
         code = inline_create(logic)
-        code = reindent(code)
+        code = sq(reindent(code))
         # code = core + "\n" + logic
 
         task_path = f"submissions/task{task_id:03d}.py"
