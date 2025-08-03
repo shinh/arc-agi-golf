@@ -36,6 +36,7 @@ def report():
     fail_tests = []
     error_tests = []
     todo_tests = []
+    negative_tests = []
     for task_id in range(1, 401):
         result = open(f"reports/task{task_id:03d}.txt").read()
         if result == "FAIL":
@@ -46,9 +47,13 @@ def report():
             todo_tests.append(task_id)
         else:
             score += int(result)
+            if int(result) < 0:
+                negative_tests.append(task_id)
     print(f"Failed tests: {len(fail_tests)} {list(sorted(fail_tests))}")
     print(f"Error tests: {error_tests}")
     print(f"TODO tests: {len(todo_tests)} {list(sorted(todo_tests))}")
+    if negative_tests:
+        print(f"Negative tests: {len(negative_tests)} {list(sorted(negative_tests))}")
     print(f"Total score: {score}")
 
 
