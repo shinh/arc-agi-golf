@@ -21,8 +21,20 @@ import json
 import os
 import sys
 
-import matplotlib.pyplot as plt
-import numpy as np
+try:
+    import matplotlib.pyplot as plt
+except Exception:  # pragma: no cover - fallback if matplotlib unavailable
+    class _P:
+        def __getattr__(self, _):
+            return lambda *a, **k: None
+    plt = _P()
+try:
+    import numpy as np
+except Exception:  # pragma: no cover - fallback if numpy unavailable
+    class _N:
+        def array(self, a):
+            return a
+    np = _N()
 
 
 #code_golf_dir = "/kaggle/input/google-code-golf-2025/"

@@ -1,7 +1,13 @@
 import argparse
 import code_golf_utils
 
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except Exception:  # pragma: no cover - fallback if matplotlib unavailable
+    class _P:
+        def __getattr__(self, _):
+            return lambda *a, **k: None
+    plt = _P()
 
 def main():
     parser = argparse.ArgumentParser(description="Show code golf examples.")
