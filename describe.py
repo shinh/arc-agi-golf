@@ -102,14 +102,39 @@ def show(task_id):
             print(a)
 
 
+def instruction(task_id, out_dir):
+    task_id = "%03d" % int(task_id)
+    comment = ""
+    with open(os.path.join(out_dir, f"{task_id}.txt")) as f:
+        comment = f.read().strip()
+    print(f"logic/task001.pyを参考に、logic/task{task_id}.pyを作成してください。まず")
+    print("```")
+    print(f"$ python3 describe.py {int(task_id)}")
+    print("```")
+    print("を実行すると、期待されている変化が出てきます")
+    print("```")
+    print(f"# task{task_id}.py")
+    print("def p(g):")
+    print(f"  # gは二次元配列で、0-9の値が入っています。{comment}")
+    print("```")
+    print("テストとして")
+    print("```")
+    print(f"python3 verify.py {int(task_id)}")
+    print("```")
+    print("が成功する必要があります")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Show code golf examples.")
     parser.add_argument("task_id")
     parser.add_argument("out", nargs="?")
     parser.add_argument("--skip_savefig", action="store_true")
+    parser.add_argument("--instruction", action="store_true")
     args = parser.parse_args()
 
-    if args.out is None:
+    if args.instruction:
+        instruction(args.task_id, args.out or "dashboard")
+    elif args.out is None:
         show(args.task_id)
     elif args.task_id == "all":
         for task_id in range(1, 401):
