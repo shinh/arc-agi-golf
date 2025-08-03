@@ -1,6 +1,6 @@
 def p(g):
  n=len(g)
- o=[[0]*len(g[0]*2)for _ in g*2]
+ o=[[0]*n*2 for _ in g*2]
  for y in range(n):
   for x in range(n):
    v=g[y][x]
