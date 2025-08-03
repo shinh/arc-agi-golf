@@ -29,7 +29,7 @@ def reindent(code):
     return "\n".join(lines)
 
 
-def sq(s):
+def squeeze(s):
     W='if for while try with class def else elif except finally'.split()
     L=s.split('\n');R=[];i=0
     while i<len(L):
@@ -65,7 +65,8 @@ def submit(task_id, skip_verify=False):
         logic = open(f"logic/task{task_id:03d}.py").read()
 
         code = inline_create(logic)
-        code = sq(reindent(code))
+        code = reindent(code)
+        code = squeeze(code)
         # code = core + "\n" + logic
 
         task_path = f"submissions/task{task_id:03d}.py"
