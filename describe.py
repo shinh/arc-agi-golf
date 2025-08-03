@@ -4,6 +4,7 @@ import json
 import os
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 import code_golf_utils
 
@@ -21,6 +22,8 @@ def save(task_id, out_dir, skip_savefig):
     output_ws = []
     io_ratio_hs = []
     io_ratio_ws = []
+    input_cols = []
+    output_cols = []
     for d in data:
         ib = d["input"]
         ob = d["output"]
@@ -31,6 +34,13 @@ def save(task_id, out_dir, skip_savefig):
         io_ratio_hs.append(len(ob) / len(ib))
         io_ratio_ws.append(len(ob[0]) / len(ib[0]))
 
+        for r in ib:
+            for c in r:
+                input_cols.append(c)
+        for r in ob:
+            for c in r:
+                output_cols.append(c)
+
     info = []
     if len(set(input_hs)) == 1 and len(set(input_ws)) == 1:
         info.append(f"static input size {input_ws[0]}x{input_hs[0]}")
@@ -40,6 +50,8 @@ def save(task_id, out_dir, skip_savefig):
     if not info:
         if len(set(io_ratio_hs)) == 1 and len(set(io_ratio_ws)) == 1:
             info.append(f"static output/input ratio {io_ratio_ws[0]}x{io_ratio_hs[0]}")
+
+    info.append("colors: " + str(list(set(input_cols))) + " => " + str(list(set(output_cols))))
 
     comment = ""
     if os.path.exists(os.path.join(out_dir, f"{task_id}.txt")):
