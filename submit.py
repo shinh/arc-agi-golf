@@ -46,7 +46,7 @@ def report():
             todo_tests.append(task_id)
         else:
             score += int(result)
-    print(f"Failed tests: {list(sorted(todo_tests))}")
+    print(f"Failed tests: {len(fail_tests)} {list(sorted(fail_tests))}")
     print(f"Error tests: {error_tests}")
     print(f"TODO tests: {len(todo_tests)} {list(sorted(todo_tests))}")
     print(f"Total score: {score}")
