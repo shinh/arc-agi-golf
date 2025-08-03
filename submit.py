@@ -1,7 +1,12 @@
 import argparse
 import os
+import re
 
 import code_golf_utils
+
+
+def inline_create(code):
+    return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
 
 def submit(task_id, skip_verify=False):
@@ -18,7 +23,8 @@ def submit(task_id, skip_verify=False):
 
     try:
         logic = open(f"logic/task{task_id:03d}.py").read()
-        code = core + "\n" + logic
+        code = inline_create(logic)
+        # code = core + "\n" + logic
         task_path = f"submissions/task{task_id:03d}.py"
         open(task_path, "w").write(code)
 
