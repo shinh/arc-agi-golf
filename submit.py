@@ -5,6 +5,28 @@ import re
 import code_golf_utils
 
 
+def reindent(code):
+    lines = []
+    cur_indent = 0
+    prev_indent = 0
+    indents = {}
+    for line in code.splitlines():
+        line = line.rstrip()
+        if not line:
+            continue
+
+        n = len(line) - len(line.lstrip())
+        if n > prev_indent:
+            cur_indent += 1
+        elif n < prev_indent:
+            cur_indent = indents[n]
+        prev_indent = n
+        indents[n] = cur_indent
+
+        lines.append(" " * cur_indent + line.lstrip())
+    return "\n".join(lines)
+
+
 def inline_create(code):
     return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
@@ -23,8 +45,11 @@ def submit(task_id, skip_verify=False):
 
     try:
         logic = open(f"logic/task{task_id:03d}.py").read()
+
         code = inline_create(logic)
+        code = reindent(code)
         # code = core + "\n" + logic
+
         task_path = f"submissions/task{task_id:03d}.py"
         open(task_path, "w").write(code)
 
