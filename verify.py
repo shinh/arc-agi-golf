@@ -1,4 +1,6 @@
 import argparse
+import sys
+
 import code_golf_utils
 
 try:
@@ -24,6 +26,8 @@ def main():
     examples = code_golf_utils.load_examples(int(task_id))
     if not code_golf_utils.verify_program(int(task_id), examples):
         plt.savefig("error.png")
+        print("FAILED!!")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
