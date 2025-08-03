@@ -11,6 +11,7 @@ def reindent(code):
     prev_indent = 0
     indents = {}
     for line in code.splitlines():
+        line = re.sub(r"#.*", "", line)
         line = line.rstrip()
         if not line:
             continue
