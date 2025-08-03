@@ -5,6 +5,8 @@ import code_golf_utils
 
 
 def submit(task_id):
+    print("Submitting task", task_id)
+
     try:
         core = open("logic/core.py").read()
         logic = open(f"logic/task{task_id:03d}.py").read()

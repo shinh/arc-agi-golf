@@ -1,4 +1,6 @@
 def p(g):
+ return g
+ # broken
  h=[r[:]for r in g];k=max(v for r in g for v in r if v!=2)
  for y in range(9):
   for x in range(9):
