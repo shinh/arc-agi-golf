@@ -204,9 +204,11 @@ def show_examples(examples, bgcolor=(255, 255, 255)):
   ax.set_yticks([])
 
 
-def verify_program(task_num, examples):
+def verify_program(task_num, examples, task_path=None):
   #task_name, task_path = "task_with_imports", "/kaggle/working/task.py"
-  task_name, task_path = "task_with_imports", "task.py"
+  task_name = "task_with_imports"
+  if task_path is None:
+    task_path = "task.py"
   module_path = "task_with_imports.py"
   with open(task_path, "r") as file:
     file_content = file.read()
