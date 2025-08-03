@@ -9,8 +9,8 @@ import numpy as np
 import code_golf_utils
 
 
-def save(task_id, out_dir, skip_savefig):
-    task_id = "%03d" % task_id
+def collect_info(task_id):
+    task_id = "%03d" % int(task_id)
     js = json.load(gzip.open(os.path.join("tasks", "task" + task_id + ".json.gz")))
     data = []
     for kind in ["train", "test", "arc-gen"]:
@@ -53,10 +53,16 @@ def save(task_id, out_dir, skip_savefig):
 
     info.append("colors: " + str(list(set(input_cols))) + " => " + str(list(set(output_cols))))
 
+    return info, data
+
+
+def save(task_id, out_dir, skip_savefig):
     comment = ""
     if os.path.exists(os.path.join(out_dir, f"{task_id}.txt")):
         with open(os.path.join(out_dir, f"{task_id}.txt")) as f:
             comment = f.read().strip()
+
+    info, data = collect_info(task_id)
 
     print(f"Task {task_id}: {', '.join(info)} {comment}")
 
@@ -75,14 +81,37 @@ def save(task_id, out_dir, skip_savefig):
         plt.savefig(os.path.join(out_dir, f"{task_id}-arc-gen.png"))
 
 
+def show(task_id):
+    info, data = collect_info(task_id)
+    print(f"Task {task_id}: {', '.join(info)}")
+
+    for d in data[0:3]:
+        ib = d["input"]
+        ob = d["output"]
+        print("Input:")
+        for r in ib:
+            a = ""
+            for c in r:
+                a += str(c)
+            print(a)
+        print("Output:")
+        for r in ob:
+            a = ""
+            for c in r:
+                a += str(c)
+            print(a)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Show code golf examples.")
     parser.add_argument("task_id")
-    parser.add_argument("out")
+    parser.add_argument("out", nargs="?")
     parser.add_argument("--skip_savefig", action="store_true")
     args = parser.parse_args()
 
-    if args.task_id == "all":
+    if args.out is None:
+        show(args.task_id)
+    elif args.task_id == "all":
         for task_id in range(1, 401):
             save(task_id, f"{args.out}", args.skip_savefig)
     else:
