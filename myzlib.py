@@ -534,6 +534,7 @@ def compress(data: Union[str, bytes]) -> bytes:
 if __name__ == "__main__":
     import sys
     import zlib
+    import zopfli.zlib
 
     if len(sys.argv) == 1:
         sample = "if __name__ == '__main__':"
@@ -542,4 +543,11 @@ if __name__ == "__main__":
         text = open(sys.argv[1], "rb").read()
         print("orig:", len(text))
         print("zlib:", len(zlib.compress(text, 9)))
+        print("zopfli:", len(zopfli.zlib.compress(
+            text,
+            numiterations=1000,
+            blocksplitting=True,
+            blocksplittinglast=False,
+            blocksplittingmax=100
+        )))
         print("mine:", len(compress(text)))
