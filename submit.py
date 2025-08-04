@@ -80,7 +80,7 @@ def compress(code):
     main = "import base64,zlib\n"
     main += "def p(g):\n"
     main += " O={'g':g,'o':None}\n"
-    compressed = base64.b85encode(zlib.compress("\n".join(body).encode()))
+    compressed = base64.b85encode(zlib.compress("\n".join(body).encode(),9))
     main += ' try:exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
     main += " except:0\n"
     main += " return O['o']\n"
