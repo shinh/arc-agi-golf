@@ -111,10 +111,10 @@ def check_task(task_id, filename, verbose):
     code = inline_create(logic)
     code = reindent(code)
     #code = squeeze(code)
-    code = python_minifier.minify(code)
-    # code = core + "\n" + logic
 
-    code = compress(code)
+    if task_id != 71:
+        code = python_minifier.minify(code)
+        code = compress(code)
 
     task_path = f"{basedir}/task{task_id:03d}.py"
     write_code(code, task_path)
