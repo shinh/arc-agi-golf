@@ -540,14 +540,29 @@ if __name__ == "__main__":
         sample = "if __name__ == '__main__':"
         assert zlib.decompress(compress(sample)) == sample.encode()
     else:
-        text = open(sys.argv[1], "rb").read()
-        print("orig:", len(text))
-        print("zlib:", len(zlib.compress(text, 9)))
-        print("zopfli:", len(zopfli.zlib.compress(
-            text,
-            numiterations=1000,
-            blocksplitting=True,
-            blocksplittinglast=False,
-            blocksplittingmax=100
-        )))
-        print("mine:", len(compress(text)))
+        stats = {}
+
+        def add_stat(name, value):
+            print(f"{name}: {value}")
+            if name not in stats:
+                stats[name] = []
+            stats[name].append(value)
+
+        for arg in sys.argv[1:]:
+            text = open(arg, "rb").read()
+            add_stat("orig", len(text))
+            add_stat("zlib", len(zlib.compress(text, 9)))
+            add_stat(
+                "zopfli",
+                len(zopfli.zlib.compress(
+                    text,
+                    numiterations=1000,
+                    blocksplitting=True,
+                    blocksplittinglast=False,
+                    blocksplittingmax=100
+                ))
+            )
+            add_stat("mine", len(compress(text)))
+
+        for name, values in stats.items():
+            print(f"{name} avg: {sum(values) / len(values)}")
