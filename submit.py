@@ -75,7 +75,6 @@ def compress(code, algo="zlib"):
                 return code
             has_return = True
             line, _ = re.subn(r"return\s*","o=",line)
-            line += ";1/0"
         body.append(line[1:])
 
     if algo == "zlib":
@@ -83,16 +82,14 @@ def compress(code, algo="zlib"):
         main += "def p(g):\n"
         main += " O={'g':g,'o':None}\n"
         compressed = base64.b85encode(zlib.compress("\n".join(body).encode(),9))
-        main += ' try:exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
-        main += " except:0\n"
+        main += ' exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
         main += " return O['o']\n"
     elif algo == "lzma":
         main = "import base64,lzma\n"
         main += "def p(g):\n"
         main += " O={'g':g,'o':None}\n"
         compressed = base64.b85encode(lzma.compress("\n".join(body).encode()))
-        main += ' try:exec(lzma.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
-        main += " except:0\n"
+        main += ' exec(lzma.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
         main += " return O['o']\n"
 
     if len(main) < len(code):
