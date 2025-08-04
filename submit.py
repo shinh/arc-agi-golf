@@ -110,7 +110,8 @@ def check_task(task_id, filename, verbose):
     code = squeeze(code)
     # code = core + "\n" + logic
 
-    code = compress(code)
+    if int(task_id) not in (29, 61, 136):
+        code = compress(code)
 
     task_path = f"{basedir}/task{task_id:03d}.py"
     write_code(code, task_path)
