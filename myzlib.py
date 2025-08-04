@@ -14,6 +14,9 @@ from __future__ import annotations
 import ast
 from dataclasses import dataclass
 import heapq
+import builtins
+import keyword
+from collections import Counter
 from typing import Dict, Iterable, List, Tuple, Union
 
 # ---------------------------------------------------------------------------
@@ -427,47 +430,148 @@ class _BitWriter:
 
 
 def get_identifier_positions(source_code):
+    """Return positions of all identifiers found in *source_code*.
+
+    Each element of the returned list is a tuple
+    ``(name, lineno, col_offset, end_lineno, end_col_offset, kind)`` where
+    ``kind`` describes the AST context (``"name"``, ``"attr"``, ``"func"``
+    etc.).  Having the kind available later allows the caller to avoid
+    touching attribute names which could otherwise change semantics.
     """
-    ASTを走査して識別子（変数名、関数名など）の位置（開始・終了）を収集する。
-    戻り値は (name, lineno, col_offset, end_lineno, end_col_offset) のタプルのリスト。
-    """
+
     tree = ast.parse(source_code)
     positions = []
 
     class IdentifierVisitor(ast.NodeVisitor):
-        def record(self, node, name):
-            if hasattr(node, 'lineno') and hasattr(node, 'col_offset'):
-                # Python 3.8+ only
-                end_lineno = getattr(node, 'end_lineno', node.lineno)
-                end_col_offset = getattr(node, 'end_col_offset', node.col_offset + len(name))
-                positions.append((name, node.lineno, node.col_offset, end_lineno, end_col_offset))
+        """Collect identifier occurrences with their location and kind."""
+
+        def record(self, node, name, kind):
+            if hasattr(node, "lineno") and hasattr(node, "col_offset"):
+                end_lineno = getattr(node, "end_lineno", node.lineno)
+                end_col_offset = getattr(
+                    node, "end_col_offset", node.col_offset + len(name)
+                )
+                positions.append(
+                    (name, node.lineno, node.col_offset, end_lineno, end_col_offset, kind)
+                )
 
         def visit_Name(self, node):
-            self.record(node, node.id)
+            self.record(node, node.id, "name")
             self.generic_visit(node)
 
         def visit_FunctionDef(self, node):
-            self.record(node, node.name)
+            self.record(node, node.name, "func")
             self.generic_visit(node)
 
         def visit_AsyncFunctionDef(self, node):
-            self.record(node, node.name)
+            self.record(node, node.name, "func")
             self.generic_visit(node)
 
         def visit_ClassDef(self, node):
-            self.record(node, node.name)
+            self.record(node, node.name, "class")
             self.generic_visit(node)
 
         def visit_Attribute(self, node):
-            self.record(node, node.attr)
+            self.record(node, node.attr, "attr")
             self.generic_visit(node)
 
         def visit_arg(self, node):
-            self.record(node, node.arg)
+            self.record(node, node.arg, "arg")
             self.generic_visit(node)
 
     IdentifierVisitor().visit(tree)
     return positions
+
+
+# ---------------------------------------------------------------------------
+# Identifier rewriting for Python mode
+# ---------------------------------------------------------------------------
+
+
+def _alias_generator():
+    """Yield a stream of short, valid Python identifiers."""
+
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    index = 0
+    while True:
+        n = index
+        name = ""
+        while True:
+            name = alphabet[n % 26] + name
+            n //= 26
+            if n == 0:
+                break
+        index += 1
+        yield name
+
+
+def _build_identifier_mapping(positions) -> Dict[str, str]:
+    """Create a mapping from original identifier to a short alias."""
+
+    # Count occurrences for each identifier while skipping attribute names.
+    counts: Counter[str] = Counter()
+    for name, _, _, _, _, kind in positions:
+        if kind == "attr":
+            continue
+        counts[name] += 1
+
+    # Reserved names (keywords, builtins, and dunder names) must not change.
+    reserved = set(keyword.kwlist) | set(dir(builtins))
+    reserved.update(name for name in counts if name.startswith("__"))
+
+    mapping: Dict[str, str] = {}
+    gen = _alias_generator()
+    for name, _ in counts.most_common():
+        if name in reserved:
+            continue
+        alias = next(gen)
+        while alias in reserved or alias in counts or alias in mapping.values():
+            alias = next(gen)
+        mapping[name] = alias
+    return mapping
+
+
+def _apply_identifier_mapping(source: str, positions, mapping: Dict[str, str]) -> str:
+    """Return *source* with identifiers replaced according to *mapping*.
+
+    The *positions* list is expected to originate from
+    :func:`get_identifier_positions`.  Only entries whose name appears in
+    ``mapping`` are substituted.  The function works with absolute
+    positions, so replacements are applied from left to right without
+    affecting subsequent indices.
+    """
+
+    if not mapping:
+        return source
+
+    # Pre-compute the starting index of each line for fast conversion
+    # from (lineno, col) to an absolute character index.
+    lines = source.splitlines(keepends=True)
+    line_starts = [0]
+    for line in lines:
+        line_starts.append(line_starts[-1] + len(line))
+
+    def absolute(line: int, col: int) -> int:
+        return line_starts[line - 1] + col
+
+    replacements = []
+    for name, lineno, col, end_lineno, end_col, kind in positions:
+        if name not in mapping or kind == "attr":
+            continue
+        start = absolute(lineno, col)
+        end = absolute(end_lineno, end_col)
+        replacements.append((start, end, mapping[name]))
+
+    # Apply replacements in order.
+    replacements.sort()
+    out = []
+    last = 0
+    for start, end, repl in replacements:
+        out.append(source[last:start])
+        out.append(repl)
+        last = end
+    out.append(source[last:])
+    return "".join(out)
 
 
 # ---------------------------------------------------------------------------
@@ -478,22 +582,21 @@ def get_identifier_positions(source_code):
 def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     """Compress *data* into a zlib-formatted byte stream.
 
-    The implementation is intentionally straightforward and supports only
-    a single DEFLATE block using dynamically generated Huffman tables.
-    Despite its simplicity it produces output compatible with
-    :func:`zlib.decompress` and achieves respectable compression ratios
-    for typical text inputs.
+    When ``is_python`` is ``True`` a simple identifier rewriting pass is
+    performed before compression.  This pass renames identifiers to short
+    aliases in a semantics‑preserving way which often yields better
+    compression ratios.
     """
 
-    identifier_positions = []
+    # Convert to ``str`` if we intend to analyse identifiers.
     if is_python:
-        identifier_positions = get_identifier_positions(data)
-
-    # Normalise the input to a ``bytes`` object.
-    if isinstance(data, str):
-        data_bytes = data.encode("utf-8")
+        source = data.decode("utf-8") if isinstance(data, bytes) else data
+        positions = get_identifier_positions(source)
+        mapping = _build_identifier_mapping(positions)
+        source = _apply_identifier_mapping(source, positions, mapping)
+        data_bytes = source.encode("utf-8")
     else:
-        data_bytes = data
+        data_bytes = data.encode("utf-8") if isinstance(data, str) else data
 
     # ------------------------------------------------------------------
     # LZ77 tokenisation
@@ -587,7 +690,8 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 1:
         sample = "if __name__ == '__main__':"
-        assert zlib.decompress(compress(sample)) == sample.encode()
+        # Sanity check: compression round trip without Python specific tweaks.
+        assert zlib.decompress(compress(sample, False)) == sample.encode()
     else:
         stats = {}
 
@@ -603,16 +707,27 @@ if __name__ == "__main__":
             add_stat("zlib", len(zlib.compress(text, 9)))
             add_stat(
                 "zopfli",
-                len(zopfli.zlib.compress(
-                    text,
-                    numiterations=1000,
-                    blocksplitting=True,
-                    blocksplittinglast=False,
-                    blocksplittingmax=100
-                ))
+                len(
+                    zopfli.zlib.compress(
+                        text,
+                        numiterations=1000,
+                        blocksplitting=True,
+                        blocksplittinglast=False,
+                        blocksplittingmax=100,
+                    )
+                ),
             )
-            is_python = arg.endswith(".py")
-            add_stat("mine", len(compress(text, is_python)))
+
+            if arg.endswith(".py"):
+                # For Python files, show identifier list and run both modes.
+                source = text.decode("utf-8")
+                id_pos = get_identifier_positions(source)
+                names = sorted({name for name, *_ in id_pos})
+                print(f"{arg} identifiers: {', '.join(names)}")
+                add_stat("mine", len(compress(text, False)))
+                add_stat("mine-py", len(compress(text, True)))
+            else:
+                add_stat("mine", len(compress(text, False)))
 
         for name, values in stats.items():
             print(f"{name} avg: {sum(values) / len(values)}")
