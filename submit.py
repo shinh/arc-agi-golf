@@ -119,11 +119,8 @@ def check_task(task_id, filename, verbose):
     code = reindent(code)
     #code = squeeze(code)
 
-    if task_id in (133,157,193,234,291):
-        rename_locals = True
-    else:
-        code = myzlib.map_identifiers(code, ["p"])
-        rename_locals = False
+    code = myzlib.map_identifiers(code, ["p"])
+    rename_locals = False
     #print(code, flush=True)
 
     code = python_minifier.minify(code, rename_locals=rename_locals)
