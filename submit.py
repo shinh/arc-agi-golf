@@ -6,6 +6,7 @@ import sys
 import zlib
 
 import code_golf_utils
+import python_minifier
 
 
 def write_code(code, filename):
@@ -110,6 +111,7 @@ def check_task(task_id, filename, verbose):
     code = inline_create(logic)
     code = reindent(code)
     code = squeeze(code)
+    code = python_minifier.minify(code)
     # code = core + "\n" + logic
 
     code = compress(code)
