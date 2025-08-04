@@ -119,7 +119,7 @@ def check_task(task_id, filename, verbose):
     code = reindent(code)
     #code = squeeze(code)
 
-    #code = myzlib.map_identifiers(code)
+    #code = myzlib.map_identifiers(code, ["p"])
     #print(code, flush=True)
 
     if task_id != 71:

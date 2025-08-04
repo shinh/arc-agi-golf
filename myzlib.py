@@ -521,7 +521,7 @@ def _alias_generator():
         yield name
 
 
-def _build_identifier_mapping(positions) -> Dict[str, str]:
+def _build_identifier_mapping(positions, excludes: List[str] = []) -> Dict[str, str]:
     """Create a mapping from original identifier to a short alias."""
 
     # Count occurrences for each identifier while skipping attribute names.
@@ -532,7 +532,7 @@ def _build_identifier_mapping(positions) -> Dict[str, str]:
         counts[name] += 1
 
     # Reserved names (keywords, builtins, and dunder names) must not change.
-    reserved = set(keyword.kwlist) | set(dir(builtins))
+    reserved = set(keyword.kwlist) | set(dir(builtins)) | set(excludes)
     reserved.update(name for name in counts if name.startswith("__"))
 
     mapping: Dict[str, str] = {}
@@ -699,7 +699,7 @@ def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     return bytes(out)
 
 
-def map_identifiers(source: str) -> str:
+def map_identifiers(source: str, excludes: List[str]) -> str:
     """Return *source* with identifiers replaced by short aliases.
 
     The function analyses Python source code and rewrites identifiers using
@@ -710,7 +710,7 @@ def map_identifiers(source: str) -> str:
     """
 
     positions = get_identifier_positions(source)
-    mapping = _build_identifier_mapping(positions)
+    mapping = _build_identifier_mapping(positions, excludes)
     mapped_source = _apply_identifier_mapping(source, positions, mapping)
     return mapped_source
 
