@@ -205,22 +205,10 @@ def show_examples(examples, bgcolor=(255, 255, 255)):
 
 
 def verify_program(task_num, examples, task_path=None, quiet=False):
-  #task_name, task_path = "task_with_imports", "/kaggle/working/task.py"
   task_name = "task_with_imports"
   if task_path is None:
     task_path = "task.py"
-  module_path = "task_with_imports.py"
-  with open(task_path, "r") as file:
-    file_content = file.read()
-    if "import" in file_content:
-      #pass
-      print("Error: Imports are not permitted")
-      return
-  with open(module_path, "w") as file:
-    for library in libraries:
-      file.write(f"from {library} import *\n")
-    file.write(file_content)
-  spec = importlib.util.spec_from_file_location(task_name, module_path)
+  spec = importlib.util.spec_from_file_location(task_name, task_path)
   if spec is None:
     print("Error: Unable to import task.py.")
     return
@@ -245,16 +233,15 @@ def verify_program(task_num, examples, task_path=None, quiet=False):
         else:
           expected = copy.deepcopy(example)
           wrong += 1
-      except Exception as e:
-        raise
+      except:
         wrong += 1
     return right, wrong, expected
   arc_agi_right, arc_agi_wrong, arc_agi_expected = verify(examples["train"] + examples["test"])
   arc_gen_right, arc_gen_wrong, arc_gen_expected = verify(examples["arc-gen"])
   if not quiet:
-    print(f"Results on ARC-AGI exaples: {arc_agi_right} pass, {arc_agi_wrong} fail")
-    print(f"Results on ARC-GEN exaples: {arc_gen_right} pass, {arc_gen_wrong} fail")
-    print()
+      print(f"Results on ARC-AGI examples: {arc_agi_right} pass, {arc_agi_wrong} fail")
+      print(f"Results on ARC-GEN examples: {arc_gen_right} pass, {arc_gen_wrong} fail")
+      print()
   if arc_agi_wrong + arc_gen_wrong == 0:
     task_length = os.path.getsize(task_path)
     if not quiet:
@@ -267,14 +254,13 @@ def verify_program(task_num, examples, task_path=None, quiet=False):
     return True
   else:
     if not quiet:
-      print("Your code IS NOT ready for submission.")
+        print("Your code IS NOT ready for submission.")
     expected = arc_agi_expected if arc_agi_expected else arc_gen_expected
     if not expected: return
     actual = {}
     actual["input"] = expected["input"]
     actual["output"] = program(copy.deepcopy(expected["input"]))
     if not quiet:
-      print("The expected result is shown in green; your actual result is shown in red.")
+        print("The expected result is shown in green; your actual result is shown in red.")
     show_examples([expected], bgcolor=(200, 255, 200))
     show_examples([actual], bgcolor=(255, 200, 200))
-    return False
