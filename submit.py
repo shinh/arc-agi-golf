@@ -73,13 +73,15 @@ def compress(code):
                 return code
             has_return = True
             line, _ = re.subn("return\s*","o=",line)
+            line += ";1/0"
         body.append(line[1:])
 
     main = "import base64,zlib\n"
     main += "def p(g):\n"
-    main += " O={'g':g}\n"
+    main += " O={'g':g,'o':None}\n"
     compressed = base64.b85encode(zlib.compress("\n".join(body).encode()))
-    main += ' exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
+    main += ' try:exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
+    main += ' except:0\n'
     main += " return O['o']\n"
 
     if len(main) < len(code):
@@ -110,8 +112,7 @@ def check_task(task_id, filename, verbose):
     code = squeeze(code)
     # code = core + "\n" + logic
 
-    if int(task_id) not in (29, 61, 136):
-        code = compress(code)
+    code = compress(code)
 
     task_path = f"{basedir}/task{task_id:03d}.py"
     write_code(code, task_path)
