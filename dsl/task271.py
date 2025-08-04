@@ -128,4 +128,4 @@ def verify_task271(I):
  x7 = subgrid(x6, I)
  return x7
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task271(tuple(tuple(r) for r in g))]

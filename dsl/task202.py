@@ -201,4 +201,4 @@ def verify_task202(I):
  x30 = x5(x29)
  return x30
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task202(tuple(tuple(r) for r in g))]

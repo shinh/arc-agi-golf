@@ -94,4 +94,4 @@ def verify_task231(I):
  x15 = crop(x13, ORIGIN, x14)
  return x15
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task231(tuple(tuple(r) for r in g))]

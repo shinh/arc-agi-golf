@@ -80,4 +80,4 @@ def verify_task097(I):
  x3 = cover(I, x2)
  return x3
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task097(tuple(tuple(r) for r in g))]

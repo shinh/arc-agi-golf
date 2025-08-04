@@ -131,4 +131,4 @@ def verify_task262(I):
  x27 = apply(x26, x2)
  return x27
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task262(tuple(tuple(r) for r in g))]

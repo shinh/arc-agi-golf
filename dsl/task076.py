@@ -250,4 +250,4 @@ def verify_task076(I):
  x50 = x49(I)
  return x50
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task076(tuple(tuple(r) for r in g))]

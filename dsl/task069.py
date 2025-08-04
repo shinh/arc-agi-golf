@@ -128,4 +128,4 @@ def verify_task069(I):
  x8 = cover(x7, x1)
  return x8
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task069(tuple(tuple(r) for r in g))]

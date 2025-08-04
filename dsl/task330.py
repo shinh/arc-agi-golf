@@ -93,4 +93,4 @@ def verify_task330(I):
  x6 = fill(x5, ONE, x4)
  return x6
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task330(tuple(tuple(r) for r in g))]

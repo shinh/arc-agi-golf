@@ -41,4 +41,4 @@ def verify_task211(I):
  x5 = hmirror(x4)
  return x5
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task211(tuple(tuple(r) for r in g))]

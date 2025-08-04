@@ -160,4 +160,4 @@ def verify_task306(I):
  x12 = paint(I, x11)
  return x12
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task306(tuple(tuple(r) for r in g))]

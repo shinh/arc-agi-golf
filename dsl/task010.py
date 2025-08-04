@@ -126,4 +126,4 @@ def verify_task010(I):
  x28 = dmirror(x27)
  return x28
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task010(tuple(tuple(r) for r in g))]

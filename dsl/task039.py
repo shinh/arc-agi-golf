@@ -107,4 +107,4 @@ def verify_task039(I):
  x28 = tophalf(x27)
  return x28
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task039(tuple(tuple(r) for r in g))]

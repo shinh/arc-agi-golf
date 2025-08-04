@@ -170,4 +170,4 @@ def verify_task184(I):
  x16 = compress(x15)
  return x16
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task184(tuple(tuple(r) for r in g))]

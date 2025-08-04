@@ -211,4 +211,4 @@ def verify_task175(I):
  x57 = replace(x46, x38, x56)
  return x57
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task175(tuple(tuple(r) for r in g))]

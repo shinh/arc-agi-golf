@@ -298,4 +298,4 @@ def verify_task157(I):
  x85 = x20(x84)
  return x85
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task157(tuple(tuple(r) for r in g))]

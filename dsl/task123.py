@@ -267,4 +267,4 @@ def verify_task123(I):
  x39 = x15(x38)
  return x39
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task123(tuple(tuple(r) for r in g))]

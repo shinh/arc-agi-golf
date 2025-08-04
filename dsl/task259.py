@@ -62,4 +62,4 @@ def verify_task259(I):
  x4 = replace(x2, x3, ZERO)
  return x4
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task259(tuple(tuple(r) for r in g))]

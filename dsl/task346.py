@@ -108,4 +108,4 @@ def verify_task346(I):
  x15 = canvas(x14, UNITY)
  return x15
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task346(tuple(tuple(r) for r in g))]

@@ -172,4 +172,4 @@ def verify_task263(I):
  x46 = argmin(x42, x45)
  return x46
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task263(tuple(tuple(r) for r in g))]

@@ -67,4 +67,4 @@ def verify_task376(I):
  x10 = vconcat(x6, x9)
  return x10
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task376(tuple(tuple(r) for r in g))]

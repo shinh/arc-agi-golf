@@ -194,4 +194,4 @@ def verify_task336(I):
  x29 = fill(I, EIGHT, x28)
  return x29
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task336(tuple(tuple(r) for r in g))]

@@ -92,4 +92,4 @@ def verify_task053(I):
  x2 = move(I, x1, DOWN)
  return x2
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task053(tuple(tuple(r) for r in g))]

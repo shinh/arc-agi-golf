@@ -276,4 +276,4 @@ def verify_task255(I):
  x65 = trim(x64)
  return x65
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task255(tuple(tuple(r) for r in g))]

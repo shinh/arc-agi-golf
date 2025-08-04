@@ -233,4 +233,4 @@ def verify_task328(I):
  x45 = paint(x10, x44)
  return x45
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task328(tuple(tuple(r) for r in g))]

@@ -164,4 +164,4 @@ def verify_task244(I):
  x16 = vmirror(x15)
  return x16
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task244(tuple(tuple(r) for r in g))]

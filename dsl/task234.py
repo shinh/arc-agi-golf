@@ -248,4 +248,4 @@ def verify_task234(I):
  x38 = trim(x37)
  return x38
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task234(tuple(tuple(r) for r in g))]

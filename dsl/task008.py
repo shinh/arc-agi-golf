@@ -161,4 +161,4 @@ def verify_task008(I):
  x6 = move(I, x4, x5)
  return x6
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task008(tuple(tuple(r) for r in g))]

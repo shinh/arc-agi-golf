@@ -250,4 +250,4 @@ def verify_task357(I):
  x57 = replace(x56, x28, EIGHT)
  return x57
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task357(tuple(tuple(r) for r in g))]

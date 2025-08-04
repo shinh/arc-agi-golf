@@ -105,4 +105,4 @@ def verify_task178(I):
  x10 = x4(x9)
  return x10
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task178(tuple(tuple(r) for r in g))]

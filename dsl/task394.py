@@ -181,4 +181,4 @@ def verify_task394(I):
  x41 = subgrid(x17, x40)
  return x41
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task394(tuple(tuple(r) for r in g))]

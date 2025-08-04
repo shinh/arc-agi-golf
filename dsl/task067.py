@@ -12,4 +12,4 @@ def verify_task067(I):
  x1 = first(x0)
  return x1
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task067(tuple(tuple(r) for r in g))]

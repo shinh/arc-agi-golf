@@ -54,4 +54,4 @@ def verify_task377(I):
  x8 = x5(x7)
  return x8
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task377(tuple(tuple(r) for r in g))]

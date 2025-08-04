@@ -193,4 +193,4 @@ def verify_task348(I):
  x43 = x8(x42)
  return x43
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task348(tuple(tuple(r) for r in g))]

@@ -138,4 +138,4 @@ def verify_task131(I):
  x27 = x2(x26)
  return x27
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task131(tuple(tuple(r) for r in g))]

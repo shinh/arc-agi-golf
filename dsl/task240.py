@@ -196,4 +196,4 @@ def verify_task240(I):
  x47 = x46(x13)
  return x47
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task240(tuple(tuple(r) for r in g))]

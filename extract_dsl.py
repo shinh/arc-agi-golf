@@ -41,18 +41,28 @@ def compress_code(code):
         if sym in syms:
             return
         s = sym[0]
+        n = 0
         while s in used:
-            s = chr((ord(s) - 97 + 1) % 26 + 97)
+            s = s[:-1] + chr((ord(s[-1]) - 97 + 1) % 26 + 97)
+            n += 1
+            if n == 26:
+                s = s + "a"
         syms[sym] = s
+        used.add(s)
 
+    all_syms = []
     for fn, args in re.findall(r"def ([a-z]+)\((.*)\):", code):
-        args = args.split(",")
-        assign(fn)
-        for arg in args:
-            assign(arg.strip())
+        all_syms.append(fn)
+        all_syms.extend(args.split(","))
+
+    used.update(all_syms)
+
+    for sym in all_syms:
+        if len(sym) > 1:
+            assign(sym)
 
     for sym, s in syms.items():
-        code, _ = re.subn(sym, s, code)
+        code, _ = re.subn(rf"\b{sym}\b", s, code)
     return code
 
 
@@ -113,14 +123,14 @@ def main():
 
         dsl = func
         dsl += "def p(g):\n"
-        dsl += f" return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
+        dsl += f" return [list(r)for r in verify_task{task_id_str}(tuple(tuple(r) for r in g))]"
         open(f"dsl/task{task_id_str}.py", "w").write(dsl)
 
         if len(dsl) < 2500:
             num_short += 1
 
         body = add_indent(func)
-        body += f" o=[list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
+        body += f" o=[list(r)for r in verify_task{task_id_str}(tuple(tuple(r) for r in g))]"
 
         # main = b"# -*- coding: latin-1 -*-\n"
         # main += b"import zlib\n"

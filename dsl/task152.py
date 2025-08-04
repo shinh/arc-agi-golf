@@ -39,4 +39,4 @@ def verify_task152(I):
  x3 = vconcat(x1, x2)
  return x3
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task152(tuple(tuple(r) for r in g))]

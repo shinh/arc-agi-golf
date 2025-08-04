@@ -81,4 +81,4 @@ def verify_task041(I):
  x9 = paint(I, x8)
  return x9
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task041(tuple(tuple(r) for r in g))]

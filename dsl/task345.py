@@ -262,4 +262,4 @@ def verify_task345(I):
  x45 = x16(x44)
  return x45
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task345(tuple(tuple(r) for r in g))]

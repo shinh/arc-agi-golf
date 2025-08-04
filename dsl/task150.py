@@ -25,4 +25,4 @@ def verify_task150(I):
  x0 = vmirror(I)
  return x0
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task150(tuple(tuple(r) for r in g))]

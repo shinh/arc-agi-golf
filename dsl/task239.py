@@ -108,4 +108,4 @@ def verify_task239(I):
  x14 = cmirror(x13)
  return x14
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task239(tuple(tuple(r) for r in g))]

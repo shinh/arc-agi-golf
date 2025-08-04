@@ -131,4 +131,4 @@ def verify_task187(I):
  x10 = replace(x9, x4, THREE)
  return x10
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task187(tuple(tuple(r) for r in g))]

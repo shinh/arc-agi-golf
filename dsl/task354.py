@@ -294,4 +294,4 @@ def verify_task354(I):
  x83 = paint(I, x82)
  return x83
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task354(tuple(tuple(r) for r in g))]

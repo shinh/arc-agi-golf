@@ -71,4 +71,4 @@ def verify_task332(I):
  x9 = vmirror(x8)
  return x9
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task332(tuple(tuple(r) for r in g))]

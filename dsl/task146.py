@@ -92,4 +92,4 @@ def verify_task146(I):
  x9 = extract(x6, x8)
  return x9
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task146(tuple(tuple(r) for r in g))]

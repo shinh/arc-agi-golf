@@ -227,4 +227,4 @@ def verify_task392(I):
  x42 = replace(x41, x3, FIVE)
  return x42
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task392(tuple(tuple(r) for r in g))]

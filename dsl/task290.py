@@ -82,4 +82,4 @@ def verify_task290(I):
  x8 = switch(x5, x6, x7)
  return x8
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task290(tuple(tuple(r) for r in g))]

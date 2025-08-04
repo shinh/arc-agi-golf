@@ -74,4 +74,4 @@ def verify_task115(I):
  x11 = x4(x10)
  return x11
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task115(tuple(tuple(r) for r in g))]

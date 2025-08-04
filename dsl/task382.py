@@ -216,4 +216,4 @@ def verify_task382(I):
  x52 = x9(x51)
  return x52
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task382(tuple(tuple(r) for r in g))]

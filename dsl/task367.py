@@ -166,4 +166,4 @@ def verify_task367(I):
  x14 = fill(I, FOUR, x13)
  return x14
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task367(tuple(tuple(r) for r in g))]

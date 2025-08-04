@@ -292,4 +292,4 @@ def verify_task046(I):
  x87 = x86(x72)
  return x87
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task046(tuple(tuple(r) for r in g))]

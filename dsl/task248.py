@@ -246,4 +246,4 @@ def verify_task248(I):
  x56 = x1(x55)
  return x56
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task248(tuple(tuple(r) for r in g))]

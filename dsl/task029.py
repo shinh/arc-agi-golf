@@ -164,4 +164,4 @@ def verify_task029(I):
  x15 = trim(x14)
  return x15
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task029(tuple(tuple(r) for r in g))]

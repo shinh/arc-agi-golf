@@ -66,4 +66,4 @@ def verify_task371(I):
  x5 = fill(I, THREE, x4)
  return x5
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task371(tuple(tuple(r) for r in g))]

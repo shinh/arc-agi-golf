@@ -6,4 +6,4 @@ def verify_task276(I):
  x0 = replace(I, SIX, TWO)
  return x0
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task276(tuple(tuple(r) for r in g))]

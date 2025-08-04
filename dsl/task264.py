@@ -360,4 +360,4 @@ def verify_task264(I):
  x156 = paint(x148, x155)
  return x156
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task264(tuple(tuple(r) for r in g))]

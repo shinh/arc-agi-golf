@@ -26,4 +26,4 @@ def verify_task339(I):
  x4 = canvas(x1, x3)
  return x4
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task339(tuple(tuple(r) for r in g))]

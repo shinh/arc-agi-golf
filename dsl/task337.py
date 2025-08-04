@@ -6,4 +6,4 @@ def verify_task337(I):
  x0 = switch(I, FIVE, EIGHT)
  return x0
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task337(tuple(tuple(r) for r in g))]

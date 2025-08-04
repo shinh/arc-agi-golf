@@ -307,4 +307,4 @@ def verify_task080(I):
  x69 = crop(x67, ORIGIN, x68)
  return x69
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task080(tuple(tuple(r) for r in g))]

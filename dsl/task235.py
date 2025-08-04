@@ -170,4 +170,4 @@ def verify_task235(I):
  x38 = apply(x37, x36)
  return x38
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task235(tuple(tuple(r) for r in g))]

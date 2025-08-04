@@ -15,4 +15,4 @@ def verify_task016(I):
  x3 = switch(x2, ONE, FIVE)
  return x3
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task016(tuple(tuple(r) for r in g))]

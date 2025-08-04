@@ -122,4 +122,4 @@ def verify_task270(I):
  x21 = fill(x20, THREE, x17)
  return x21
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task270(tuple(tuple(r) for r in g))]

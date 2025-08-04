@@ -93,4 +93,4 @@ def verify_task252(I):
  x10 = fill(I, FOUR, x9)
  return x10
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task252(tuple(tuple(r) for r in g))]

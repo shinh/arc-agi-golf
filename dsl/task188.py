@@ -18,4 +18,4 @@ def verify_task188(I):
  x4 = x3(I)
  return x4
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task188(tuple(tuple(r) for r in g))]

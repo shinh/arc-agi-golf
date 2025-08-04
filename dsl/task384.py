@@ -65,4 +65,4 @@ def verify_task384(I):
  x1 = upscale(x0, TWO)
  return x1
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task384(tuple(tuple(r) for r in g))]

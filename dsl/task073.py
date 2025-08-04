@@ -197,4 +197,4 @@ def verify_task073(I):
  x40 = fill(x9, x5, x39)
  return x40
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task073(tuple(tuple(r) for r in g))]

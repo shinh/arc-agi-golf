@@ -57,4 +57,4 @@ def verify_task052(I):
  x8 = apply(x7, I)
  return x8
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task052(tuple(tuple(r) for r in g))]

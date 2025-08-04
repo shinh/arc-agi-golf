@@ -196,4 +196,4 @@ def verify_task396(I):
  x26 = replace(x25, x15, x19)
  return x26
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task396(tuple(tuple(r) for r in g))]

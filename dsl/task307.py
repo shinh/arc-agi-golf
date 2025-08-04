@@ -53,4 +53,4 @@ def verify_task307(I):
  x0 = upscale(I, TWO)
  return x0
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task307(tuple(tuple(r) for r in g))]

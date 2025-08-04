@@ -126,4 +126,4 @@ def verify_task040(I):
  x34 = x7(x33, x28)
  return x34
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task040(tuple(tuple(r) for r in g))]

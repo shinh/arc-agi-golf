@@ -110,4 +110,4 @@ def verify_task247(I):
  x9 = dmirror(x8)
  return x9
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task247(tuple(tuple(r) for r in g))]

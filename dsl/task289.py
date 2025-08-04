@@ -62,4 +62,4 @@ def verify_task289(I):
  x2 = upscale(I, x1)
  return x2
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task289(tuple(tuple(r) for r in g))]

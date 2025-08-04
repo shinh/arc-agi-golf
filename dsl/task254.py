@@ -88,4 +88,4 @@ def verify_task254(I):
  x6 = fill(x5, TWO, x2)
  return x6
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task254(tuple(tuple(r) for r in g))]

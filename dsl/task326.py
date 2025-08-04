@@ -6,4 +6,4 @@ def verify_task326(I):
  x0 = crop(I, ORIGIN, TWO_BY_TWO)
  return x0
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task326(tuple(tuple(r) for r in g))]

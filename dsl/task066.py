@@ -296,4 +296,4 @@ def verify_task066(I):
  x70 = x2(x69)
  return x70
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task066(tuple(tuple(r) for r in g))]

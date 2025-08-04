@@ -206,4 +206,4 @@ def verify_task134(I):
  x31 = downscale(x22, x30)
  return x31
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task134(tuple(tuple(r) for r in g))]

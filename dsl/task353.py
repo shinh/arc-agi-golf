@@ -103,4 +103,4 @@ def verify_task353(I):
  x11 = move(I, x10, x9)
  return x11
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task353(tuple(tuple(r) for r in g))]

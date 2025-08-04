@@ -37,4 +37,4 @@ def verify_task177(I):
  x1 = vmirror(x0)
  return x1
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task177(tuple(tuple(r) for r in g))]

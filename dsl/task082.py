@@ -221,4 +221,4 @@ def verify_task082(I):
  x33 = x9(x32)
  return x33
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task082(tuple(tuple(r) for r in g))]

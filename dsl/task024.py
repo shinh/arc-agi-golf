@@ -44,4 +44,4 @@ def verify_task024(I):
  x8 = fill(x7, ONE, x5)
  return x8
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task024(tuple(tuple(r) for r in g))]

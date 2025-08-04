@@ -89,4 +89,4 @@ def verify_task385(I):
  x16 = x7(x15)
  return x16
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task385(tuple(tuple(r) for r in g))]

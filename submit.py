@@ -49,33 +49,34 @@ def inline_create(code):
     return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
 
-def submit(task_id, skip_verify=False):
-    if skip_verify:
-        return
+def check_task(task_id, filename, verbose):
+    if verbose:
+        print(f"Checking === {filename} ===", flush=True)
 
-    # print("Submitting task", task_id)
+    if not os.path.exists(filename):
+        return False, "TODO", None
 
-    core = open("logic/core.py").read()
+    kind = os.path.basename(os.path.dirname(filename))
+    basedir = os.path.join("/tmp", kind)
 
-    if not os.path.exists(f"logic/task{task_id:03d}.py"):
-        open(f"reports/task{task_id:03d}.txt", "w").write("TODO")
-        return
+    os.makedirs(basedir, exist_ok=True)
 
     result = "N/A"
     ok = False
+    code = None
     try:
-        logic = open(f"logic/task{task_id:03d}.py").read()
+        logic = open(filename).read()
 
         code = inline_create(logic)
         code = reindent(code)
         code = squeeze(code)
         # code = core + "\n" + logic
 
-        task_path = f"submissions/task{task_id:03d}.py"
+        task_path = f"{basedir}/task{task_id:03d}.py"
         open(task_path, "w").write(code)
 
         examples = code_golf_utils.load_examples(int(task_id))
-        if code_golf_utils.verify_program(task_id, examples, task_path, quiet=True):
+        if code_golf_utils.verify_program(task_id, examples, task_path, quiet=not verbose):
             result = str(2500 - len(code))
             ok = True
         else:
@@ -83,9 +84,31 @@ def submit(task_id, skip_verify=False):
     except:
         result = "ERROR"
 
-    open(f"reports/task{task_id:03d}.txt", "w").write(result)
+    return ok, result, code
 
-    print(f"Task {task_id:03d}: {result}")
+
+def submit(task_id, verbose, skip_verify=False):
+    if skip_verify:
+        return
+
+    # print("Submitting task", task_id)
+
+    ok, result, code = check_task(task_id, f"logic/task{task_id:03d}.py", verbose)
+
+    dsl_filename = f"dsl/task{task_id:03d}.py"
+    if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
+        ok_c, result_c, code_c = check_task(task_id, dsl_filename, verbose)
+        lc = len(code_c)
+        if ok_c and (not ok or lc < len(code_c)) and len(code_c) < 2500:
+            ok = ok_c
+            result = result_c + " (" + result + ")"
+            code = code_c
+
+    open(f"reports/task{task_id:03d}.txt", "w").write(result)
+    if code:
+        open(f"submissions/task{task_id:03d}.txt", "w").write(code)
+
+    print(f"Task {task_id:03d}: {result}", flush=True)
 
     return ok
 
@@ -98,6 +121,7 @@ def report():
     negative_tests = []
     for task_id in range(1, 401):
         result = open(f"reports/task{task_id:03d}.txt").read()
+        result = result.split()[0]
         if result == "FAIL":
             fail_tests.append(task_id)
         elif result == "ERROR":
@@ -119,15 +143,16 @@ def report():
 def main():
     parser = argparse.ArgumentParser(description="Submit code golf.")
     parser.add_argument("task_id")
+    parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--skip_verify", action="store_true")
     args = parser.parse_args()
 
     if args.task_id == "all":
         for task_id in range(1, 401):
-            submit(task_id, args.skip_verify)
+            submit(task_id, args.verbose, args.skip_verify)
         report()
     else:
-        if not submit(int(args.task_id)):
+        if not submit(int(args.task_id), True):
             print("FAIL!!")
             sys.exit(1)
 

@@ -78,4 +78,4 @@ def verify_task359(I):
  x14 = x13(x12, x10)
  return x14
 def p(g):
- return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
+ return [list(r)for r in verify_task359(tuple(tuple(r) for r in g))]
