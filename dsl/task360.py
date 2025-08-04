@@ -14,6 +14,10 @@ def hsplit(grid,n):
  h, w = len(grid), len(grid[0]) // n
  offset = len(grid[0]) % n != 0
  return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def tophalf(grid):
  return grid[:len(grid) // 2]
 def lefthalf(grid):

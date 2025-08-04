@@ -132,6 +132,8 @@ def rbind(function,fixed):
   return lambda x, y, z: function(x, y, z, fixed)
 def recolor(value,patch):
  return frozenset((value, index) for index in toindices(patch))
+def rot180(grid):
+ return tuple(tuple(row[::-1]) for row in grid[::-1])
 def shape(piece):
  return (height(piece), width(piece))
 def shift(patch,directions):

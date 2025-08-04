@@ -15,6 +15,8 @@ def downscale(grid,factor):
   if i % factor == 0:
    downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
  return downscaled_grid2
+def rot180(grid):
+ return tuple(tuple(row[::-1]) for row in grid[::-1])
 def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b

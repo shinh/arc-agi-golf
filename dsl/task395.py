@@ -42,6 +42,10 @@ def intersection(a,b):
  return a & b
 def last(container):
  return max(enumerate(container))[1]
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def tophalf(grid):
  return grid[:len(grid) // 2]
 def lefthalf(grid):

@@ -43,6 +43,8 @@ def mostcommon(container):
  return max(set(container), key=container.count)
 def repeat(item,num):
  return tuple(item for i in range(num))
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def size(container):
  return len(container)
 def vupscale(grid,factor):

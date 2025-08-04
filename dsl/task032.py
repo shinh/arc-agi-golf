@@ -23,6 +23,10 @@ def rbind(function,fixed):
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def sfilter(container,condition):
  return type(container)(e for e in container if condition(e))
 def verify_task032(I):

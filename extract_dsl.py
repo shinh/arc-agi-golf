@@ -51,7 +51,7 @@ def compress_code(code):
         used.add(s)
 
     all_syms = []
-    for fn, args in re.findall(r"def ([a-z]+)\((.*)\):", code):
+    for fn, args in re.findall(r"def ([a-z0-9]+)\((.*)\):", code):
         all_syms.append(fn)
         all_syms.extend(args.split(","))
 
@@ -108,7 +108,7 @@ def main():
     reqs_map = {}
     for name, func in defs.items():
         reqs = []
-        for m in re.findall(r"([A-Z_]+|[a-z]+)", func):
+        for m in re.findall(r"([A-Z_]+|[a-z][a-z0-9]+)", func):
             if m != name:
                 reqs.append(m)
         reqs_map[name] = list(sorted(set(reqs)))

@@ -1,5 +1,11 @@
 def hconcat(a,b):
  return tuple(i + j for i, j in zip(a, b))
+def rot180(grid):
+ return tuple(tuple(row[::-1]) for row in grid[::-1])
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def vconcat(a,b):
  return a + b
 def verify_task106(I):

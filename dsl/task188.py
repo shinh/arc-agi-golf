@@ -2,6 +2,10 @@ def branch(condition,if_value,else_value):
  return if_value if condition else else_value
 def equality(a,b):
  return a == b
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def tophalf(grid):
  return grid[:len(grid) // 2]
 def lefthalf(grid):

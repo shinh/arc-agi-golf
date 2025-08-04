@@ -175,6 +175,8 @@ def recolor(value,patch):
  return frozenset((value, index) for index in toindices(patch))
 def remove(value,container):
  return type(container)(e for e in container if e != value)
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def height(piece):
  if len(piece) == 0:
   return 0

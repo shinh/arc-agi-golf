@@ -68,6 +68,10 @@ def hline(patch):
  return width(patch) == len(patch) and height(patch) == 1
 def intersection(a,b):
  return a & b
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def tophalf(grid):
  return grid[:len(grid) // 2]
 def lefthalf(grid):

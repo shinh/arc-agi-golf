@@ -188,6 +188,8 @@ def rbind(function,fixed):
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def lowermost(patch):
  return max(i for i, j in toindices(patch))
 def height(piece):

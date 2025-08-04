@@ -73,6 +73,10 @@ def merge(containers):
  return type(containers)(e for c in containers for e in c)
 def repeat(item,num):
  return tuple(item for i in range(num))
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
 def verify_task231(I):

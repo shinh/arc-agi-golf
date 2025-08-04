@@ -14,6 +14,10 @@ def halve(n):
  return n // 2 if isinstance(n, int) else (n[0] // 2, n[1] // 2)
 def intersection(a,b):
  return a & b
+def rot270(grid):
+ return tuple(tuple(row[::-1]) for row in zip(*grid[::-1]))[::-1]
+def rot90(grid):
+ return tuple(row for row in zip(*grid[::-1]))
 def tophalf(grid):
  return grid[:len(grid) // 2]
 def lefthalf(grid):
