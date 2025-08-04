@@ -2,8 +2,6 @@ def p(g):
  DOWN = (1, 0)
  RIGHT = (0, 1)
  UNITY = (1, 1)
- def add(a,b):
-  return (a + b[0], a + b[1])
  def asindices(grid):
   return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
  def asobject(grid):
@@ -38,7 +36,7 @@ def p(g):
   hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
   return frozenset(vlines | hlines)
  def canvas(value,dimensions):
-  return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+  return [[value for j in range(dimensions[1])]for i in range(dimensions[0])]
  def combine(a,b):
   return type(a)((*a, *b))
  def compose(outer,inner):
@@ -171,9 +169,8 @@ def p(g):
   return [list(r[1:-1])for r in grid[1:-1]]
  def verify_task255(I):
   x0 = mostcolor(I)
-  x1 = shape(I)
-  x2 = add(2, x1)
-  x3 = canvas(x0, x2)
+  H,W = shape(I)
+  x3 = [[x0 for j in range(W+2)]for i in range(H+2)]
   x4 = asobject(I)
   x5 = shift(x4, UNITY)
   x6 = paint(x3, x5)
