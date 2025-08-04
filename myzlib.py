@@ -683,6 +683,19 @@ def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     return bytes(out)
 
 
+def map_identifiers(source: str) -> str:
+    """Map identifiers in *source* to short aliases and return the modified source.
+
+    This function is intended for use with Python source code.  It returns
+    a tuple of the modified source code and a mapping from original names
+    to their aliases.
+    """
+    positions = get_identifier_positions(source)
+    mapping = _build_identifier_mapping(positions)
+    mapped_source = _apply_identifier_mapping(source, positions, mapping)
+    return mapped_source
+
+
 if __name__ == "__main__":
     import sys
     import zlib
@@ -692,6 +705,8 @@ if __name__ == "__main__":
         sample = "if __name__ == '__main__':"
         # Sanity check: compression round trip without Python specific tweaks.
         assert zlib.decompress(compress(sample, False)) == sample.encode()
+
+        assert map_identifiers("def ppp(g):return len(g)") == "def b(a):return len(a)"
     else:
         stats = {}
 

@@ -10,6 +10,8 @@ import zopfli.zlib
 import code_golf_utils
 import python_minifier
 
+import myzlib
+
 
 def write_code(code, filename):
     if isinstance(code, bytes):
@@ -116,6 +118,9 @@ def check_task(task_id, filename, verbose):
     code = inline_create(logic)
     code = reindent(code)
     #code = squeeze(code)
+
+    #code = myzlib.map_identifiers(code)
+    #print(code, flush=True)
 
     if task_id != 71:
         code = python_minifier.minify(code)
