@@ -1,4 +1,5 @@
 import re
+import zlib
 
 
 def reindent(code):
@@ -24,6 +25,13 @@ def reindent(code):
     return "\n".join(lines)
 
 
+def add_indent(code):
+    result = ""
+    for line in code.splitlines():
+        result += " " + line + "\n"
+    return result
+
+
 def concat(name, defs, reqs_map, seen):
     code = ""
     for r in reqs_map[name]:
@@ -46,6 +54,8 @@ def main():
         elif m := re.match(r"^def (\w+)\(", line):
             cur_func = m.group(1)
             defs[cur_func] = line
+        elif re.match(r'^\s*""".*"""$', line):
+            continue
         elif line.strip() == "":
             cur_func = None
         elif cur_func:
@@ -72,13 +82,20 @@ def main():
 
         func = concat(name, defs, reqs_map, set())
 
-        # libs, main = func.split(f"def {name}")
-        # func = libs + "\ndef p" + main
+        dsl = func
+        dsl += "def p(g):\n"
+        dsl += f" return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
+        open(f"dsl/task{task_id_str}.py", "w").write(dsl)
 
-        func += "def p(g):\n"
-        func += f" return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
+        body = add_indent(func)
+        body += f" o=[list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
 
-        open(f"dsl/task{task_id_str}.py", "w").write(func)
+        main = b"# -*- coding: latin-1 -*-\n"
+        main += b"import zlib\n"
+        main += b"def p(g):\n"
+        main += b" exec(r'''" + zlib.compress(body.encode()) + b"''')\n"
+        main += b" return o\n"
+        open(f"cdsl/task{task_id_str}.py", "wb").write(main)
 
 
 if __name__ == "__main__":
