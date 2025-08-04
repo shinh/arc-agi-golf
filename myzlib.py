@@ -87,7 +87,7 @@ def _huffman_lengths(freqs: List[int], max_bits: int = 15) -> List[int]:
     heap: List[Tuple[int, int, object]] = []
     for sym, freq in enumerate(freqs):
         if freq > 0:
-            heap.append((freq, sym, sym))
+            heap.append((freq, len(heap), sym))
     if not heap:
         return [0] * len(freqs)
     if len(heap) == 1:
