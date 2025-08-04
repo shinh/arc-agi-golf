@@ -1,81 +1,70 @@
 def p(g):
-    #show(g,"input")
-    pats=[]
-    b=0
-    H=len(g)
-    W=len(g[0])
-    max_l=0
-    for c in range(9):
-        sy=sx=999
-        ey=ex=-1
-        cnt=0
-        for y in range(H):
-            for x in range(W):
-                if g[y][x]==c:
-                    sy=min(sy,y)
-                    sx=min(sx,x)
-                    ey=max(ey,y)
-                    ex=max(ex,x)
-                    cnt+=1
-        if cnt>100:
-            b=c
-            continue
-        if ey>=0:
-            pat=None
-            for l in range(1,30,2):
-                for oy in range(sy-ey-l,1):
-                    for ox in range(sx-ex-l,1):
-                        cnt2=0
-                        left0=0
-                        right0=0
-                        top0=0
-                        bottom0=0
-                        for y in range(oy+sy,min(oy+sy+l,H)):
-                            for x in range(ox+sx,min(ox+sx+l,W)):
-                                if y<0 or x<0:
-                                    continue
-                                if g[y][x]==c:
-                                    if y!=oy+sy and y!=min(oy+sy+l,H)-1 and x!=ox+sx and x!=min(ox+sx+l,W)-1:
-                                        cnt2=-999
-                                    else:
-                                        cnt2+=1
-                                if g[y][x]==0:
-                                    if x==ox+sx:
-                                        left0+=1
-                                    if x==ox+sx+l:
-                                        right0+=1
-                                    if y==oy+sy:
-                                        top0+=1
-                                    if y==oy+sy+l:
-                                        bottom0+=1
-                        zeros=max(left0,right0,top0,bottom0)
-                        # TODO: ここに zeros が4辺の中心に並んでるかどうかのチェックを入れる
-                        if cnt==cnt2:
-                            pat=(-l,c,sy,sx,ey,ex,oy,ox,cnt)
-                            print(f"Pattern found: {c} at ({sy},{sx}) to ({ey},{ex}) with offset ({oy},{ox}) and length {l} cnt={cnt}")
-                if pat is not None:
-                    pats.append(pat)
-                    max_l=max(max_l,l)
-                    break
-
-    # So now we have sx+ox and sy+oy and l, we can finish the pattern.
-    o=[[b for _ in range(max_l)] for _ in range(max_l)]
-    for l,c,sy,sx,ey,ex,oy,ox,cnt in sorted(pats):
-        l=-l
-        d=(max_l-l)//2
-        for by in range(l):
-            for bx in range(l):
-                y=oy+sy+by
-                x=ox+sx+bx
-                if y<0:y=oy+sy+l-by-1
-                if y>=H:y=oy+sy+l-by-1
-                if x<0:x=ox+sx+l-bx-1
-                if x>=W:x=ox+sx+l-bx-1
-                if y<0 or y>=H or x<0 or x>=W:
-                    continue
-                #print(f"Placing {c} at ({y},{x}) with offset ({by},{bx}) bounding box ({H},{W})")
-                o[by+d][bx+d]=g[y][x]
-        #show(o,f"output l={l}")
-
-    #show(o,"output")
-    return o
+ H=len(g);W=len(g[0])
+ cnt=[0]*10
+ for r in g:
+  for v in r:cnt[v]+=1
+ bg=max(range(10),key=lambda i:cnt[i])
+ patches={c:set() for c in range(10)}
+ for y in range(H):
+  for x in range(W):
+   v=g[y][x]
+   if v!=bg:patches[v].add((y,x))
+ patches={c:s for c,s in patches.items() if s}
+ vis=[[0]*W for _ in range(H)]
+ comps={}
+ for y in range(H):
+  for x in range(W):
+   if vis[y][x]:continue
+   v=g[y][x];vis[y][x]=1
+   if v==bg:continue
+   q=[(y,x)];c=[]
+   while q:
+    cy,cx=q.pop();c.append((cy,cx))
+    for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
+     ny,nx=cy+dy,cx+dx
+     if 0<=ny<H and 0<=nx<W and not vis[ny][nx] and g[ny][nx]==v:
+      vis[ny][nx]=1;q.append((ny,nx))
+   comps.setdefault(v,[]).append(c)
+ def bbox(s):
+  ys=[y for y,x in s];xs=[x for y,x in s]
+  return min(ys),min(xs),max(ys),max(xs)
+ mets=[]
+ for c,s in patches.items():
+  sy,sx,ey,ex=bbox(s)
+  shape=max(ey-sy+1,ex-sx+1)
+  mx=max(max(x for _,x in cc)-min(x for _,x in cc)+1 for cc in comps[c])
+  mets.append((-(shape+mx),-c,c))
+ cols=[c for _,__,c in sorted(mets)]
+ def norm(s):
+  sy=min(y for y,x in s);sx=min(x for y,x in s)
+  return {(y-sy,x-sx) for y,x in s}
+ def vm(s):
+  sy,sx,ey,ex=bbox(s)
+  return {(y,sx+ex-x) for y,x in s}
+ def hm(s):
+  sy,sx,ey,ex=bbox(s)
+  return {(sy+ey-y,x) for y,x in s}
+ def cm(s):
+  sy,sx,ey,ex=bbox(s)
+  return {(sy+ey-y,sx+ex-x) for y,x in s}
+ orient=[]
+ for c in cols:
+  S=patches[c]
+  best=None;sc=-1
+  for s in(S,vm(S),cm(S),hm(S)):
+   n=norm(s);score=((1,0) in n)+((0,1) in n)
+   if score>sc:sc=score;best=n
+  orient.append((c,best))
+ counts=[len(patches[c]) for c in cols]
+ n=len(cols)+(0 if any(k==1 for k in counts) else 1)
+ size=2*n-1
+ def paint(o,ps):
+  for c,s in ps:
+   for y,x in s:
+    if 0<=y<size and 0<=x<size:o[y][x]=c
+  return o
+ shifted=[(c,{(y+i,x+i) for y,x in s}) for i,(c,s) in enumerate(orient)]
+ o=paint([[bg]*size for _ in range(size)],shifted)
+ for _ in range(3):
+  o=paint([list(r) for r in zip(*o[::-1])],shifted)
+ return o
