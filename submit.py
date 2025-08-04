@@ -73,7 +73,7 @@ def compress(code):
             if has_return:
                 return code
             has_return = True
-            line, _ = re.subn("return\s*","o=",line)
+            line, _ = re.subn(r"return\s*","o=",line)
             line += ";1/0"
         body.append(line[1:])
 
