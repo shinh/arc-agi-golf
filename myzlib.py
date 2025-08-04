@@ -752,11 +752,36 @@ def map_identifiers(source: str, excludes: List[str]) -> str:
     :func:`get_identifier_positions` and the helper routines for building and
     applying an identifier mapping.  Only the modified source code is
     returned; callers interested in the mapping itself can invoke the helper
-    functions directly.
+    functions directly.  ``excludes`` can be used to protect specific
+    identifiers from being rewritten.
     """
 
+    # Gather all identifier positions within the source.  This provides the
+    # location for every ``ast.Name`` (and a few other constructs) so that the
+    # mapping can be applied efficiently later on.
     positions = get_identifier_positions(source)
-    mapping = _build_identifier_mapping(positions, excludes)
+
+    # Certain names must never be rewritten because doing so would produce
+    # invalid Python code.  Examples are names introduced by import statements
+    # or mentioned in ``global``/``nonlocal`` declarations.  The AST stores
+    # those names separately, so we scan the tree again to collect them.
+    tree = ast.parse(source)
+    reserved: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            # ``alias.name`` may contain dotted paths ("module.func").  Only the
+            # last component becomes a variable name in the current module.  If
+            # ``asname`` is present it is the name used in the code.
+            for alias in node.names:
+                reserved.add(alias.asname or alias.name.split(".")[-1])
+        elif isinstance(node, (ast.Global, ast.Nonlocal)):
+            reserved.update(node.names)
+
+    # Build a mapping for all identifiers except those explicitly excluded or
+    # reserved by the checks above.
+    mapping = _build_identifier_mapping(positions, excludes + list(reserved))
+
+    # Finally apply the mapping to the original source code.
     mapped_source = _apply_identifier_mapping(source, positions, mapping)
     return mapped_source
 
