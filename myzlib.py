@@ -11,6 +11,7 @@ The :func:`compress` function accepts ``bytes`` or ``str`` and returns a
 
 from __future__ import annotations
 
+import ast
 from dataclasses import dataclass
 import heapq
 from typing import Dict, Iterable, List, Tuple, Union
@@ -425,12 +426,56 @@ class _BitWriter:
             self.nbits = 0
 
 
+def get_identifier_positions(source_code):
+    """
+    ASTを走査して識別子（変数名、関数名など）の位置（開始・終了）を収集する。
+    戻り値は (name, lineno, col_offset, end_lineno, end_col_offset) のタプルのリスト。
+    """
+    tree = ast.parse(source_code)
+    positions = []
+
+    class IdentifierVisitor(ast.NodeVisitor):
+        def record(self, node, name):
+            if hasattr(node, 'lineno') and hasattr(node, 'col_offset'):
+                # Python 3.8+ only
+                end_lineno = getattr(node, 'end_lineno', node.lineno)
+                end_col_offset = getattr(node, 'end_col_offset', node.col_offset + len(name))
+                positions.append((name, node.lineno, node.col_offset, end_lineno, end_col_offset))
+
+        def visit_Name(self, node):
+            self.record(node, node.id)
+            self.generic_visit(node)
+
+        def visit_FunctionDef(self, node):
+            self.record(node, node.name)
+            self.generic_visit(node)
+
+        def visit_AsyncFunctionDef(self, node):
+            self.record(node, node.name)
+            self.generic_visit(node)
+
+        def visit_ClassDef(self, node):
+            self.record(node, node.name)
+            self.generic_visit(node)
+
+        def visit_Attribute(self, node):
+            self.record(node, node.attr)
+            self.generic_visit(node)
+
+        def visit_arg(self, node):
+            self.record(node, node.arg)
+            self.generic_visit(node)
+
+    IdentifierVisitor().visit(tree)
+    return positions
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
 
-def compress(data: Union[str, bytes]) -> bytes:
+def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     """Compress *data* into a zlib-formatted byte stream.
 
     The implementation is intentionally straightforward and supports only
@@ -439,6 +484,10 @@ def compress(data: Union[str, bytes]) -> bytes:
     :func:`zlib.decompress` and achieves respectable compression ratios
     for typical text inputs.
     """
+
+    identifier_positions = []
+    if is_python:
+        identifier_positions = get_identifier_positions(data)
 
     # Normalise the input to a ``bytes`` object.
     if isinstance(data, str):
@@ -562,7 +611,8 @@ if __name__ == "__main__":
                     blocksplittingmax=100
                 ))
             )
-            add_stat("mine", len(compress(text)))
+            is_python = arg.endswith(".py")
+            add_stat("mine", len(compress(text, is_python)))
 
         for name, values in stats.items():
             print(f"{name} avg: {sum(values) / len(values)}")
