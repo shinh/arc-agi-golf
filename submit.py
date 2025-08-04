@@ -1,9 +1,20 @@
 import argparse
+import base64
 import os
 import re
 import sys
+import zlib
 
 import code_golf_utils
+
+
+def write_code(code, filename):
+    if isinstance(code, bytes):
+        with open(filename, "wb") as f:
+            f.write(code)
+    else:
+        with open(filename, "w") as f:
+            f.write(code)
 
 
 def reindent(code):
@@ -49,6 +60,35 @@ def inline_create(code):
     return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
 
+def compress(code):
+    first_line, *body_orig = code.splitlines()
+    if first_line.strip() != "def p(g):":
+        return code
+
+    body = []
+    has_return = False
+    for line in body_orig:
+        if "return" in line:
+            if has_return:
+                return code
+            has_return = True
+            line, _ = re.subn("return\s*","o=",line)
+        body.append(line[1:])
+
+    main = "import base64,zlib\n"
+    main += "def p(g):\n"
+    main += " O={'g':g}\n"
+    compressed = base64.b85encode(zlib.compress("\n".join(body).encode()))
+    main += ' exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
+    main += " return O['o']\n"
+
+    if len(main) < len(code):
+        print(f"Use compressed code! {len(code)} => {len(main)}")
+        return main
+
+    return code
+
+
 def check_task(task_id, filename, verbose):
     if verbose:
         print(f"Checking === {filename} ===", flush=True)
@@ -63,25 +103,28 @@ def check_task(task_id, filename, verbose):
 
     result = "N/A"
     ok = False
-    code = None
+
+    logic = open(filename).read()
+    code = inline_create(logic)
+    code = reindent(code)
+    code = squeeze(code)
+    # code = core + "\n" + logic
+
+    code = compress(code)
+
+    task_path = f"{basedir}/task{task_id:03d}.py"
+    write_code(code, task_path)
+
     try:
-        logic = open(filename).read()
-
-        code = inline_create(logic)
-        code = reindent(code)
-        code = squeeze(code)
-        # code = core + "\n" + logic
-
-        task_path = f"{basedir}/task{task_id:03d}.py"
-        open(task_path, "w").write(code)
-
         examples = code_golf_utils.load_examples(int(task_id))
         if code_golf_utils.verify_program(task_id, examples, task_path, quiet=not verbose):
             result = str(2500 - len(code))
             ok = True
         else:
             result = "FAIL"
-    except:
+    except Exception as e:
+        if verbose:
+            raise
         result = "ERROR"
 
     return ok, result, code
@@ -106,7 +149,7 @@ def submit(task_id, verbose, skip_verify=False):
 
     open(f"reports/task{task_id:03d}.txt", "w").write(result)
     if code:
-        open(f"submissions/task{task_id:03d}.txt", "w").write(code)
+        write_code(code, f"submissions/task{task_id:03d}.py")
 
     print(f"Task {task_id:03d}: {result}", flush=True)
 
