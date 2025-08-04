@@ -1,0 +1,24 @@
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def hsplit(
+ grid,
+ n
+):
+ h, w = len(grid), len(grid[0]) // n
+ offset = len(grid[0]) % n != 0
+ return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
+THREE = 3
+def first(
+ container
+):
+ return next(iter(container))
+def verify_task067(I):
+ x0 = hsplit(I, THREE)
+ x1 = first(x0)
+ return x1
+def p(g):
+ return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]
