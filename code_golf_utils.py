@@ -264,4 +264,6 @@ def verify_program(task_num, examples, task_path=None, quiet=False):
     if not quiet:
         print("The expected result is shown in green; your actual result is shown in red.")
     show_examples([expected], bgcolor=(200, 255, 200))
+    plt.savefig("expected.png")
     show_examples([actual], bgcolor=(255, 200, 200))
+    plt.savefig("error.png")
