@@ -25,15 +25,11 @@ def p(g):
  def ulcorner(patch):
   return tuple(map(min, zip(*toindices(patch))))
  def backdrop(patch):
-  if len(patch) == 0:
-   return frozenset({})
   indices = toindices(patch)
   si, sj = ulcorner(indices)
   ei, ej = lrcorner(patch)
   return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
  def box(patch):
-  if len(patch) == 0:
-   return patch
   ai, aj = ulcorner(patch)
   bi, bj = lrcorner(patch)
   si, sj = min(ai, bi), min(aj, bj)
