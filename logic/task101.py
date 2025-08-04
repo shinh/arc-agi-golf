@@ -1,46 +1,62 @@
 def p(g):
-    h=len(g);w=len(g[0]);D=(1,0,-1,0,1)
-    for y,r in enumerate(g):
-        if 1 in r:
-            x=r.index(1);break
-    s=[(y,x)];c={(y,x)}
-    while s:
-        y,x=s.pop()
-        for d in range(4):
-            a,b=y+D[d],x+D[d+1]
-            if 0<=a<h and 0<=b<w and g[a][b] and(a,b)not in c:
-                c.add((a,b));s.append((a,b))
-    r0=min(y for y,_ in c);r1=max(y for y,_ in c)+1
-    c0=min(x for _,x in c);c1=max(x for _,x in c)+1
-    t=[row[c0:c1]for row in g[r0:r1]]
-    P=[(i,j)for i,r in enumerate(t)for j,v in enumerate(r)if v==2]
-    a=P[0];H=len(t);W=len(t[0])
-    reg={(r0+i,c0+j)for i in range(H)for j in range(W)}
-    out=[r[:]for r in g];seen=set();cl=[]
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]==2 and(y,x)not in reg and(y,x)not in seen:
-                q=[(y,x)];seen.add((y,x));cells=[]
+    h=len(g);w=len(g[0]);H=3*h;W=3*w
+    b=max(range(10),key=lambda c:sum(r.count(c)for r in g))
+    B=[[b]*W for _ in range(H)]
+    for i in range(h):
+        for j in range(w):B[h+i][w+j]=g[i][j]
+    D=(-1,0,1);vis=set();objs=[]
+    for i in range(H):
+        for j in range(W):
+            if B[i][j]!=b and(i,j)not in vis:
+                q=[(i,j)];vis.add((i,j));s=set();col={}
                 while q:
-                    Y,X=q.pop();cells.append((Y,X))
-                    for d in range(4):
-                        A,B=Y+D[d],X+D[d+1]
-                        if 0<=A<h and 0<=B<w and g[A][B]==2 and(A,B)not in reg and(A,B)not in seen:
-                            seen.add((A,B));q.append((A,B))
-                my=min(y for y,_ in cells);mx=min(x for _,x in cells)
-                k=max(y for y,_ in cells)-my+1
-                cl.append((my,mx,k))
-    used=set()
-    for y,x,k in cl:
-        if (y,x,k)in used:continue
-        by=y-a[0]*k;bx=x-a[1]*k
-        for py,px in P:used.add((by+py*k,bx+px*k,k))
-        for i in range(H):
-            for j in range(W):
-                v=t[i][j]
-                if v:
-                    for di in range(k):
-                        for dj in range(k):
-                            Y=by+i*k+di;X=bx+j*k+dj
-                            if 0<=Y<h and 0<=X<w:out[Y][X]=v
-    return out
+                    y,x=q.pop();s.add((y,x));v=B[y][x];col[v]=col.get(v,0)+1
+                    for dy in D:
+                        for dx in D:
+                            if dy or dx:
+                                Y,X=y+dy,x+dx
+                                if 0<=Y<H and 0<=X<W and B[Y][X]!=b and(Y,X)not in vis:
+                                    vis.add((Y,X));q.append((Y,X))
+                objs.append((s,col))
+    tm=max(objs,key=lambda o:len(o[1]))
+    objs.remove(tm)
+    cnt={}
+    for _,c in objs:
+        for k,v in c.items():cnt[k]=cnt.get(k,0)+v
+    m=max(cnt,key=cnt.get)
+    s,c=tm
+    mi=min(i for i,_ in s);mj=min(j for _,j in s)
+    T=[(i-mi,j-mj,B[i][j]) for i,j in s]
+    A=[(i,j)for i,j,v in T if v==m];Z=[(i,j)for i,j,v in T if v!=m]
+    th=max(i for i,_,_ in T)+1;tw=max(j for _,j,_ in T)+1
+    C=[]
+    for k in range(1,6):
+        for y in range(H-th*k+1):
+            for x in range(W-tw*k+1):
+                ok=1;S=set()
+                for i,j in A:
+                    for dy in range(k):
+                        for dx in range(k):
+                            Y=y+i*k+dy;X=x+j*k+dx
+                            if B[Y][X]!=m:ok=0;break
+                            S.add((Y,X))
+                        if not ok:break
+                    if not ok:break
+                if not ok:continue
+                for i,j in Z:
+                    for dy in range(k):
+                        for dx in range(k):
+                            if B[y+i*k+dy][x+j*k+dx]!=b:ok=0;break
+                        if not ok:break
+                    if not ok:break
+                if not ok:continue
+                U=set()
+                for s2,_ in objs:
+                    if s2&S:U|=s2
+                if len(U)==len(S):C.append((y,x,k))
+    for y,x,k in C:
+        for i,j,v in T:
+            for dy in range(k):
+                for dx in range(k):
+                    B[y+i*k+dy][x+j*k+dx]=v
+    return [r[w:2*w]for r in B[h:2*h]]
