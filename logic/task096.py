@@ -4,6 +4,7 @@ def p(g):
     b=0
     H=len(g)
     W=len(g[0])
+    max_l=0
     for c in range(9):
         sy=sx=999
         ey=ex=-1
@@ -37,15 +38,31 @@ def p(g):
 
 
                         if cnt==cnt2:
-                            pat=(c,sy,sx,ey,ex,oy,ox,l,cnt)
+                            pat=(-l,c,sy,sx,ey,ex,oy,ox,cnt)
                             print(f"Pattern found: {c} at ({sy},{sx}) to ({ey},{ex}) with offset ({oy},{ox}) and length {l} cnt={cnt}")
                 if pat is not None:
                     pats.append(pat)
+                    max_l=max(max_l,l)
                     break
             if pat is None:
                 # TODO: Fix this!
                 raise RuntimeError(f"Patter not found!!! {c} cnt={cnt}")
 
-        # So now we have sx+ox and sy+oy and l, we can finish the pattern.
+    # So now we have sx+ox and sy+oy and l, we can finish the pattern.
+    o=create(max_l,max_l)
+    for l,c,sy,sx,ey,ex,oy,ox,cnt in sorted(pats):
+        l=-l
+        d=(max_l-l)//2
+        for by in range(l):
+            for bx in range(l):
+                y=oy+sy+by
+                if y<0:y=oy+sy+l-by-1
+                if y>=H:y=oy+sy+l-by-1
+                x=ox+sx+bx
+                if x<0:x=ox+sx+l-bx-1
+                if x>=W:x=ox+sx+l-bx-1
+                o[by+d][bx+d]=g[y][x]
+        show(o,f"output l={l}")
 
-    return g
+    show(o,"output")
+    return o
