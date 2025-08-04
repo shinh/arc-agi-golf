@@ -69,11 +69,13 @@ def compress(code, algo="zlib"):
         main += 'exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")))'
     elif algo == "lzma":
         main = "import base64,lzma\n"
-        main += "def p(g):\n"
-        main += " O={'g':g,'o':None}\n"
-        compressed = base64.b85encode(lzma.compress("\n".join(body).encode()))
-        main += ' exec(lzma.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
-        main += " return O['o']\n"
+        filters = [{
+            "id": lzma.FILTER_LZMA1,   # ふつうは LZMA1 で十分
+            "preset": 9 | lzma.PRESET_EXTREME,  # 圧縮効率優先。遅くてもいいなら EXTREME を足す
+        }]
+        #compressed = base64.b85encode(lzma.compress(code.encode(),format=lzma.FORMAT_RAW,filters=filters))
+        compressed = base64.b85encode(lzma.compress(code.encode(),format=2))
+        main += 'exec(lzma.decompress(base64.b85decode("' + compressed.decode() + '")))'
 
     if len(main) < len(code):
         print(f"Use {algo} compressed code! {len(code)} => {len(main)}")
