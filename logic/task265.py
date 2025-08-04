@@ -1,20 +1,12 @@
 def p(g):
-# h=len(g);w=len(g[0])
-# for y in range(h-1):
-#  for x in range(w-1):
-#   if g[y][x]==g[y+1][x]==g[y][x+1]==g[y+1][x+1]==0:
-#    W=2
-#    while x+W<w and g[y][x+W]==g[y+1][x+W]==0:W+=1
-#    H=2
-#    while y+H<h and all(g[y+H][xx]==0 for xx in range(x,x+W)):H+=1
-#    for Y in range(y,y+H):
-#     for X in range(x,x+W):g[Y][X]=2
-# return g
-    h=len(g);w=len(g[0])
+    h=len(g);w=len(g[0]);o=[r[:]for r in g]
     for y in range(h-1):
         for x in range(w-1):
-            if not sum(g[y+i][x+j] for i in(0,1) for j in(0,1)):
-                for i in(0,1):
-                    for j in(0,1):
-                        g[y+i][x+j]=2
-    return g
+            if g[y][x]==g[y][x+1]==g[y+1][x]==g[y+1][x+1]==0 and (y<1 or g[y-1][x] or g[y-1][x+1]) and (x<1 or g[y][x-1] or g[y+1][x-1]):
+                X=x+2
+                while X<w and g[y][X]==g[y+1][X]==0:X+=1
+                Y=y+2
+                while Y<h and all(g[Y][i]==0 for i in range(x,X)):Y+=1
+                for yy in range(y,Y):o[yy][x:X]=[2]*(X-x)
+    return o
+
