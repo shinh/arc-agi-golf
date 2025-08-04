@@ -1,21 +1,17 @@
 def p(g):
     h=len(g);w=len(g[0]);R=range
-    rows=[i for i in R(h) if 8 in g[i]]
+    rows=[i for i,r in enumerate(g) if 8 in r]
     if not rows:return [r[:]for r in g]
     B=[];b=[rows[0]]
     for i in rows[1:]:
         if i==b[-1]+1:b.append(i)
         else:B.append(b);b=[i]
     B.append(b)
-    P=[]
-    for b in B:
-        s=set()
-        for i in b:s|={(i,j)for j,v in enumerate(g[i])if v==8}
-        P.append(s)
+    P=[{(i,j)for i in b for j,v in enumerate(g[i])if v==8} for b in B]
     wdt=lambda p:max(j for _,j in p)-min(j for _,j in p)
     T=max(P,key=wdt);P.remove(T)
-    a=min(i for i,_ in T);b=min(j for _,j in T)
-    T=[(i-a,j-b)for i,j in T]
+    a=min(i for i,_ in T);b0=min(j for _,j in T)
+    T=[(i-a,j-b0)for i,j in T]
     add=set()
     for p in P:
         sc=-1;bd=bx=0;rm=max(j for _,j in p)
