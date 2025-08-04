@@ -174,7 +174,7 @@ def p(g):
  def shape(piece):
   return (height(piece), width(piece))
  def trim(grid):
-  return tuple(r[1:-1] for r in grid[1:-1])
+  return [list(r[1:-1])for r in grid[1:-1]]
  def verify_task255(I):
   x0 = mostcolor(I)
   x1 = shape(I)
@@ -243,4 +243,4 @@ def p(g):
   x64 = x60(x63)
   x65 = trim(x64)
   return x65
- return [list(r)for r in verify_task255(tuple(tuple(r) for r in g))]
+ return verify_task255(g)
