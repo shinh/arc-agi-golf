@@ -110,7 +110,7 @@ def check_task(task_id, filename, verbose):
     logic = open(filename).read()
     code = inline_create(logic)
     code = reindent(code)
-    code = squeeze(code)
+    #code = squeeze(code)
     code = python_minifier.minify(code)
     # code = core + "\n" + logic
 
