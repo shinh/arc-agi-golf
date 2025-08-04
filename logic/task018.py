@@ -1,42 +1,31 @@
 def p(g):
-    h=len(g);w=len(g[0])
-    bg=max(range(10),key=lambda c:sum(r.count(c)for r in g))
-    seen=set();objs=[]
+    h=len(g);w=len(g[0]);B=max(range(10),key=lambda c:sum(r.count(c)for r in g))
+    R=[r[:]for r in g];S=set();T=[]
+    def F(i,j):
+        if not(0<=i<h and 0<=j<w) or g[i][j]==B or(i,j)in S:return[]
+        S.add((i,j));v=g[i][j]
+        return[(i,j,v)]+F(i+1,j)+F(i-1,j)+F(i,j+1)+F(i,j-1)
     for i in range(h):
         for j in range(w):
-            if g[i][j]!=bg and(i,j)not in seen:
-                q=[(i,j)];cells=[];seen.add((i,j))
-                while q:
-                    x,y=q.pop();cells.append((x,y,g[x][y]))
-                    for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
-                        X,Y=x+dx,y+dy
-                        if 0<=X<h and 0<=Y<w and g[X][Y]!=bg and(X,Y)not in seen:
-                            seen.add((X,Y));q.append((X,Y))
-                objs.append(cells)
-    res=[r[:]for r in g];targets=[]
-    for c in objs:
-        if len({v for _,_,v in c})==4:
-            targets.append(c)
-            for i,j,_ in c:res[i][j]=bg
-    for c in targets:
-        mi=min(i for i,_,_ in c);mj=min(j for _,j,_ in c)
-        mx=max(i for i,_,_ in c);my=max(j for _,j,_ in c)
-        P=[[bg]*(my-mj+1)for _ in range(mx-mi+1)]
-        cnt={}
-        for i,j,v in c:cnt[v]=cnt.get(v,0)+1;P[i-mi][j-mj]=v
-        maj=max(cnt,key=cnt.get)
-        for f in 0,1:
-            T=[row[::-1]for row in P]if f else[row[:]for row in P]
+            if g[i][j]!=B and(i,j)not in S:
+                c=F(i,j)
+                if len({v for _,_,v in c})==4:
+                    T.append(c)
+                    for x,y,_ in c:R[x][y]=B
+    for c in T:
+        mi=min(x for x,_,_ in c);mj=min(y for _,y,_ in c);mx=max(x for x,_,_ in c);my=max(y for _,y,_ in c)
+        H=mx-mi+1;W=my-mj+1;cnt={};P=[[B]*W for _ in range(H)]
+        for x,y,v in c:cnt[v]=cnt.get(v,0)+1;P[x-mi][y-mj]=v
+        m=max(cnt,key=cnt.get)
+        for t in(P,[r[::-1]for r in P]):
             for _ in 0,1,2,3:
-                h2=len(T);w2=len(T[0])
-                core=[(a,b,T[a][b])for a in range(h2)for b in range(w2)if T[a][b]!=maj and T[a][b]!=bg]
+                h2=len(t);w2=len(t[0])
                 for i in range(h-h2+1):
                     for j in range(w-w2+1):
-                        if all(res[i+a][j+b]==v for a,b,v in core):
+                        if all(R[i+a][j+b]==u for a in range(h2)for b in range(w2)if(u:=t[a][b])not in(B,m)):
                             for a in range(h2):
-                                R=res[i+a];Pa=T[a]
                                 for b in range(w2):
-                                    v=Pa[b]
-                                    if v!=bg:R[j+b]=v
-                T=[list(x)for x in zip(*T)][::-1]
-    return res
+                                    u=t[a][b]
+                                    if u!=B:R[i+a][j+b]=u
+                t=[*zip(*t)][::-1]
+    return R
