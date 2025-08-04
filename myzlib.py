@@ -527,6 +527,9 @@ def _alias_generator(alphabet: str = string.ascii_lowercase):
         callers may provide a custom ordering to bias the output.
     """
 
+    # TODO: Why...?
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+
     index = 0
     base = len(alphabet)
     while True:
