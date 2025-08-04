@@ -33,6 +33,29 @@ def add_indent(code):
     return result
 
 
+def compress_code(code):
+    used = set()
+    syms = {}
+
+    def assign(sym):
+        if sym in syms:
+            return
+        s = sym[0]
+        while s in used:
+            s = chr((ord(s) - 97 + 1) % 26 + 97)
+        syms[sym] = s
+
+    for fn, args in re.findall(r"def ([a-z]+)\((.*)\):", code):
+        args = args.split(",")
+        assign(fn)
+        for arg in args:
+            assign(arg.strip())
+
+    for sym, s in syms.items():
+        code, _ = re.subn(sym, s, code)
+    return code
+
+
 def concat(name, defs, reqs_map, seen):
     code = ""
     for r in reqs_map[name]:
@@ -81,6 +104,7 @@ def main():
         reqs_map[name] = list(sorted(set(reqs)))
 
     num_short = 0
+    num_short_compact = 0
     for task_id in range(1, 401):
         task_id_str = f"{task_id:03d}"
         name = "verify_task" + task_id_str
@@ -110,14 +134,20 @@ def main():
         # main += b" return o\n"
         # open(f"cdsl/task{task_id_str}.py", "wb").write(main)
 
-        main = "import base64,zlib\n"
-        main += "def p(g):\n"
-        compressed = base64.b85encode(zlib.compress(body.encode()))
-        main += ' exec(base64.b85decode("' + compressed.decode() + '"))\n'
-        main += " return o"
-        open(f"cdsl/task{task_id_str}.py", "w").write(main)
+        # main = "import base64,zlib\n"
+        # main += "def p(g):\n"
+        # compressed = base64.b85encode(zlib.compress(body.encode()))
+        # main += ' exec(base64.b85decode("' + compressed.decode() + '"))\n'
+        # main += " return o"
+        # open(f"cdsl/task{task_id_str}.py", "w").write(main)
+
+        compressed = compress_code(dsl)
+        open(f"cdsl/task{task_id_str}.py", "w").write(compressed)
+        if len(compressed) < 2500:
+            num_short_compact += 1
 
     print(f"Number of tasks with short DSL: {num_short} / 400")
+    print(f"Number of tasks with short compact DSL: {num_short_compact} / 400")
 
 
 if __name__ == "__main__":
