@@ -54,15 +54,14 @@ def main():
     for name, func in defs.items():
         func, _ = re.subn(r": [A-Z]\w+", "", func)
         func, _  = re.subn(r"\) -> [A-Z]\w+", ")", func)
-        func = reindent(func)
+        func = reindent(func) + "\n"
+        # func, _ = re.subn(r"tuple", "list", func)
         defs[name] = func
 
     reqs_map = {}
     for name, func in defs.items():
         reqs = []
-        for m in re.findall(r"([A-Z_]+|[a-z]+\()", func):
-            if m.endswith("("):
-                m = m[:-1]
+        for m in re.findall(r"([A-Z_]+|[a-z]+)", func):
             if m != name:
                 reqs.append(m)
         reqs_map[name] = set(reqs)
@@ -73,7 +72,13 @@ def main():
 
         func = concat(name, defs, reqs_map, set())
 
-        open(f"dsls/task{task_id_str}.py", "w").write(func)
+        # libs, main = func.split(f"def {name}")
+        # func = libs + "\ndef p" + main
+
+        func += "def p(g):\n"
+        func += f" return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
+
+        open(f"dsl/task{task_id_str}.py", "w").write(func)
 
 
 if __name__ == "__main__":
