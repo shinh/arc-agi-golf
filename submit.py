@@ -95,14 +95,14 @@ def submit(task_id, verbose, skip_verify=False):
 
     ok, result, code = check_task(task_id, f"logic/task{task_id:03d}.py", verbose)
 
-    dsl_filename = f"dsl/task{task_id:03d}.py"
-    if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
-        ok_c, result_c, code_c = check_task(task_id, dsl_filename, verbose)
-        lc = len(code_c)
-        if ok_c and (not ok or lc < len(code_c)) and len(code_c) < 2500:
-            ok = ok_c
-            result = result_c + " (" + result + ")"
-            code = code_c
+    # dsl_filename = f"dsl/task{task_id:03d}.py"
+    # if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
+    #     ok_c, result_c, code_c = check_task(task_id, dsl_filename, verbose)
+    #     lc = len(code_c)
+    #     if ok_c and (not ok or lc < len(code_c)) and len(code_c) < 2500:
+    #         ok = ok_c
+    #         result = result_c + " (" + result + ")"
+    #         code = code_c
 
     open(f"reports/task{task_id:03d}.txt", "w").write(result)
     if code:
