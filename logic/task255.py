@@ -1,4 +1,6 @@
 def p(g):
+    # Search for the largest rectangle of background cells (value <1)
+    # and draw a thin cross of 3s through its centre.
     h=len(g);w=len(g[0]);b=0
     for t in range(h):
         m=[1]*w
@@ -12,9 +14,15 @@ def p(g):
                 else:k=0
     r=[r[:] for r in g]
     if b:
-        cy=(T+B)//2;cx=(L+R)//2
-        for c in range(L,R+1):r[cy][c]=3
-        for r0 in range(T,B+1):r[r0][cx]=3
+        ys=[(T+B)//2];xs=[(L+R)//2]
+        if (B-T)%2==1:ys+=[ys[0]+1]
+        if (R-L)%2==1:xs+=[xs[0]+1]
+        for y in ys:
+            for c in range(L,R+1):r[y][c]=3
+        for x in xs:
+            for y in range(T,B+1):r[y][x]=3
     return r
-
-# TODO: refine cross dimensions to match task description precisely
+# Current limitations: only places one-cell-thick central bars. Examples
+# indicate the band may be wider or offset, so this approach fails.
+# Idea: compute bar thickness and location from the bounding rectangle
+# instead of hardcoding the centre lines.
