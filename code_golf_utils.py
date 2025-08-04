@@ -213,6 +213,7 @@ def verify_program(task_num, examples, task_path=None):
   with open(task_path, "r") as file:
     file_content = file.read()
     if "import" in file_content:
+      #pass
       print("Error: Imports are not permitted")
       return
   with open(module_path, "w") as file:

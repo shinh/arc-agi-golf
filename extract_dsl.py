@@ -1,3 +1,4 @@
+import base64
 import re
 import zlib
 
@@ -90,12 +91,24 @@ def main():
         body = add_indent(func)
         body += f" o=[list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
 
-        main = b"# -*- coding: latin-1 -*-\n"
-        main += b"import zlib\n"
-        main += b"def p(g):\n"
-        main += b" exec(r'''" + zlib.compress(body.encode()) + b"''')\n"
-        main += b" return o\n"
-        open(f"cdsl/task{task_id_str}.py", "wb").write(main)
+        # main = b"# -*- coding: latin-1 -*-\n"
+        # main += b"import zlib\n"
+        # main += b"def p(g):\n"
+        # compressed = zlib.compress(body.encode())
+        # chunks = []
+        # for tok in compressed.split(b"\0"):
+        #     chunks.append(b"r'''" + tok + b"'''")
+        # compressed = b"+'\\0'+".join(chunks)
+        # main += b" exec(" + compressed + b")\n"
+        # main += b" return o\n"
+        # open(f"cdsl/task{task_id_str}.py", "wb").write(main)
+
+        main = "import base64,zlib\n"
+        main += "def p(g):\n"
+        compressed = base64.b85encode(zlib.compress(body.encode()))
+        main += ' exec(base64.b85decode("' + compressed.decode() + '"))\n'
+        main += " return o"
+        open(f"cdsl/task{task_id_str}.py", "w").write(main)
 
 
 if __name__ == "__main__":
