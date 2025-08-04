@@ -204,7 +204,7 @@ def show_examples(examples, bgcolor=(255, 255, 255)):
   ax.set_yticks([])
 
 
-def verify_program(task_num, examples, task_path=None):
+def verify_program(task_num, examples, task_path=None, quiet=False):
   #task_name, task_path = "task_with_imports", "/kaggle/working/task.py"
   task_name = "task_with_imports"
   if task_path is None:
@@ -233,7 +233,8 @@ def verify_program(task_num, examples, task_path=None):
   if not callable(program):
     print("Error: Function p() in task.py is not callable.")
     return
-  print()
+  if not quiet:
+    print()
   def verify(example_subset):
     right, wrong, expected = 0, 0, None
     for example in example_subset:
@@ -250,26 +251,30 @@ def verify_program(task_num, examples, task_path=None):
     return right, wrong, expected
   arc_agi_right, arc_agi_wrong, arc_agi_expected = verify(examples["train"] + examples["test"])
   arc_gen_right, arc_gen_wrong, arc_gen_expected = verify(examples["arc-gen"])
-  print(f"Results on ARC-AGI exaples: {arc_agi_right} pass, {arc_agi_wrong} fail")
-  print(f"Results on ARC-GEN exaples: {arc_gen_right} pass, {arc_gen_wrong} fail")
-  print()
+  if not quiet:
+    print(f"Results on ARC-AGI exaples: {arc_agi_right} pass, {arc_agi_wrong} fail")
+    print(f"Results on ARC-GEN exaples: {arc_gen_right} pass, {arc_gen_wrong} fail")
+    print()
   if arc_agi_wrong + arc_gen_wrong == 0:
     task_length = os.path.getsize(task_path)
-    print("Your code IS READY for submission!")
-    print("Its length appears to be " + str(task_length) + " bytes.")
-    print("Next steps:")
-    print(" * Copy it into a file named task{:03d}.py on your local machine.".format(task_num))
-    print(" * Create a zip file containing that program along with all others.")
-    print(" * Submit that zip file to the Kaggle competition so that it can be officially scored.")
+    if not quiet:
+      print("Your code IS READY for submission!")
+      print("Its length appears to be " + str(task_length) + " bytes.")
+      print("Next steps:")
+      print(" * Copy it into a file named task{:03d}.py on your local machine.".format(task_num))
+      print(" * Create a zip file containing that program along with all others.")
+      print(" * Submit that zip file to the Kaggle competition so that it can be officially scored.")
     return True
   else:
-    print("Your code IS NOT ready for submission.")
+    if not quiet:
+      print("Your code IS NOT ready for submission.")
     expected = arc_agi_expected if arc_agi_expected else arc_gen_expected
     if not expected: return
     actual = {}
     actual["input"] = expected["input"]
     actual["output"] = program(copy.deepcopy(expected["input"]))
-    print("The expected result is shown in green; your actual result is shown in red.")
+    if not quiet:
+      print("The expected result is shown in green; your actual result is shown in red.")
     show_examples([expected], bgcolor=(200, 255, 200))
     show_examples([actual], bgcolor=(255, 200, 200))
     return False

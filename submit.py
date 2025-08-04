@@ -53,7 +53,7 @@ def submit(task_id, skip_verify=False):
     if skip_verify:
         return
 
-    print("Submitting task", task_id)
+    # print("Submitting task", task_id)
 
     core = open("logic/core.py").read()
 
@@ -61,6 +61,8 @@ def submit(task_id, skip_verify=False):
         open(f"reports/task{task_id:03d}.txt", "w").write("TODO")
         return
 
+    result = "N/A"
+    ok = False
     try:
         logic = open(f"logic/task{task_id:03d}.py").read()
 
@@ -73,13 +75,19 @@ def submit(task_id, skip_verify=False):
         open(task_path, "w").write(code)
 
         examples = code_golf_utils.load_examples(int(task_id))
-        if code_golf_utils.verify_program(task_id, examples, task_path):
-            open(f"reports/task{task_id:03d}.txt", "w").write(str(2500 - len(code)))
-            return True
+        if code_golf_utils.verify_program(task_id, examples, task_path, quiet=True):
+            result = str(2500 - len(code))
+            ok = True
         else:
-            open(f"reports/task{task_id:03d}.txt", "w").write("FAIL")
+            result = "FAIL"
     except:
-        open(f"reports/task{task_id:03d}.txt", "w").write("ERROR")
+        result = "ERROR"
+
+    open(f"reports/task{task_id:03d}.txt", "w").write(result)
+
+    print(f"Task {task_id:03d}: {result}")
+
+    return ok
 
 
 def report():
