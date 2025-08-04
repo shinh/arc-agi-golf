@@ -1,13 +1,19 @@
 def p(g):
- h=len(g);w=len(g[0])
- for y in range(h):
-  for x in range(w):
-   if g[y][x]==4 and(y<1 or g[y-1][x]!=4)and(x<1 or g[y][x-1]!=4):
-    Y=y
-    while Y<h and g[Y][x]==4:Y+=1
-    X=x
-    while X<w and g[y][X]==4:X+=1
-    c=2 if (X-x)*(Y-y)>=20 else 1
-    for yy in range(y+1,Y-1):
-     for xx in range(x+1,X-1):g[yy][xx]=c
- return g
+    h=len(g);w=len(g[0]);v=set();o=[]
+    for y in range(h):
+        for x in range(w):
+            if (y,x)not in v:
+                t=g[y][x];q=[(y,x)];v.add((y,x));s={(y,x)};a=b=y;c=d=x
+                while q:
+                    i,j=q.pop();a=min(a,i);b=max(b,i);c=min(c,j);d=max(d,j)
+                    for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
+                        ny,nx=i+dy,j+dx
+                        if 0<=ny<h and 0<=nx<w and g[ny][nx]==t and (ny,nx)not in v:
+                            v.add((ny,nx));q.append((ny,nx));s.add((ny,nx))
+                if len(s)==(b-a+1)*(d-c+1):o.append((len(s),a,b,c,d))
+    if o:
+        mn=min(o)[1:];mx=max(o)[1:]
+        for (a,b,c,d),k in((mn,1),(mx,2)):
+            for y in range(a+1,b):
+                for x in range(c+1,d):g[y][x]=k
+    return g
