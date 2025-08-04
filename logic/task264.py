@@ -1,51 +1,34 @@
-from collections import Counter,deque
-
 def p(g):
-    h=len(g);w=len(g[0])
-    b,l=[x[0]for x in Counter(v for r in g for v in r).most_common(2)]
-    s=[[0]*w for _ in g];o=[]
-    for i in range(h):
-        for j in range(w):
-            c=g[i][j]
-            if s[i][j] or c in(b,l):continue
-            q=deque([(i,j)]);s[i][j]=1;cs=[]
-            while q:
-                x,y=q.popleft();cs.append((x,y))
-                for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
-                    nx,ny=x+dx,y+dy
-                    if 0<=nx<h and 0<=ny<w and not s[nx][ny] and g[nx][ny]==c:
-                        s[nx][ny]=1;q.append((nx,ny))
-            o.append((c,cs))
-    def cl(cs):
-        mi=min(i for i,_ in cs);mj=min(j for _,j in cs)
-        S={(i-mi,j-mj)for i,j in cs}
-        h=max(i for i,_ in S)+1;w=max(j for _,j in S)+1;m=(h//2,w//2)
-        def pt(f):return{(i,j)for i in range(h)for j in range(w)if f(i,j)}
-        d={'UL':pt(lambda i,j:(i==0 and j<2)or(j==0 and i<2)),
-           'UR':pt(lambda i,j:(i==0 and j>=w-2)or(j==w-1 and i<2)),
-           'LL':pt(lambda i,j:(i==h-1 and j<2)or(j==0 and i>=h-2)),
-           'LR':pt(lambda i,j:(i==h-1 and j>=w-2)or(j==w-1 and i>=h-2)),
-           'T': pt(lambda i,j:i==0 or j==m[1]),
-           'B': pt(lambda i,j:i==h-1 or j==m[1]),
-           'L': pt(lambda i,j:j==0 or i==m[0]),
-           'R': pt(lambda i,j:j==w-1 or i==m[0])}
-        for k,v in d.items():
-            if S==v:return k
-    P={'UL':(0,0),'T':(0,1),'UR':(0,2),'L':(1,0),'R':(1,2),'LL':(2,0),'B':(2,1),'LR':(2,2)}
-    out=[[l]*9 for _ in range(9)]
-    for c,cs in o:
-        o8=cl(cs);r,cx=P[o8];rr=r*3;cc=cx*3
-        if o8=='UL':out[rr][cc]=out[rr][cc+1]=out[rr+1][cc]=c
-        elif o8=='UR':out[rr][cc+1]=out[rr][cc+2]=out[rr+1][cc+2]=c
-        elif o8=='LL':out[rr+1][cc]=out[rr+2][cc]=out[rr+2][cc+1]=c
-        elif o8=='LR':out[rr+1][cc+2]=out[rr+2][cc+1]=out[rr+2][cc+2]=c
-        elif o8=='T':out[rr][cc:cc+3]=[c]*3;out[rr+1][cc+1]=c
-        elif o8=='B':out[rr+2][cc:cc+3]=[c]*3;out[rr+1][cc+1]=c
-        elif o8=='L':
-            for k in range(3):out[rr+k][cc]=c
-            out[rr+1][cc+1]=c
-        else:
-            for k in range(3):out[rr+k][cc+2]=c
-            out[rr+1][cc+1]=c
-    return out
+ h,w,f=len(g),len(g[0]),{}
+ for r in g:
+  for v in r:f[v]=f.get(v,0)+1
+ b,l=sorted(f,key=f.get)[-1:-3:-1]
+ def cl(s):
+  xs,ys=zip(*s);mi=min(xs);mj=min(ys)
+  S={(x-mi,y-mj)for x,y in s};xs,ys=zip(*S)
+  h=max(xs)+1;w=max(ys)+1
+  if len(S)==3:
+   (i,j),=({(0,0),(0,1),(1,0),(1,1)}-S)
+   return[['LR','LL'],['UR','UL']][i][j]
+  if all((0,j)in S for j in range(w)):return'T'
+  if all((h-1,j)in S for j in range(w)):return'B'
+  if all((i,0)in S for i in range(h)):return'L'
+  return'R'
+ M=dict(UL=(0,[0,1,3]),T=(1,[0,1,2,4]),UR=(2,[1,2,5]),
+    L=(3,[0,3,6,4]),R=(5,[2,5,8,4]),
+    LL=(6,[3,6,7]),B=(7,[6,7,8,4]),LR=(8,[5,7,8]))
+ out=[[l]*9 for _ in range(9)]
+ for i in range(h):
+  for j in range(w):
+   c=g[i][j]
+   if c in(b,l):continue
+   q=[(i,j)];g[i][j]=b;s=[]
+   while q:
+    x,y=q.pop();s+=[(x,y)]
+    for nx,ny in((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+     if 0<=nx<h and 0<=ny<w and g[nx][ny]==c:
+      g[nx][ny]=b;q.append((nx,ny))
+   k=M[cl(s)];r,cx=divmod(k[0],3);rr=r*3;cc=cx*3
+   for p in k[1]:dr,dc=divmod(p,3);out[rr+dr][cc+dc]=c
+ return out
 
