@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import zlib
+import zopfli.zlib
 
 import code_golf_utils
 import python_minifier
@@ -65,7 +66,12 @@ def inline_create(code):
 def compress(code, algo="zlib"):
     if algo == "zlib":
         main = "import base64,zlib\n"
-        compressed = base64.b85encode(zlib.compress(code.encode()),9)
+        z1 = zlib.compress(code.encode(),9)
+        z2 = zopfli.zlib.compress(code.encode())
+        if len(z2) < len(z1):
+            algo = "zopfli"
+            z1 = z2
+        compressed = base64.b85encode(z1)
         main += 'exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")))'
     elif algo == "lzma":
         main = "import base64,lzma\n"
