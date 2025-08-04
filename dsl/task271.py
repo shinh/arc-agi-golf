@@ -1,13 +1,15 @@
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+F = False
+ONE = 1
 T = True
 def argmax(
  container,
  compfunc
 ):
  return max(container, key=compfunc, default=None)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
 def index(
  grid,
  loc
@@ -25,20 +27,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def toobject(
- patch,
- grid
-):
- h, w = len(grid), len(grid[0])
- return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def box(
  patch
 ):
@@ -51,7 +47,6 @@ def box(
  vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
  hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
  return frozenset(vlines | hlines)
-ONE = 1
 def colorcount(
  element,
  value
@@ -59,10 +54,11 @@ def colorcount(
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def dneighbors(
- loc
+def mostcolor(
+ element
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def add(
  a,
  b
@@ -74,6 +70,10 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def ineighbors(
  loc
 ):
@@ -82,11 +82,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -120,6 +115,39 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -136,49 +164,21 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def shape(
  piece
 ):
  return (height(piece), width(piece))
-def crop(
- grid,
- start,
- dims
-):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
 def subgrid(
  patch,
  grid
 ):
  return crop(grid, ulcorner(patch), shape(patch))
-def rbind(
- function,
- fixed
+def toobject(
+ patch,
+ grid
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-F = False
+ h, w = len(grid), len(grid[0])
+ return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
 def verify_task271(I):
  x0 = asindices(I)
  x1 = box(x0)

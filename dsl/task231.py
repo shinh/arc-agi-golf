@@ -1,26 +1,34 @@
-def repeat(
- item,
- num
+ORIGIN = (0, 0)
+def asobject(
+ grid
 ):
- return tuple(item for i in range(num))
-def merge(
- containers
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def astuple(
+ a,
+ b
 ):
- return type(containers)(e for c in containers for e in c)
-def increment(
- x
-):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def double(
- n
-):
- return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
+ return (a, b)
 def crop(
  grid,
  start,
  dims
 ):
  return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def divide(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a // b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] // b[0], a[1] // b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a // b[0], a // b[1])
+ return (a[0] // b, a[1] // b)
+def double(
+ n
+):
+ return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
 def index(
  grid,
  loc
@@ -38,10 +46,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
+def lowermost(
  patch
 ):
- return tuple(map(min, zip(*toindices(patch))))
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -56,10 +76,6 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
 def normalize(
  patch
 ):
@@ -89,39 +105,23 @@ def hperiod(
   if pruned.issubset(normalized):
    return p
  return w
-ORIGIN = (0, 0)
-def astuple(
- a,
- b
+def increment(
+ x
 ):
- return (a, b)
-def divide(
- a,
- b
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def merge(
+ containers
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a // b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] // b[0], a[1] // b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a // b[0], a // b[1])
- return (a[0] // b, a[1] // b)
-def lowermost(
+ return type(containers)(e for c in containers for e in c)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
+def ulcorner(
  patch
 ):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def asobject(
- grid
-):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+ return tuple(map(min, zip(*toindices(patch))))
 def verify_task231(I):
  x0 = width(I)
  x1 = asobject(I)

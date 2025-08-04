@@ -1,8 +1,27 @@
-def repeat(
- item,
- num
+ONE = 1
+THREE = 3
+UNITY = (1, 1)
+def apply(
+ function,
+ container
 ):
- return tuple(item for i in range(num))
+ return type(container)(function(e) for e in container)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -12,6 +31,10 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
+def dedupe(
+ iterable
+):
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def toindices(
  patch
 ):
@@ -33,112 +56,6 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-UNITY = (1, 1)
-def trim(
- grid
-):
- return tuple(r[1:-1] for r in grid[1:-1])
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def dedupe(
- iterable
-):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-def initset(
- value
-):
- return frozenset({value})
-def first(
- container
-):
- return next(iter(container))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-def size(
- container
-):
- return len(container)
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def shift(
- patch,
- directions
-):
- if len(patch) == 0:
-  return patch
- di, dj = directions
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
- return frozenset((i + di, j + dj) for i, j in patch)
-THREE = 3
-def rapply(
- functions,
- value
-):
- return type(functions)(function(value) for function in functions)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def fill(
  grid,
  value,
@@ -150,6 +67,89 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def identity(
+ x
+):
+ return x
+def initset(
+ value
+):
+ return frozenset({value})
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def rapply(
+ functions,
+ value
+):
+ return type(functions)(function(value) for function in functions)
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
+def shift(
+ patch,
+ directions
+):
+ if len(patch) == 0:
+  return patch
+ di, dj = directions
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
+ return frozenset((i + di, j + dj) for i, j in patch)
+def size(
+ container
+):
+ return len(container)
+def trim(
+ grid
+):
+ return tuple(r[1:-1] for r in grid[1:-1])
 def verify_task063(I):
  x0 = trim(I)
  x1 = mostcolor(x0)

@@ -1,11 +1,11 @@
+FIVE = 5
+SEVEN = 7
 def replace(
  grid,
  replacee,
  replacer
 ):
  return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
-SEVEN = 7
-FIVE = 5
 def verify_task309(I):
  x0 = replace(I, SEVEN, FIVE)
  return x0

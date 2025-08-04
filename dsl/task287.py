@@ -1,3 +1,10 @@
+FOUR = 4
+NEG_ONE = -1
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
 def index(
  grid,
  loc
@@ -19,6 +26,15 @@ def ulcorner(
  patch
 ):
  return tuple(map(min, zip(*toindices(patch))))
+def dmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(zip(*piece))
+ a, b = ulcorner(piece)
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
+ return frozenset((j - b + a, i - a + b) for i, j in piece)
 def lrcorner(
  patch
 ):
@@ -32,27 +48,21 @@ def vmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def dmirror(
+def cmirror(
  piece
 ):
  if isinstance(piece, tuple):
-  return tuple(zip(*piece))
- a, b = ulcorner(piece)
+  return tuple(zip(*(r[::-1] for r in piece[::-1])))
+ return vmirror(dmirror(vmirror(piece)))
+def hmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return piece[::-1]
+ d = ulcorner(piece)[0] + lrcorner(piece)[0]
  if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
- return frozenset((j - b + a, i - a + b) for i, j in piece)
-def replace(
- grid,
- replacee,
- replacer
-):
- return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
-NEG_ONE = -1
-def pair(
- a,
- b
-):
- return tuple(zip(a, b))
+  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
+ return frozenset((d - i, j) for i, j in piece)
 def lbind(
  function,
  fixed
@@ -64,37 +74,27 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def cmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return tuple(zip(*(r[::-1] for r in piece[::-1])))
- return vmirror(dmirror(vmirror(piece)))
 def maximum(
  container
 ):
  return max(container, default=0)
-def apply(
- function,
- container
+def pair(
+ a,
+ b
 ):
- return type(container)(function(e) for e in container)
+ return tuple(zip(a, b))
 def papply(
  function,
  a,
  b
 ):
  return tuple(function(i, j) for i, j in zip(a, b))
-FOUR = 4
-def hmirror(
- piece
+def replace(
+ grid,
+ replacee,
+ replacer
 ):
- if isinstance(piece, tuple):
-  return piece[::-1]
- d = ulcorner(piece)[0] + lrcorner(piece)[0]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
- return frozenset((d - i, j) for i, j in piece)
+ return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
 def verify_task287(I):
  x0 = replace(I, FOUR, NEG_ONE)
  x1 = dmirror(x0)

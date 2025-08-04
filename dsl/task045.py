@@ -1,7 +1,23 @@
+ZERO = 0
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def asobject(
+ grid
+):
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
 def index(
  grid,
  loc
@@ -19,16 +35,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def recolor(
- value,
+def lowermost(
  patch
 ):
- return frozenset((value, index) for index in toindices(patch))
-def compose(
- outer,
- inner
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
 ):
- return lambda x: outer(inner(x))
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -45,93 +67,19 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def center(
  patch
 ):
  return (uppermost(patch) + height(patch) // 2, leftmost(patch) + width(patch) // 2)
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def product(
- a,
- b
-):
- return frozenset((i, j) for j in b for i in a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def toobject(
- patch,
- grid
-):
- h, w = len(grid), len(grid[0])
- return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def either(
- a,
- b
-):
- return a or b
-def paint(
- grid,
+def color(
  obj
 ):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def initset(
- value
+ return next(iter(obj))[0]
+def compose(
+ outer,
+ inner
 ):
- return frozenset({value})
-def last(
- container
-):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-def equality(
- a,
- b
-):
- return a == b
+ return lambda x: outer(inner(x))
 def connect(
  a,
  b
@@ -151,17 +99,24 @@ def connect(
  elif bi - ai == aj - bj:
   return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
  return frozenset()
-def matcher(
- function,
- target
+def decrement(
+ x
 ):
- return lambda x: function(x) == target
-ZERO = 0
-def sfilter(
- container,
- condition
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+def either(
+ a,
+ b
 ):
- return type(container)(e for e in container if condition(e))
+ return a or b
+def equality(
+ a,
+ b
+):
+ return a == b
+def first(
+ container
+):
+ return next(iter(container))
 def flip(
  b
 ):
@@ -172,19 +127,64 @@ def fork(
  b
 ):
  return lambda x: outer(a(x), b(x))
-def color(
- obj
+def initset(
+ value
 ):
- return next(iter(obj))[0]
+ return frozenset({value})
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
 def mostcolor(
  element
 ):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def asobject(
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def product(
+ a,
+ b
+):
+ return frozenset((i, j) for j in b for i in a)
+def recolor(
+ value,
+ patch
+):
+ return frozenset((value, index) for index in toindices(patch))
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def toobject(
+ patch,
  grid
 ):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+ h, w = len(grid), len(grid[0])
+ return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
 def verify_task045(I):
  x0 = mostcolor(I)
  x1 = asobject(I)

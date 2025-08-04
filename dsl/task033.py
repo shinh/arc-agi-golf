@@ -1,8 +1,15 @@
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+F = False
 T = True
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def argmin(
+ container,
+ compfunc
+):
+ return min(container, key=compfunc, default=None)
 def index(
  grid,
  loc
@@ -20,86 +27,72 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
+def lrcorner(
  patch
 ):
- return min(j for i, j in toindices(patch))
-def rightmost(
+ return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
  patch
 ):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
+ return tuple(map(min, zip(*toindices(patch))))
+def box(
  patch
 ):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
+ if len(patch) == 0:
+  return patch
+ ai, aj = ulcorner(patch)
+ bi, bj = lrcorner(patch)
+ si, sj = min(ai, bi), min(aj, bj)
+ ei, ej = max(ai, bi), max(aj, bj)
+ vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
+ hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
+ return frozenset(vlines | hlines)
+def canvas(
+ value,
+ dimensions
 ):
- return max(i for i, j in toindices(patch))
-def height(
- piece
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def color(
+ obj
 ):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
+ return next(iter(obj))[0]
+def colorcount(
+ element,
+ value
 ):
- return (height(piece), width(piece))
+ if isinstance(element, tuple):
+  return sum(row.count(value) for row in element)
+ return sum(v == value for v, _ in element)
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
-def lbind(
- function,
- fixed
+def contained(
+ value,
+ container
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+ return value in container
+def difference(
+ a,
+ b
+):
+ return type(a)(e for e in a if e not in b)
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def first(
  container
 ):
  return next(iter(container))
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def other(
- container,
- value
-):
- return first(remove(value, container))
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def dmirror(
  piece
 ):
@@ -118,54 +111,48 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def ofcolor(
- grid,
- value
+def hconcat(
+ a,
+ b
 ):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def lrcorner(
- patch
-):
- return tuple(map(max, zip(*toindices(patch))))
-def box(
- patch
-):
- if len(patch) == 0:
-  return patch
- ai, aj = ulcorner(patch)
- bi, bj = lrcorner(patch)
- si, sj = min(ai, bi), min(aj, bj)
- ei, ej = max(ai, bi), max(aj, bj)
- vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
- hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
- return frozenset(vlines | hlines)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def colorcount(
- element,
- value
-):
- if isinstance(element, tuple):
-  return sum(row.count(value) for row in element)
- return sum(v == value for v, _ in element)
-def argmin(
- container,
- compfunc
-):
- return min(container, key=compfunc, default=None)
+ return tuple(i + j for i, j in zip(a, b))
 def last(
  container
 ):
  return max(enumerate(container))[1]
-def canvas(
- value,
- dimensions
+def lbind(
+ function,
+ fixed
 ):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def leastcommon(
+ container
+):
+ return min(set(container), key=container.count)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
 def shift(
  patch,
  directions
@@ -176,20 +163,16 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
 def normalize(
  patch
 ):
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def add(
  a,
  b
@@ -201,6 +184,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -209,11 +205,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -247,16 +238,27 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def matcher(
- function,
- target
+def ofcolor(
+ grid,
+ value
 ):
- return lambda x: function(x) == target
-def sfilter(
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def other(
  container,
- condition
+ value
 ):
- return type(container)(e for e in container if condition(e))
+ return first(remove(value, container))
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
 def rbind(
  function,
  fixed
@@ -268,45 +270,43 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def hconcat(
- a,
- b
+def sfilter(
+ container,
+ condition
 ):
- return tuple(i + j for i, j in zip(a, b))
-def color(
- obj
+ return type(container)(e for e in container if condition(e))
+def lowermost(
+ patch
 ):
- return next(iter(obj))[0]
-def contained(
- value,
- container
+ return max(i for i, j in toindices(patch))
+def height(
+ piece
 ):
- return value in container
-def difference(
- a,
- b
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def rightmost(
+ patch
 ):
- return type(a)(e for e in a if e not in b)
-def leastcommon(
- container
+ return max(j for i, j in toindices(patch))
+def width(
+ piece
 ):
- return min(set(container), key=container.count)
-F = False
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def shape(
+ piece
+):
+ return (height(piece), width(piece))
 def totuple(
  container
 ):
  return tuple(container)
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task033(I):
  x0 = frontiers(I)
  x1 = totuple(x0)

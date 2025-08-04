@@ -1,24 +1,13 @@
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def pair(
- a,
- b
-):
- return tuple(zip(a, b))
-def lbind(
+FOUR = 4
+ONE = 1
+TEN = 10
+THREE = 3
+ZERO = 0
+def apply(
  function,
- fixed
+ container
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+ return type(container)(function(e) for e in container)
 def branch(
  condition,
  if_value,
@@ -31,22 +20,11 @@ def chain(
  f
 ):
  return lambda x: h(g(f(x)))
-def apply(
- function,
- container
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
-def multiply(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a * b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] * b[0], a[1] * b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a * b[0], a * b[1])
- return (a[0] * b, a[1] * b)
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -60,26 +38,90 @@ def dedupe(
  iterable
 ):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-TEN = 10
-def initset(
- value
-):
- return frozenset({value})
-def first(
- container
-):
- return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
 def equality(
  a,
  b
 ):
  return a == b
-ZERO = 0
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def identity(
+ x
+):
+ return x
+def initset(
+ value
+):
+ return frozenset({value})
+def interval(
+ start,
+ stop,
+ step
+):
+ return tuple(range(start, stop, step))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def tophalf(
+ grid
+):
+ return grid[:len(grid) // 2]
+def lefthalf(
+ grid
+):
+ return rot270(tophalf(rot90(grid)))
+def multiply(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a * b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] * b[0], a[1] * b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a * b[0], a * b[1])
+ return (a[0] * b, a[1] * b)
+def pair(
+ a,
+ b
+):
+ return tuple(zip(a, b))
+def positive(
+ x
+):
+ return x > 0
+def power(
+ function,
+ n
+):
+ if n == 1:
+  return function
+ return compose(function, power(function, n - 1))
+def rapply(
+ functions,
+ value
+):
+ return type(functions)(function(value) for function in functions)
 def rbind(
  function,
  fixed
@@ -96,52 +138,10 @@ def sfilter(
  condition
 ):
  return type(container)(e for e in container if condition(e))
-FOUR = 4
-def positive(
- x
-):
- return x > 0
 def size(
  container
 ):
  return len(container)
-def tophalf(
- grid
-):
- return grid[:len(grid) // 2]
-def interval(
- start,
- stop,
- step
-):
- return tuple(range(start, stop, step))
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def power(
- function,
- n
-):
- if n == 1:
-  return function
- return compose(function, power(function, n - 1))
-def lefthalf(
- grid
-):
- return rot270(tophalf(rot90(grid)))
-def rapply(
- functions,
- value
-):
- return type(functions)(function(value) for function in functions)
-THREE = 3
 def verify_task039(I):
  x0 = lbind(apply, last)
  x1 = compose(positive, first)

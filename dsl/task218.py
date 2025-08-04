@@ -1,3 +1,16 @@
+FOUR = 4
+ZERO = 0
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -7,6 +20,10 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
+def dedupe(
+ iterable
+):
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def toindices(
  patch
 ):
@@ -28,27 +45,30 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def compose(
- outer,
- inner
+def flip(
+ b
 ):
- return lambda x: outer(inner(x))
-def chain(
- h,
- g,
- f
+ return not b
+def identity(
+ x
 ):
- return lambda x: h(g(f(x)))
-def dedupe(
- iterable
-):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
+ return x
 def matcher(
  function,
  target
 ):
  return lambda x: function(x) == target
-ZERO = 0
+def positive(
+ x
+):
+ return x > 0
+def power(
+ function,
+ n
+):
+ if n == 1:
+  return function
+ return compose(function, power(function, n - 1))
 def rbind(
  function,
  fixed
@@ -60,35 +80,15 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
-):
- return not b
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-FOUR = 4
-def positive(
- x
-):
- return x > 0
 def size(
  container
 ):
  return len(container)
-def identity(
- x
-):
- return x
-def power(
- function,
- n
-):
- if n == 1:
-  return function
- return compose(function, power(function, n - 1))
 def verify_task218(I):
  x0 = matcher(identity, ZERO)
  x1 = compose(flip, x0)

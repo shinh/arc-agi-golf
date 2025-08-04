@@ -1,8 +1,41 @@
-def repeat(
- item,
- num
+ONE = 1
+TWO_BY_ZERO = (2, 0)
+ZERO = 0
+def apply(
+ function,
+ container
 ):
- return tuple(item for i in range(num))
+ return type(container)(function(e) for e in container)
+def asobject(
+ grid
+):
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def both(
+ a,
+ b
+):
+ return a and b
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -12,6 +45,10 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
+def dedupe(
+ iterable
+):
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def toindices(
  patch
 ):
@@ -33,61 +70,21 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def toivec(
- i
+def extract(
+ container,
+ condition
 ):
- return (i, 0)
-def combine(
- a,
- b
+ return next(e for e in container if condition(e))
+def first(
+ container
 ):
- return type(a)((*a, *b))
-def compose(
+ return next(iter(container))
+def fork(
  outer,
- inner
-):
- return lambda x: outer(inner(x))
-def hupscale(
- grid,
- factor
-):
- upscaled_grid = tuple()
- for row in grid:
-  upscaled_row = tuple()
-  for value in row:
-   upscaled_row = upscaled_row + tuple(value for num in range(factor))
-  upscaled_grid = upscaled_grid + (upscaled_row,)
- return upscaled_grid
-def pair(
  a,
  b
 ):
- return tuple(zip(a, b))
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
+ return lambda x: outer(a(x), b(x))
 def frontiers(
  grid
 ):
@@ -97,12 +94,27 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def chain(
- h,
- g,
- f
+def greater(
+ a,
+ b
 ):
- return lambda x: h(g(f(x)))
+ return a > b
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -119,36 +131,59 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def hline(
  patch
 ):
  return width(patch) == len(patch) and height(patch) == 1
-def extract(
- container,
- condition
+def hupscale(
+ grid,
+ factor
 ):
- return next(e for e in container if condition(e))
-def dedupe(
- iterable
+ upscaled_grid = tuple()
+ for row in grid:
+  upscaled_row = tuple()
+  for value in row:
+   upscaled_row = upscaled_row + tuple(value for num in range(factor))
+  upscaled_grid = upscaled_grid + (upscaled_row,)
+ return upscaled_grid
+def identity(
+ x
 ):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
+ return x
+def initset(
+ value
+):
+ return frozenset({value})
+def interval(
+ start,
+ stop,
+ step
+):
+ return tuple(range(start, stop, step))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
 def paint(
  grid,
  obj
@@ -159,19 +194,20 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def initset(
+def pair(
+ a,
+ b
+):
+ return tuple(zip(a, b))
+def positive(
+ x
+):
+ return x > 0
+def rapply(
+ functions,
  value
 ):
- return frozenset({value})
-def last(
- container
-):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-ZERO = 0
+ return type(functions)(function(value) for function in functions)
 def rbind(
  function,
  fixed
@@ -183,51 +219,16 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-TWO_BY_ZERO = (2, 0)
-def astuple(
- a,
- b
-):
- return (a, b)
-def positive(
- x
-):
- return x > 0
-def size(
- container
-):
- return len(container)
-def both(
- a,
- b
-):
- return a and b
-def greater(
- a,
- b
-):
- return a > b
-def interval(
- start,
- stop,
- step
-):
- return tuple(range(start, stop, step))
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
 def shift(
  patch,
  directions
@@ -238,15 +239,14 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def rapply(
- functions,
- value
+def size(
+ container
 ):
- return type(functions)(function(value) for function in functions)
-def asobject(
- grid
+ return len(container)
+def toivec(
+ i
 ):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+ return (i, 0)
 def verify_task297(I):
  x0 = compose(positive, size)
  x1 = rbind(sfilter, hline)

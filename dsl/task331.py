@@ -1,8 +1,30 @@
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+DOWN = (1, 0)
+EIGHT = 8
+LEFT = (0, -1)
+RIGHT = (0, 1)
 SEVEN = 7
+SIX = 6
+TWO = 2
+UP = (-1, 0)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
 def index(
  grid,
  loc
@@ -20,42 +42,6 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-LEFT = (0, -1)
-UP = (-1, 0)
-RIGHT = (0, 1)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-SIX = 6
-def shift(
- patch,
- directions
-):
- if len(patch) == 0:
-  return patch
- di, dj = directions
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
- return frozenset((i + di, j + dj) for i, j in patch)
-DOWN = (1, 0)
-EIGHT = 8
-TWO = 2
 def fill(
  grid,
  value,
@@ -67,6 +53,20 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def shift(
+ patch,
+ directions
+):
+ if len(patch) == 0:
+  return patch
+ di, dj = directions
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
+ return frozenset((i + di, j + dj) for i, j in patch)
 def verify_task331(I):
  x0 = fgpartition(I)
  x1 = merge(x0)

@@ -1,20 +1,5 @@
-ZERO = 0
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
 FIVE = 5
-def first(
- container
-):
- return next(iter(container))
+ZERO = 0
 def index(
  grid,
  loc
@@ -43,6 +28,21 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
+):
+ return next(iter(container))
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
 def remove(
  value,
  container

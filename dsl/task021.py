@@ -1,11 +1,27 @@
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def argmin(
+ container,
+ compfunc
+):
+ return min(container, key=compfunc, default=None)
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def increment(
- x
+def astuple(
+ a,
+ b
 ):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+ return (a, b)
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def index(
  grid,
  loc
@@ -23,10 +39,47 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def llcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def lrcorner(
+ patch
+):
+ return tuple(map(max, zip(*toindices(patch))))
 def ulcorner(
  patch
 ):
  return tuple(map(min, zip(*toindices(patch))))
+def urcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def corners(
+ patch
+):
+ return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
+def difference(
+ a,
+ b
+):
+ return type(a)(e for e in a if e not in b)
+def equality(
+ a,
+ b
+):
+ return a == b
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def dmirror(
  piece
 ):
@@ -45,17 +98,15 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def toobject(
- patch,
- grid
+def increment(
+ x
 ):
- h, w = len(grid), len(grid[0])
- return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
-def apply(
- function,
- container
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def mostcolor(
+ element
 ):
- return type(container)(function(e) for e in container)
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ofcolor(
  grid,
  value
@@ -67,37 +118,6 @@ def palette(
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def argmin(
- container,
- compfunc
-):
- return min(container, key=compfunc, default=None)
-def equality(
- a,
- b
-):
- return a == b
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def urcorner(
- patch
-):
- return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def llcorner(
- patch
-):
- return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def lrcorner(
- patch
-):
- return tuple(map(max, zip(*toindices(patch))))
-def corners(
- patch
-):
- return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
 def rbind(
  function,
  fixed
@@ -114,15 +134,32 @@ def sfilter(
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def astuple(
- a,
- b
-):
- return (a, b)
 def size(
  container
 ):
  return len(container)
+def toobject(
+ patch,
+ grid
+):
+ h, w = len(grid), len(grid[0])
+ return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -139,47 +176,10 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def vline(
  patch
 ):
  return height(patch) == len(patch) and width(patch) == 1
-def difference(
- a,
- b
-):
- return type(a)(e for e in a if e not in b)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task021(I):
  x0 = asindices(I)
  x1 = corners(x0)

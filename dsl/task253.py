@@ -1,16 +1,68 @@
-def toivec(
- i
+def add(
+ a,
+ b
 ):
- return (i, 0)
-def tojvec(
- j
+ if isinstance(a, int) and isinstance(b, int):
+  return a + b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] + b[0], a[1] + b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a + b[0], a + b[1])
+ return (a[0] + b, a[1] + b)
+def astuple(
+ a,
+ b
 ):
- return (0, j)
+ return (a, b)
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
+def contained(
+ value,
+ container
+):
+ return value in container
+def extract(
+ container,
+ condition
+):
+ return next(e for e in container if condition(e))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def flip(
+ b
+):
+ return not b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
 def index(
  grid,
  loc
@@ -28,30 +80,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
 def lowermost(
  patch
 ):
  return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
 def height(
  piece
 ):
@@ -60,45 +96,18 @@ def height(
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
-):
- return (height(piece), width(piece))
-def ulcorner(
+def llcorner(
  patch
 ):
- return tuple(map(min, zip(*toindices(patch))))
-def subtract(
- a,
- b
+ return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def lrcorner(
+ patch
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a - b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] - b[0], a[1] - b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a - b[0], a - b[1])
- return (a[0] - b, a[1] - b)
-def extract(
- container,
- condition
+ return tuple(map(max, zip(*toindices(patch))))
+def leftmost(
+ patch
 ):
- return next(e for e in container if condition(e))
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ return min(j for i, j in toindices(patch))
 def shift(
  patch,
  directions
@@ -115,68 +124,59 @@ def normalize(
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
-def flip(
- b
+def paint(
+ grid,
+ obj
 ):
- return not b
-def add(
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
+def width(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def shape(
+ piece
+):
+ return (height(piece), width(piece))
+def subtract(
  a,
  b
 ):
  if isinstance(a, int) and isinstance(b, int):
-  return a + b
+  return a - b
  elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] + b[0], a[1] + b[1])
+  return (a[0] - b[0], a[1] - b[1])
  elif isinstance(a, int) and isinstance(b, tuple):
-  return (a + b[0], a + b[1])
- return (a[0] + b, a[1] + b)
-def astuple(
- a,
- b
+  return (a - b[0], a - b[1])
+ return (a[0] - b, a[1] - b)
+def toivec(
+ i
 ):
- return (a, b)
+ return (i, 0)
+def tojvec(
+ j
+):
+ return (0, j)
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def urcorner(
  patch
 ):
  return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def llcorner(
- patch
-):
- return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def contained(
- value,
- container
-):
- return value in container
-def lrcorner(
- patch
-):
- return tuple(map(max, zip(*toindices(patch))))
 def verify_task253(I):
  x0 = fgpartition(I)
  x1 = fork(contained, lrcorner, toindices)

@@ -1,15 +1,11 @@
+F = False
+ONE = 1
 T = True
-def lbind(
+def apply(
  function,
- fixed
+ container
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+ return type(container)(function(e) for e in container)
 def argmax(
  container,
  compfunc
@@ -21,17 +17,10 @@ def chain(
  f
 ):
  return lambda x: h(g(f(x)))
-def apply(
- function,
- container
+def color(
+ obj
 ):
- return type(container)(function(e) for e in container)
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-ONE = 1
+ return next(iter(obj))[0]
 def colorcount(
  element,
  value
@@ -39,14 +28,31 @@ def colorcount(
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def asindices(
- grid
+def extract(
+ container,
+ condition
 ):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
+ return next(e for e in container if condition(e))
+def identity(
+ x
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ return x
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
 def add(
  a,
  b
@@ -58,6 +64,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -66,11 +85,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -104,6 +118,21 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
 def index(
  grid,
  loc
@@ -121,10 +150,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
+def lowermost(
  patch
 ):
- return tuple(map(min, zip(*toindices(patch))))
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -141,60 +182,19 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def shape(
  piece
 ):
  return (height(piece), width(piece))
-def crop(
- grid,
- start,
- dims
+def ulcorner(
+ patch
 ):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+ return tuple(map(min, zip(*toindices(patch))))
 def subgrid(
  patch,
  grid
 ):
  return crop(grid, ulcorner(patch), shape(patch))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def size(
- container
-):
- return len(container)
-def identity(
- x
-):
- return x
-def color(
- obj
-):
- return next(iter(obj))[0]
-F = False
 def totuple(
  container
 ):

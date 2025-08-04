@@ -1,27 +1,30 @@
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def numcolors(
- element
-):
- return len(palette(element))
 DOWN_LEFT = (1, -1)
-def toivec(
- i
-):
- return (i, 0)
-def combine(
+NEG_UNITY = (-1, -1)
+ONE = 1
+ORIGIN = (0, 0)
+UNITY = (1, 1)
+UP_RIGHT = (-1, 1)
+def add(
  a,
  b
 ):
- return type(a)((*a, *b))
-def tojvec(
- j
+ if isinstance(a, int) and isinstance(b, int):
+  return a + b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] + b[0], a[1] + b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a + b[0], a + b[1])
+ return (a[0] + b, a[1] + b)
+def apply(
+ function,
+ container
 ):
- return (0, j)
+ return type(container)(function(e) for e in container)
+def astuple(
+ a,
+ b
+):
+ return (a, b)
 def index(
  grid,
  loc
@@ -39,74 +42,50 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
+def lrcorner(
  patch
 ):
- return min(j for i, j in toindices(patch))
-def rightmost(
+ return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
  patch
 ):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
+ return tuple(map(min, zip(*toindices(patch))))
+def backdrop(
  patch
 ):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
+ if len(patch) == 0:
+  return frozenset({})
+ indices = toindices(patch)
+ si, sj = ulcorner(indices)
+ ei, ej = lrcorner(patch)
+ return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
+def color(
+ obj
 ):
- return max(i for i, j in toindices(patch))
-def height(
- piece
+ return next(iter(obj))[0]
+def combine(
+ a,
+ b
 ):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
-):
- return (height(piece), width(piece))
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+ return type(a)((*a, *b))
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
-def mostcommon(
- container
+def decrement(
+ x
 ):
- return max(set(container), key=container.count)
-UNITY = (1, 1)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def sfilter(
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+def extract(
  container,
  condition
 ):
- return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
+ return next(e for e in container if condition(e))
+def flip(
+ b
 ):
- return merge(sfilter(container, function))
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
+ return not b
 def dmirror(
  piece
 ):
@@ -125,53 +104,84 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
+def width(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def hline(
+ patch
+):
+ return width(patch) == len(patch) and height(patch) == 1
+def initset(
+ value
+):
+ return frozenset({value})
 def insert(
  value,
  container
 ):
  return container.union(frozenset({value}))
-def toobject(
- patch,
- grid
-):
- h, w = len(grid), len(grid[0])
- return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def hline(
- patch
-):
- return width(patch) == len(patch) and height(patch) == 1
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-ONE = 1
-NEG_UNITY = (-1, -1)
-def initset(
- value
-):
- return frozenset({value})
-def crop(
- grid,
- start,
- dims
-):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def subgrid(
- patch,
- grid
-):
- return crop(grid, ulcorner(patch), shape(patch))
 def matcher(
  function,
  target
 ):
  return lambda x: function(x) == target
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def mfilter(
+ container,
+ function
+):
+ return merge(sfilter(container, function))
+def mostcommon(
+ container
+):
+ return max(set(container), key=container.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def numcolors(
+ element
+):
+ return len(palette(element))
 def rbind(
  function,
  fixed
@@ -183,45 +193,35 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def add(
- a,
- b
+def shape(
+ piece
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a + b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] + b[0], a[1] + b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a + b[0], a + b[1])
- return (a[0] + b, a[1] + b)
-ORIGIN = (0, 0)
-def flip(
- b
+ return (height(piece), width(piece))
+def crop(
+ grid,
+ start,
+ dims
 ):
- return not b
-def astuple(
- a,
- b
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def subgrid(
+ patch,
+ grid
 ):
- return (a, b)
-def color(
- obj
+ return crop(grid, ulcorner(patch), shape(patch))
+def toivec(
+ i
 ):
- return next(iter(obj))[0]
-def lrcorner(
- patch
+ return (i, 0)
+def tojvec(
+ j
 ):
- return tuple(map(max, zip(*toindices(patch))))
-def backdrop(
- patch
+ return (0, j)
+def toobject(
+ patch,
+ grid
 ):
- if len(patch) == 0:
-  return frozenset({})
- indices = toindices(patch)
- si, sj = ulcorner(indices)
- ei, ej = lrcorner(patch)
- return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
-UP_RIGHT = (-1, 1)
+ h, w = len(grid), len(grid[0])
+ return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
 def vline(
  patch
 ):

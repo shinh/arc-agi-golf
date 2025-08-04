@@ -1,25 +1,4 @@
 THREE = 3
-def index(
- grid,
- loc
-):
- i, j = loc
- h, w = len(grid), len(grid[0])
- if not (0 <= i < h and 0 <= j < w):
-  return None
- return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def add(
  a,
  b
@@ -41,6 +20,27 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
+def index(
+ grid,
+ loc
+):
+ i, j = loc
+ h, w = len(grid), len(grid[0])
+ if not (0 <= i < h and 0 <= j < w):
+  return None
+ return grid[loc[0]][loc[1]]
+def toindices(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def upscale(
  element,
  factor

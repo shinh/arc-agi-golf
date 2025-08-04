@@ -1,4 +1,6 @@
+F = False
 T = True
+THREE = 3
 def index(
  grid,
  loc
@@ -16,16 +18,54 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def recolor(
- value,
+def lrcorner(
  patch
 ):
- return frozenset((value, index) for index in toindices(patch))
+ return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
+def backdrop(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset({})
+ indices = toindices(patch)
+ si, sj = ulcorner(indices)
+ ei, ej = lrcorner(patch)
+ return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
+def color(
+ obj
+):
+ return next(iter(obj))[0]
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def greater(
+ a,
+ b
+):
+ return a > b
 def lbind(
  function,
  fixed
@@ -37,38 +77,25 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def paint(
- grid,
- obj
+def mostcolor(
+ element
 ):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def add(
  a,
  b
@@ -80,6 +107,14 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def ineighbors(
  loc
 ):
@@ -88,11 +123,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -126,6 +156,21 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def recolor(
+ value,
+ patch
+):
+ return frozenset((value, index) for index in toindices(patch))
 def sfilter(
  container,
  condition
@@ -135,51 +180,6 @@ def size(
  container
 ):
  return len(container)
-def greater(
- a,
- b
-):
- return a > b
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def color(
- obj
-):
- return next(iter(obj))[0]
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
-def lrcorner(
- patch
-):
- return tuple(map(max, zip(*toindices(patch))))
-def backdrop(
- patch
-):
- if len(patch) == 0:
-  return frozenset({})
- indices = toindices(patch)
- si, sj = ulcorner(indices)
- ei, ej = lrcorner(patch)
- return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
-THREE = 3
-F = False
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task192(I):
  x0 = mostcolor(I)
  x1 = objects(I, T, F, T)

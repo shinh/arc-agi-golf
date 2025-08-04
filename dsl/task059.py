@@ -1,51 +1,35 @@
+ZERO = 0
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def increment(
- x
+def astuple(
+ a,
+ b
 ):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def replace(
- grid,
- replacee,
- replacer
+ return (a, b)
+def canvas(
+ value,
+ dimensions
 ):
- return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def colorcount(
+ element,
+ value
+):
+ if isinstance(element, tuple):
+  return sum(row.count(value) for row in element)
+ return sum(v == value for v, _ in element)
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
-):
- return merge(sfilter(container, function))
 def index(
  grid,
  loc
@@ -82,6 +66,32 @@ def compress(
  ri = tuple(i for i, r in enumerate(grid) if len(set(r)) == 1)
  ci = tuple(j for j, c in enumerate(dmirror(grid)) if len(set(c)) == 1)
  return tuple(tuple(v for j, v in enumerate(r) if j not in ci) for i, r in enumerate(grid) if i not in ri)
+def decrement(
+ x
+):
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+def divide(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a // b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] // b[0], a[1] // b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a // b[0], a // b[1])
+ return (a[0] // b, a[1] // b)
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def frontiers(
  grid
 ):
@@ -91,39 +101,22 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def toobject(
- patch,
- grid
+def lowermost(
+ patch
 ):
- h, w = len(grid), len(grid[0])
- return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
-def apply(
- function,
- container
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
 ):
- return type(container)(function(e) for e in container)
-def subtract(
- a,
- b
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a - b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] - b[0], a[1] - b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a - b[0], a - b[1])
- return (a[0] - b, a[1] - b)
-def multiply(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a * b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] * b[0], a[1] * b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a * b[0], a * b[1])
- return (a[0] * b, a[1] * b)
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -140,43 +133,25 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def hline(
  patch
 ):
  return width(patch) == len(patch) and height(patch) == 1
-def valmax(
- container,
- compfunc
+def increment(
+ x
 ):
- return compfunc(max(container, key=compfunc, default=0))
-def colorcount(
- element,
- value
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def lbind(
+ function,
+ fixed
 ):
- if isinstance(element, tuple):
-  return sum(row.count(value) for row in element)
- return sum(v == value for v, _ in element)
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
 def leastcolor(
  element
 ):
@@ -187,7 +162,36 @@ def matcher(
  target
 ):
  return lambda x: function(x) == target
-ZERO = 0
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def mfilter(
+ container,
+ function
+):
+ return merge(sfilter(container, function))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def multiply(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a * b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] * b[0], a[1] * b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a * b[0], a * b[1])
+ return (a[0] * b, a[1] * b)
 def rbind(
  function,
  fixed
@@ -199,31 +203,12 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def divide(
- a,
- b
+def replace(
+ grid,
+ replacee,
+ replacer
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a // b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] // b[0], a[1] // b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a // b[0], a // b[1])
- return (a[0] // b, a[1] // b)
-def astuple(
- a,
- b
-):
- return (a, b)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def size(
- container
-):
- return len(container)
+ return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
 def shift(
  patch,
  directions
@@ -234,21 +219,36 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
+def size(
+ container
+):
+ return len(container)
+def subtract(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a - b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] - b[0], a[1] - b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a - b[0], a - b[1])
+ return (a[0] - b, a[1] - b)
+def toobject(
+ patch,
+ grid
+):
+ h, w = len(grid), len(grid[0])
+ return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
+def valmax(
+ container,
+ compfunc
+):
+ return compfunc(max(container, key=compfunc, default=0))
 def vline(
  patch
 ):
  return height(patch) == len(patch) and width(patch) == 1
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task059(I):
  x0 = compress(I)
  x1 = leastcolor(x0)

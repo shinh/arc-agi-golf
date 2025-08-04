@@ -1,56 +1,18 @@
-def index(
- grid,
- loc
+ZERO = 0
+def apply(
+ function,
+ container
 ):
- i, j = loc
- h, w = len(grid), len(grid[0])
- if not (0 <= i < h and 0 <= j < w):
-  return None
- return grid[loc[0]][loc[1]]
-def toindices(
- patch
+ return type(container)(function(e) for e in container)
+def asobject(
+ grid
 ):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def leftmost(
- patch
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def canvas(
+ value,
+ dimensions
 ):
- return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
-):
- return (height(piece), width(piece))
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def lbind(
  function,
  fixed
@@ -66,16 +28,16 @@ def merge(
  containers
 ):
  return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def multiply(
  a,
  b
@@ -102,12 +64,59 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def canvas(
- value,
- dimensions
+def index(
+ grid,
+ loc
 ):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-ZERO = 0
+ i, j = loc
+ h, w = len(grid), len(grid[0])
+ if not (0 <= i < h and 0 <= j < w):
+  return None
+ return grid[loc[0]][loc[1]]
+def toindices(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
+def width(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def shape(
+ piece
+):
+ return (height(piece), width(piece))
 def shift(
  patch,
  directions
@@ -118,15 +127,6 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def asobject(
- grid
-):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
 def verify_task304(I):
  x0 = shape(I)
  x1 = multiply(x0, x0)

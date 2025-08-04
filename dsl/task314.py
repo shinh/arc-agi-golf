@@ -1,11 +1,90 @@
-def merge(
- containers
+def apply(
+ function,
+ container
 ):
- return type(containers)(e for c in containers for e in c)
-def increment(
- x
+ return type(container)(function(e) for e in container)
+def argmax(
+ container,
+ compfunc
 ):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+ return max(container, key=compfunc, default=None)
+def both(
+ a,
+ b
+):
+ return a and b
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def colorcount(
+ element,
+ value
+):
+ if isinstance(element, tuple):
+  return sum(row.count(value) for row in element)
+ return sum(v == value for v, _ in element)
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def connect(
+ a,
+ b
+):
+ ai, aj = a
+ bi, bj = b
+ si = min(ai, bi)
+ ei = max(ai, bi) + 1
+ sj = min(aj, bj)
+ ej = max(aj, bj) + 1
+ if ai == bi:
+  return frozenset((ai, j) for j in range(sj, ej))
+ elif aj == bj:
+  return frozenset((i, aj) for i in range(si, ei))
+ elif bi - ai == bj - aj:
+  return frozenset((i, j) for i, j in zip(range(si, ei), range(sj, ej)))
+ elif bi - ai == aj - bj:
+  return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
+ return frozenset()
+def divide(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a // b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] // b[0], a[1] // b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a // b[0], a // b[1])
+ return (a[0] // b, a[1] // b)
+def either(
+ a,
+ b
+):
+ return a or b
+def equality(
+ a,
+ b
+):
+ return a == b
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
 def index(
  grid,
  loc
@@ -23,56 +102,6 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def recolor(
- value,
- patch
-):
- return frozenset((value, index) for index in toindices(patch))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def product(
- a,
- b
-):
- return frozenset((i, j) for j in b for i in a)
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def argmax(
- container,
- compfunc
-):
- return max(container, key=compfunc, default=None)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
 def ulcorner(
  patch
 ):
@@ -95,34 +124,22 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def chain(
- h,
- g,
- f
+def lowermost(
+ patch
 ):
- return lambda x: h(g(f(x)))
-def multiply(
- a,
- b
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a * b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] * b[0], a[1] * b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a * b[0], a * b[1])
- return (a[0] * b, a[1] * b)
-def subtract(
- a,
- b
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a - b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] - b[0], a[1] - b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a - b[0], a - b[1])
- return (a[0] - b, a[1] - b)
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -139,38 +156,58 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def hline(
  patch
 ):
  return width(patch) == len(patch) and height(patch) == 1
+def identity(
+ x
+):
+ return x
+def increment(
+ x
+):
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def multiply(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a * b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] * b[0], a[1] * b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a * b[0], a * b[1])
+ return (a[0] * b, a[1] * b)
 def ofcolor(
  grid,
  value
 ):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def either(
- a,
- b
-):
- return a or b
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
 def paint(
  grid,
  obj
@@ -181,50 +218,17 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def colorcount(
- element,
- value
+def palette(
+ element
 ):
  if isinstance(element, tuple):
-  return sum(row.count(value) for row in element)
- return sum(v == value for v, _ in element)
-def first(
- container
-):
- return next(iter(container))
-def equality(
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def product(
  a,
  b
 ):
- return a == b
-def last(
- container
-):
- return max(enumerate(container))[1]
-def connect(
- a,
- b
-):
- ai, aj = a
- bi, bj = b
- si = min(ai, bi)
- ei = max(ai, bi) + 1
- sj = min(aj, bj)
- ej = max(aj, bj) + 1
- if ai == bi:
-  return frozenset((ai, j) for j in range(sj, ej))
- elif aj == bj:
-  return frozenset((i, aj) for i in range(si, ei))
- elif bi - ai == bj - aj:
-  return frozenset((i, j) for i, j in zip(range(si, ei), range(sj, ej)))
- elif bi - ai == aj - bj:
-  return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
- return frozenset()
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
+ return frozenset((i, j) for j in b for i in a)
 def rbind(
  function,
  fixed
@@ -236,40 +240,36 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def divide(
- a,
- b
+def recolor(
+ value,
+ patch
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a // b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] // b[0], a[1] // b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a // b[0], a // b[1])
- return (a[0] // b, a[1] // b)
+ return frozenset((value, index) for index in toindices(patch))
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
 def size(
  container
 ):
  return len(container)
-def both(
+def subtract(
  a,
  b
 ):
- return a and b
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def color(
- obj
-):
- return next(iter(obj))[0]
+ if isinstance(a, int) and isinstance(b, int):
+  return a - b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] - b[0], a[1] - b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a - b[0], a - b[1])
+ return (a[0] - b, a[1] - b)
 def vline(
  patch
 ):

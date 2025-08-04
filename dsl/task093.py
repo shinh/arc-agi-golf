@@ -1,11 +1,35 @@
-def merge(
- containers
+def apply(
+ function,
+ container
 ):
- return type(containers)(e for c in containers for e in c)
+ return type(container)(function(e) for e in container)
+def argmin(
+ container,
+ compfunc
+):
+ return min(container, key=compfunc, default=None)
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def colorcount(
+ element,
+ value
+):
+ if isinstance(element, tuple):
+  return sum(row.count(value) for row in element)
+ return sum(v == value for v, _ in element)
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -36,30 +60,60 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def lrcorner(
+def equality(
+ a,
+ b
+):
+ return a == b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def frontiers(
+ grid
+):
+ h, w = len(grid), len(grid[0])
+ row_indices = tuple(i for i, r in enumerate(grid) if len(set(r)) == 1)
+ column_indices = tuple(j for j, c in enumerate(dmirror(grid)) if len(set(c)) == 1)
+ hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
+ vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
+ return hfrontiers | vfrontiers
+def greater(
+ a,
+ b
+):
+ return a > b
+def hconcat(
+ a,
+ b
+):
+ return tuple(i + j for i, j in zip(a, b))
+def lowermost(
  patch
 ):
- return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
  piece
 ):
+ if len(piece) == 0:
+  return 0
  if isinstance(piece, tuple):
-  return tuple(row[::-1] for row in piece)
- d = ulcorner(piece)[1] + lrcorner(piece)[1]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
- return frozenset((i, d - j) for i, j in piece)
-def replace(
- grid,
- replacee,
- replacer
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def identity(
+ x
 ):
- return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
-def compose(
- outer,
- inner
+ return x
+def last(
+ container
 ):
- return lambda x: outer(inner(x))
+ return max(enumerate(container))[1]
 def lbind(
  function,
  fixed
@@ -71,31 +125,14 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def remove(
- value,
- container
+def leftmost(
+ patch
 ):
- return type(container)(e for e in container if e != value)
-def frontiers(
- grid
+ return min(j for i, j in toindices(patch))
+def merge(
+ containers
 ):
- h, w = len(grid), len(grid[0])
- row_indices = tuple(i for i, r in enumerate(grid) if len(set(r)) == 1)
- column_indices = tuple(j for j, c in enumerate(dmirror(grid)) if len(set(c)) == 1)
- hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
- vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
- return hfrontiers | vfrontiers
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
+ return type(containers)(e for c in containers for e in c)
 def multiply(
  a,
  b
@@ -112,85 +149,21 @@ def ofcolor(
  value
 ):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def leftmost(
- patch
+def order(
+ container,
+ compfunc
 ):
- return min(j for i, j in toindices(patch))
+ return tuple(sorted(container, key=compfunc))
 def palette(
  element
 ):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def argmin(
- container,
- compfunc
+def positive(
+ x
 ):
- return min(container, key=compfunc, default=None)
-def colorcount(
- element,
- value
-):
- if isinstance(element, tuple):
-  return sum(row.count(value) for row in element)
- return sum(v == value for v, _ in element)
-def last(
- container
-):
- return max(enumerate(container))[1]
-def equality(
- a,
- b
-):
- return a == b
-def order(
- container,
- compfunc
-):
- return tuple(sorted(container, key=compfunc))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
-):
- return (height(piece), width(piece))
-def crop(
- grid,
- start,
- dims
-):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def subgrid(
- patch,
- grid
-):
- return crop(grid, ulcorner(patch), shape(patch))
+ return x > 0
 def rbind(
  function,
  fixed
@@ -202,35 +175,62 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def replace(
+ grid,
+ replacee,
+ replacer
+):
+ return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def positive(
- x
+def crop(
+ grid,
+ start,
+ dims
 ):
- return x > 0
-def greater(
- a,
- b
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def width(
+ piece
 ):
- return a > b
-def identity(
- x
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def shape(
+ piece
 ):
- return x
-def hconcat(
- a,
- b
+ return (height(piece), width(piece))
+def subgrid(
+ patch,
+ grid
 ):
- return tuple(i + j for i, j in zip(a, b))
-def fork(
- outer,
- a,
- b
+ return crop(grid, ulcorner(patch), shape(patch))
+def lrcorner(
+ patch
 ):
- return lambda x: outer(a(x), b(x))
+ return tuple(map(max, zip(*toindices(patch))))
+def vmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(row[::-1] for row in piece)
+ d = ulcorner(piece)[1] + lrcorner(piece)[1]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
+ return frozenset((i, d - j) for i, j in piece)
 def verify_task093(I):
  x0 = frontiers(I)
  x1 = merge(x0)

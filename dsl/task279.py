@@ -1,23 +1,6 @@
+EIGHT = 8
+F = False
 T = True
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
-):
- return merge(sfilter(container, function))
 def index(
  grid,
  loc
@@ -35,18 +18,33 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def manhattan(
+ a,
+ b
+):
+ return min(abs(ai - bi) + abs(aj - bj) for ai, aj in toindices(a) for bi, bj in toindices(b))
+def adjacent(
+ a,
+ b
+):
+ return manhattan(a, b) == 1
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
 def leftmost(
  patch
 ):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
 def lowermost(
  patch
 ):
  return max(i for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
 def uppermost(
  patch
 ):
@@ -56,19 +54,55 @@ def bordering(
  grid
 ):
  return uppermost(patch) == 0 or leftmost(patch) == 0 or lowermost(patch) == len(grid) - 1 or rightmost(patch) == len(grid[0]) - 1
-def apply(
- function,
- container
+def colorfilter(
+ objs,
+ value
 ):
- return type(container)(function(e) for e in container)
-def asindices(
- grid
+ return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
+def compose(
+ outer,
+ inner
 ):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
+ return lambda x: outer(inner(x))
+def difference(
+ a,
+ b
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ return type(a)(e for e in a if e not in b)
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def flip(
+ b
+):
+ return not b
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def mfilter(
+ container,
+ function
+):
+ return merge(sfilter(container, function))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def add(
  a,
  b
@@ -80,6 +114,14 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def ineighbors(
  loc
 ):
@@ -88,11 +130,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -137,43 +174,6 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
-):
- return not b
-def colorfilter(
- objs,
- value
-):
- return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
-def manhattan(
- a,
- b
-):
- return min(abs(ai - bi) + abs(aj - bj) for ai, aj in toindices(a) for bi, bj in toindices(b))
-def adjacent(
- a,
- b
-):
- return manhattan(a, b) == 1
-def difference(
- a,
- b
-):
- return type(a)(e for e in a if e not in b)
-F = False
-EIGHT = 8
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task279(I):
  x0 = objects(I, T, F, F)
  x1 = mostcolor(I)

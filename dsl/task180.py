@@ -1,3 +1,83 @@
+def asobject(
+ grid
+):
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def bottomhalf(
+ grid
+):
+ return grid[len(grid) // 2 + len(grid) % 2:]
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def first(
+ container
+):
+ return next(iter(container))
+def flip(
+ b
+):
+ return not b
+def intersection(
+ a,
+ b
+):
+ return a & b
+def tophalf(
+ grid
+):
+ return grid[:len(grid) // 2]
+def lefthalf(
+ grid
+):
+ return rot270(tophalf(rot90(grid)))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def righthalf(
+ grid
+):
+ return rot270(bottomhalf(rot90(grid)))
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
 def index(
  grid,
  loc
@@ -15,6 +95,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -31,106 +127,10 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def shape(
  piece
 ):
  return (height(piece), width(piece))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def first(
- container
-):
- return next(iter(container))
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
-):
- return not b
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def bottomhalf(
- grid
-):
- return grid[len(grid) // 2 + len(grid) % 2:]
-def tophalf(
- grid
-):
- return grid[:len(grid) // 2]
-def righthalf(
- grid
-):
- return rot270(bottomhalf(rot90(grid)))
-def intersection(
- a,
- b
-):
- return a & b
-def lefthalf(
- grid
-):
- return rot270(tophalf(rot90(grid)))
-def asobject(
- grid
-):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
 def verify_task180(I):
  x0 = tophalf(I)
  x1 = lefthalf(x0)

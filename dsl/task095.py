@@ -1,45 +1,9 @@
-def leastcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return min(set(values), key=values.count)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def ineighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
- return dneighbors(loc) | ineighbors(loc)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+ONE = 1
 def difference(
  a,
  b
 ):
  return type(a)(e for e in a if e not in b)
-ONE = 1
 def index(
  grid,
  loc
@@ -68,6 +32,42 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def leastcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return min(set(values), key=values.count)
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def ineighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
+def neighbors(
+ loc
+):
+ return dneighbors(loc) | ineighbors(loc)
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
 def verify_task095(I):
  x0 = leastcolor(I)
  x1 = ofcolor(I, x0)

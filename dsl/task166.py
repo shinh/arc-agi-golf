@@ -1,17 +1,9 @@
-def palette(
- element
+TWO = 2
+def argmin(
+ container,
+ compfunc
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def partition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid)
- )
+ return min(container, key=compfunc, default=None)
 def index(
  grid,
  loc
@@ -29,14 +21,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def backdrop(
  patch
 ):
@@ -52,16 +44,6 @@ def delta(
  if len(patch) == 0:
   return frozenset({})
  return backdrop(patch) - toindices(patch)
-def size(
- container
-):
- return len(container)
-def argmin(
- container,
- compfunc
-):
- return min(container, key=compfunc, default=None)
-TWO = 2
 def fill(
  grid,
  value,
@@ -73,6 +55,24 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def partition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid)
+ )
+def size(
+ container
+):
+ return len(container)
 def verify_task166(I):
  x0 = partition(I)
  x1 = argmin(x0, size)

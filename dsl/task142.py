@@ -20,28 +20,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
- piece
+def ulcorner(
+ patch
 ):
- if isinstance(piece, tuple):
-  return tuple(row[::-1] for row in piece)
- d = ulcorner(piece)[1] + lrcorner(piece)[1]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
- return frozenset((i, d - j) for i, j in piece)
-def vconcat(
- a,
- b
-):
- return a + b
+ return tuple(map(min, zip(*toindices(patch))))
 def hmirror(
  piece
 ):
@@ -51,6 +37,20 @@ def hmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
+def vconcat(
+ a,
+ b
+):
+ return a + b
+def vmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(row[::-1] for row in piece)
+ d = ulcorner(piece)[1] + lrcorner(piece)[1]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
+ return frozenset((i, d - j) for i, j in piece)
 def verify_task142(I):
  x0 = vmirror(I)
  x1 = hconcat(I, x0)

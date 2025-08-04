@@ -1,4 +1,16 @@
 DOWN_LEFT = (1, -1)
+EIGHT = 8
+NEG_UNITY = (-1, -1)
+SEVEN = 7
+SIX = 6
+THREE = 3
+UNITY = (1, 1)
+UP_RIGHT = (-1, 1)
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
 def index(
  grid,
  loc
@@ -16,18 +28,27 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def recolor(
+def fill(
+ grid,
  value,
  patch
 ):
- return frozenset((value, index) for index in toindices(patch))
-SEVEN = 7
-def combine(
- a,
- b
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def leastcolor(
+ element
 ):
- return type(a)((*a, *b))
-UNITY = (1, 1)
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return min(set(values), key=values.count)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ofcolor(
  grid,
  value
@@ -43,13 +64,11 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-NEG_UNITY = (-1, -1)
-def leastcolor(
- element
+def recolor(
+ value,
+ patch
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return min(set(values), key=values.count)
-SIX = 6
+ return frozenset((value, index) for index in toindices(patch))
 def shift(
  patch,
  directions
@@ -60,25 +79,6 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-THREE = 3
-EIGHT = 8
-UP_RIGHT = (-1, 1)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task266(I):
  x0 = leastcolor(I)
  x1 = ofcolor(I, x0)

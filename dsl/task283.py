@@ -1,23 +1,8 @@
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+F = False
+FOUR = 4
+ONE = 1
 T = True
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
+TWO = 2
 def index(
  grid,
  loc
@@ -35,19 +20,23 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
+def backdrop(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset({})
+ indices = toindices(patch)
+ si, sj = ulcorner(indices)
+ ei, ej = lrcorner(patch)
+ return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
 def box(
  patch
 ):
@@ -60,20 +49,77 @@ def box(
  vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
  hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
  return frozenset(vlines | hlines)
-ONE = 1
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def llcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def urcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def corners(
+ patch
+):
+ return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
 def equality(
  a,
  b
 ):
  return a == b
-def asindices(
- grid
+def extract(
+ container,
+ condition
 ):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
+ return next(e for e in container if condition(e))
+def fill(
+ grid,
+ value,
+ patch
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def flip(
+ b
+):
+ return not b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
 def add(
  a,
  b
@@ -85,6 +131,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -93,11 +152,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -131,65 +185,11 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def urcorner(
- patch
-):
- return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def llcorner(
- patch
-):
- return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def corners(
- patch
-):
- return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def flip(
- b
-):
- return not b
-FOUR = 4
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def color(
- obj
-):
- return next(iter(obj))[0]
-def backdrop(
- patch
-):
- if len(patch) == 0:
-  return frozenset({})
- indices = toindices(patch)
- si, sj = ulcorner(indices)
- ei, ej = lrcorner(patch)
- return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
-F = False
-TWO = 2
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task283(I):
  x0 = objects(I, T, F, F)
  x1 = fork(equality, toindices, backdrop)

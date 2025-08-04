@@ -1,3 +1,38 @@
+ORIGIN = (0, 0)
+UNITY = (1, 1)
+def asobject(
+ grid
+):
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def halve(
+ n
+):
+ return n // 2 if isinstance(n, int) else (n[0] // 2, n[1] // 2)
 def index(
  grid,
  loc
@@ -7,34 +42,19 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
+def last(
+ container
 ):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def recolor(
- value,
- patch
-):
- return frozenset((value, index) for index in toindices(patch))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-UNITY = (1, 1)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+ return max(enumerate(container))[1]
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
@@ -50,19 +70,6 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def last(
- container
-):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def rbind(
  function,
  fixed
@@ -74,12 +81,19 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-ORIGIN = (0, 0)
-def astuple(
- a,
- b
+def toindices(
+ patch
 ):
- return (a, b)
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def recolor(
+ value,
+ patch
+):
+ return frozenset((value, index) for index in toindices(patch))
 def connect(
  a,
  b
@@ -104,16 +118,6 @@ def shoot(
  direction
 ):
  return connect(start, (start[0] + 42 * direction[0], start[1] + 42 * direction[1]))
-def halve(
- n
-):
- return n // 2 if isinstance(n, int) else (n[0] // 2, n[1] // 2)
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
 def leftmost(
  patch
 ):
@@ -130,10 +134,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def asobject(
- grid
-):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
 def verify_task295(I):
  x0 = index(I, ORIGIN)
  x1 = width(I)

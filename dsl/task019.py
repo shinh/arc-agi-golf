@@ -1,36 +1,41 @@
-def hconcat(
- a,
- b
-):
- return tuple(i + j for i, j in zip(a, b))
+EIGHT = 8
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def vconcat(
- a,
- b
-):
- return a + b
 def difference(
  a,
  b
 ):
  return type(a)(e for e in a if e not in b)
+def hconcat(
+ a,
+ b
+):
+ return tuple(i + j for i, j in zip(a, b))
+def ineighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ofcolor(
  grid,
  value
@@ -53,11 +58,6 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def underfill(
  grid,
  value,
@@ -71,11 +71,11 @@ def underfill(
    if grid_filled[i][j] == bg:
     grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def ineighbors(
- loc
+def vconcat(
+ a,
+ b
 ):
- return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-EIGHT = 8
+ return a + b
 def verify_task019(I):
  x0 = hconcat(I, I)
  x1 = vconcat(x0, x0)

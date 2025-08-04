@@ -1,12 +1,34 @@
-def merge(
- containers
+F = False
+ONE = 1
+T = True
+ZERO = 0
+def apply(
+ function,
+ container
 ):
- return type(containers)(e for c in containers for e in c)
-def repeat(
- item,
- num
+ return type(container)(function(e) for e in container)
+def argmax(
+ container,
+ compfunc
 ):
- return tuple(item for i in range(num))
+ return max(container, key=compfunc, default=None)
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
 def index(
  grid,
  loc
@@ -50,7 +72,12 @@ def vmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-T = True
+def cmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(zip(*(r[::-1] for r in piece[::-1])))
+ return vmirror(dmirror(vmirror(piece)))
 def combine(
  a,
  b
@@ -61,6 +88,51 @@ def compose(
  inner
 ):
  return lambda x: outer(inner(x))
+def contained(
+ value,
+ container
+):
+ return value in container
+def equality(
+ a,
+ b
+):
+ return a == b
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def hmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return piece[::-1]
+ d = ulcorner(piece)[0] + lrcorner(piece)[0]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
+ return frozenset((d - i, j) for i, j in piece)
+def identity(
+ x
+):
+ return x
+def initset(
+ value
+):
+ return frozenset({value})
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def last(
+ container
+):
+ return max(enumerate(container))[1]
 def lbind(
  function,
  fixed
@@ -72,73 +144,15 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def cmirror(
- piece
+def merge(
+ containers
 ):
- if isinstance(piece, tuple):
-  return tuple(zip(*(r[::-1] for r in piece[::-1])))
- return vmirror(dmirror(vmirror(piece)))
-def product(
- a,
- b
-):
- return frozenset((i, j) for j in b for i in a)
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def argmax(
- container,
- compfunc
-):
- return max(container, key=compfunc, default=None)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def chain(
- h,
- g,
- f
-):
- return lambda x: h(g(f(x)))
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def shift(
- patch,
- directions
-):
- if len(patch) == 0:
-  return patch
- di, dj = directions
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
- return frozenset((i + di, j + dj) for i, j in patch)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def normalize(
- patch
-):
- if len(patch) == 0:
-  return patch
- return shift(patch, (-uppermost(patch), -leftmost(patch)))
 def add(
  a,
  b
@@ -150,62 +164,6 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-F = False
-def occurrences(
- grid,
- obj
-):
- occurrences = set()
- normed = normalize(obj)
- h, w = len(grid), len(grid[0])
- for i in range(h):
-  for j in range(w):
-   occurs = True
-   for v, (a, b) in shift(normed, (i, j)):
-    if 0 <= a < h and 0 <= b < w:
-     if grid[a][b] != v:
-      occurs = False
-      break
-    else:
-     occurs = False
-     break
-   if occurs:
-    occurrences.add((i, j))
- return frozenset(occurrences)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-ONE = 1
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def initset(
- value
-):
- return frozenset({value})
-def first(
- container
-):
- return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
-def equality(
- a,
- b
-):
- return a == b
 def asindices(
  grid
 ):
@@ -214,6 +172,11 @@ def dneighbors(
  loc
 ):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -222,11 +185,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -260,7 +218,77 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-ZERO = 0
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def shift(
+ patch,
+ directions
+):
+ if len(patch) == 0:
+  return patch
+ di, dj = directions
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
+ return frozenset((i + di, j + dj) for i, j in patch)
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def normalize(
+ patch
+):
+ if len(patch) == 0:
+  return patch
+ return shift(patch, (-uppermost(patch), -leftmost(patch)))
+def occurrences(
+ grid,
+ obj
+):
+ occurrences = set()
+ normed = normalize(obj)
+ h, w = len(grid), len(grid[0])
+ for i in range(h):
+  for j in range(w):
+   occurs = True
+   for v, (a, b) in shift(normed, (i, j)):
+    if 0 <= a < h and 0 <= b < w:
+     if grid[a][b] != v:
+      occurs = False
+      break
+    else:
+     occurs = False
+     break
+   if occurs:
+    occurrences.add((i, j))
+ return frozenset(occurrences)
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def product(
+ a,
+ b
+):
+ return frozenset((i, j) for j in b for i in a)
+def rapply(
+ functions,
+ value
+):
+ return type(functions)(function(value) for function in functions)
 def rbind(
  function,
  fixed
@@ -272,53 +300,25 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def astuple(
- a,
- b
-):
- return (a, b)
 def size(
  container
 ):
  return len(container)
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
-def contained(
- value,
- container
-):
- return value in container
-def hmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return piece[::-1]
- d = ulcorner(piece)[0] + lrcorner(piece)[0]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
- return frozenset((d - i, j) for i, j in piece)
-def rapply(
- functions,
- value
-):
- return type(functions)(function(value) for function in functions)
 def verify_task076(I):
  x0 = objects(I, F, T, T)
  x1 = argmax(x0, size)

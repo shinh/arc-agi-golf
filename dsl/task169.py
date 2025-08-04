@@ -1,11 +1,56 @@
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
+F = False
+FOUR = 4
+ONE = 1
+T = True
+THREE = 3
+TWO = 2
+def index(
+ grid,
  loc
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ i, j = loc
+ h, w = len(grid), len(grid[0])
+ if not (0 <= i < h and 0 <= j < w):
+  return None
+ return grid[loc[0]][loc[1]]
+def toindices(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def mfilter(
+ container,
+ function
+):
+ return merge(sfilter(container, function))
 def add(
  a,
  b
@@ -17,6 +62,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -25,11 +83,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -63,63 +116,10 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-T = True
-THREE = 3
-FOUR = 4
-F = False
 def size(
  container
 ):
  return len(container)
-ONE = 1
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
-):
- return merge(sfilter(container, function))
-TWO = 2
-def index(
- grid,
- loc
-):
- i, j = loc
- h, w = len(grid), len(grid[0])
- if not (0 <= i < h and 0 <= j < w):
-  return None
- return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task169(I):
  x0 = objects(I, T, F, T)
  x1 = matcher(size, TWO)

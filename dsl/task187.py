@@ -1,33 +1,11 @@
+F = False
+T = True
+THREE = 3
+TWO = 2
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-T = True
-def replace(
- grid,
- replacee,
- replacer
-):
- return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
-):
- return merge(sfilter(container, function))
 def index(
  grid,
  loc
@@ -49,14 +27,14 @@ def leftmost(
  patch
 ):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
 def lowermost(
  patch
 ):
  return max(i for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
 def uppermost(
  patch
 ):
@@ -66,20 +44,14 @@ def bordering(
  grid
 ):
  return uppermost(patch) == 0 or leftmost(patch) == 0 or lowermost(patch) == len(grid) - 1 or rightmost(patch) == len(grid[0]) - 1
-def toobject(
- patch,
- grid
-):
- h, w = len(grid), len(grid[0])
- return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def box(
  patch
 ):
@@ -92,10 +64,50 @@ def box(
  vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
  hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
  return frozenset(vlines | hlines)
-def dneighbors(
- loc
+def colorfilter(
+ objs,
+ value
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def flip(
+ b
+):
+ return not b
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def mfilter(
+ container,
+ function
+):
+ return merge(sfilter(container, function))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def add(
  a,
  b
@@ -107,6 +119,10 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def ineighbors(
  loc
 ):
@@ -115,11 +131,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -164,29 +175,18 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
-):
- return not b
-def colorfilter(
- objs,
- value
-):
- return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
-TWO = 2
-THREE = 3
-F = False
-def fill(
+def replace(
  grid,
- value,
- patch
+ replacee,
+ replacer
+):
+ return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
+def toobject(
+ patch,
+ grid
 ):
  h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
+ return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
 def verify_task187(I):
  x0 = objects(I, T, F, F)
  x1 = asindices(I)

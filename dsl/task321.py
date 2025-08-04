@@ -1,56 +1,7 @@
-def increment(
- x
-):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def tojvec(
- j
-):
- return (0, j)
-def double(
- n
-):
- return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def crop(
- grid,
- start,
- dims
-):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def first(
- container
-):
- return next(iter(container))
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def other(
- container,
- value
-):
- return first(remove(value, container))
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
 ONE = 1
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ORIGIN = (0, 0)
+THREE = 3
+TWO = 2
 def add(
  a,
  b
@@ -62,7 +13,26 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-ORIGIN = (0, 0)
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def decrement(
+ x
+):
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
 def divide(
  a,
  b
@@ -74,16 +44,10 @@ def divide(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a // b[0], a // b[1])
  return (a[0] // b, a[1] // b)
-def astuple(
- a,
- b
+def double(
+ n
 ):
- return (a, b)
-def intersection(
- a,
- b
-):
- return a & b
+ return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
 def index(
  grid,
  loc
@@ -101,6 +65,71 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
+):
+ return next(iter(container))
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def increment(
+ x
+):
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def intersection(
+ a,
+ b
+):
+ return a & b
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def other(
+ container,
+ value
+):
+ return first(remove(value, container))
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def tojvec(
+ j
+):
+ return (0, j)
 def leftmost(
  patch
 ):
@@ -117,35 +146,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-THREE = 3
-TWO = 2
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task321(I):
  x0 = width(I)
  x1 = increment(x0)

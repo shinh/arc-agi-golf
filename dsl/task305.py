@@ -1,118 +1,57 @@
-def increment(
- x
-):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-def crop(
- grid,
- start,
- dims
-):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def hsplit(
- grid,
- n
-):
- h, w = len(grid), len(grid[0]) // n
- offset = len(grid[0]) % n != 0
- return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def minimum(
- container
-):
- return min(container, default=0)
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def product(
- a,
- b
-):
- return frozenset((i, j) for j in b for i in a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+ONE = 1
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def multiply(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a * b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] * b[0], a[1] * b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a * b[0], a * b[1])
- return (a[0] * b, a[1] * b)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-ONE = 1
 def argmin(
  container,
  compfunc
 ):
  return min(container, key=compfunc, default=None)
-def paint(
- grid,
- obj
+def asobject(
+ grid
 ):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def contained(
+ value,
+ container
+):
+ return value in container
+def divide(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a // b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] // b[0], a[1] // b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a // b[0], a // b[1])
+ return (a[0] // b, a[1] // b)
 def first(
  container
 ):
  return next(iter(container))
-def vsplit(
- grid,
- n
+def flip(
+ b
 ):
- h, w = len(grid) // n, len(grid[0])
- offset = len(grid) % n != 0
- return tuple(crop(grid, (h * i + i * offset, 0), (h, w)) for i in range(n))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
+ return not b
 def index(
  grid,
  loc
@@ -130,6 +69,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -144,10 +99,6 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
 def normalize(
  patch
 ):
@@ -177,6 +128,94 @@ def hperiod(
   if pruned.issubset(normalized):
    return p
  return w
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def hsplit(
+ grid,
+ n
+):
+ h, w = len(grid), len(grid[0]) // n
+ offset = len(grid[0]) % n != 0
+ return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
+def increment(
+ x
+):
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def interval(
+ start,
+ stop,
+ step
+):
+ return tuple(range(start, stop, step))
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def minimum(
+ container
+):
+ return min(container, default=0)
+def multiply(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a * b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] * b[0], a[1] * b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a * b[0], a * b[1])
+ return (a[0] * b, a[1] * b)
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def product(
+ a,
+ b
+):
+ return frozenset((i, j) for j in b for i in a)
 def rbind(
  function,
  fixed
@@ -188,53 +227,11 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
+def sfilter(
+ container,
+ condition
 ):
- return not b
-def divide(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a // b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] // b[0], a[1] // b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a // b[0], a // b[1])
- return (a[0] // b, a[1] // b)
-def astuple(
- a,
- b
-):
- return (a, b)
-def interval(
- start,
- stop,
- step
-):
- return tuple(range(start, stop, step))
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
-def contained(
- value,
- container
-):
- return value in container
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
+ return type(container)(e for e in container if condition(e))
 def vperiod(
  obj
 ):
@@ -246,10 +243,13 @@ def vperiod(
   if pruned.issubset(normalized):
    return p
  return h
-def asobject(
- grid
+def vsplit(
+ grid,
+ n
 ):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+ h, w = len(grid) // n, len(grid[0])
+ offset = len(grid) % n != 0
+ return tuple(crop(grid, (h * i + i * offset, 0), (h, w)) for i in range(n))
 def verify_task305(I):
  x0 = height(I)
  x1 = vsplit(I, x0)

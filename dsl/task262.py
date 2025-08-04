@@ -1,34 +1,63 @@
-def repeat(
- item,
- num
+FOUR = 4
+THREE = 3
+TWO = 2
+def add(
+ a,
+ b
 ):
- return tuple(item for i in range(num))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+ if isinstance(a, int) and isinstance(b, int):
+  return a + b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] + b[0], a[1] + b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a + b[0], a + b[1])
+ return (a[0] + b, a[1] + b)
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
-def ofcolor(
- grid,
- value
+def both(
+ a,
+ b
 ):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+ return a and b
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def divide(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a // b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] // b[0], a[1] // b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a // b[0], a // b[1])
+ return (a[0] // b, a[1] // b)
+def either(
+ a,
+ b
+):
+ return a or b
+def flip(
+ b
+):
+ return not b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def greater(
+ a,
+ b
+):
+ return a > b
 def index(
  grid,
  loc
@@ -46,6 +75,38 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def leastcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return min(set(values), key=values.count)
 def leftmost(
  patch
 ):
@@ -61,11 +122,27 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def either(
- a,
- b
+def ofcolor(
+ grid,
+ value
 ):
- return a or b
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
 def crop(
  grid,
  start,
@@ -79,65 +156,6 @@ def vsplit(
  h, w = len(grid) // n, len(grid[0])
  offset = len(grid) % n != 0
  return tuple(crop(grid, (h * i + i * offset, 0), (h, w)) for i in range(n))
-def leastcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return min(set(values), key=values.count)
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
-):
- return not b
-def add(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a + b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] + b[0], a[1] + b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a + b[0], a + b[1])
- return (a[0] + b, a[1] + b)
-def divide(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a // b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] // b[0], a[1] // b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a // b[0], a // b[1])
- return (a[0] // b, a[1] // b)
-FOUR = 4
-def both(
- a,
- b
-):
- return a and b
-def greater(
- a,
- b
-):
- return a > b
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
 def rightmost(
  patch
 ):
@@ -150,24 +168,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-THREE = 3
-TWO = 2
 def verify_task262(I):
  x0 = leastcolor(I)
  x1 = height(I)

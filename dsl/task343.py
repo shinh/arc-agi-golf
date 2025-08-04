@@ -1,41 +1,30 @@
-def increment(
- x
-):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-def tojvec(
- j
-):
- return (0, j)
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def pair(
- a,
- b
-):
- return tuple(zip(a, b))
-def lbind(
+ONE = 1
+ZERO = 0
+def apply(
  function,
- fixed
+ container
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+ return type(container)(function(e) for e in container)
+def asobject(
+ grid
+):
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def both(
+ a,
+ b
+):
+ return a and b
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
 def index(
  grid,
  loc
@@ -57,6 +46,15 @@ def ulcorner(
  patch
 ):
  return tuple(map(min, zip(*toindices(patch))))
+def dmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(zip(*piece))
+ a, b = ulcorner(piece)
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
+ return frozenset((j - b + a, i - a + b) for i, j in piece)
 def lrcorner(
  patch
 ):
@@ -70,99 +68,49 @@ def vmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def dmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return tuple(zip(*piece))
- a, b = ulcorner(piece)
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
- return frozenset((j - b + a, i - a + b) for i, j in piece)
 def cmirror(
  piece
 ):
  if isinstance(piece, tuple):
   return tuple(zip(*(r[::-1] for r in piece[::-1])))
  return vmirror(dmirror(vmirror(piece)))
-def merge(
- containers
+def combine(
+ a,
+ b
 ):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
+ return lambda x: outer(inner(x))
+def decrement(
+ x
 ):
- return merge(apply(function, container))
-def chain(
- h,
- g,
- f
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+def dedupe(
+ iterable
 ):
- return lambda x: h(g(f(x)))
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def extract(
  container,
  condition
 ):
  return next(e for e in container if condition(e))
-def dedupe(
- iterable
-):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def initset(
- value
-):
- return frozenset({value})
 def first(
  container
 ):
  return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-ZERO = 0
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
 def flip(
  b
 ):
  return not b
-def sfilter(
- container,
- condition
+def fork(
+ outer,
+ a,
+ b
 ):
- return type(container)(e for e in container if condition(e))
+ return lambda x: outer(a(x), b(x))
 def leftmost(
  patch
 ):
@@ -210,45 +158,97 @@ def hperiod(
   if pruned.issubset(normalized):
    return p
  return w
-def astuple(
- a,
- b
+def identity(
+ x
 ):
- return (a, b)
-def size(
- container
+ return x
+def increment(
+ x
 ):
- return len(container)
-def both(
- a,
- b
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def initset(
+ value
 ):
- return a and b
+ return frozenset({value})
 def interval(
  start,
  stop,
  step
 ):
  return tuple(range(start, stop, step))
-def identity(
- x
+def last(
+ container
 ):
- return x
-def fork(
- outer,
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def pair(
  a,
  b
 ):
- return lambda x: outer(a(x), b(x))
+ return tuple(zip(a, b))
 def rapply(
  functions,
  value
 ):
  return type(functions)(function(value) for function in functions)
-def asobject(
- grid
+def rbind(
+ function,
+ fixed
 ):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
+def tojvec(
+ j
+):
+ return (0, j)
 def verify_task343(I):
  x0 = astuple(identity, rot90)
  x1 = astuple(rot180, rot270)

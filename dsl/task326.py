@@ -1,5 +1,5 @@
-TWO_BY_TWO = (2, 2)
 ORIGIN = (0, 0)
+TWO_BY_TWO = (2, 2)
 def crop(
  grid,
  start,

@@ -1,71 +1,29 @@
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def lbind(
+TWO = 2
+def apply(
  function,
- fixed
+ container
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def product(
- a,
- b
-):
- return frozenset((i, j) for j in b for i in a)
+ return type(container)(function(e) for e in container)
 def argmax(
  container,
  compfunc
 ):
  return max(container, key=compfunc, default=None)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
 def chain(
  h,
  g,
  f
 ):
  return lambda x: h(g(f(x)))
-def apply(
- function,
- container
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def either(
- a,
- b
-):
- return a or b
-def initset(
- value
-):
- return frozenset({value})
-def last(
- container
-):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-def leastcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return min(set(values), key=values.count)
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -83,14 +41,6 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
-def urcorner(
- patch
-):
- return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
 def llcorner(
  patch
 ):
@@ -99,41 +49,28 @@ def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
+def urcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
 def corners(
  patch
 ):
  return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def size(
- container
-):
- return len(container)
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
 def difference(
  a,
  b
 ):
  return type(a)(e for e in a if e not in b)
-TWO = 2
+def either(
+ a,
+ b
+):
+ return a or b
 def fill(
  grid,
  value,
@@ -145,6 +82,69 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def initset(
+ value
+):
+ return frozenset({value})
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def leastcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return min(set(values), key=values.count)
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def product(
+ a,
+ b
+):
+ return frozenset((i, j) for j in b for i in a)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
 def verify_task043(I):
  x0 = leastcolor(I)
  x1 = ofcolor(I, x0)

@@ -1,3 +1,95 @@
+EIGHT = 8
+FOUR = 4
+ONE = 1
+SIX = 6
+THREE = 3
+TWO = 2
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def initset(
+ value
+):
+ return frozenset({value})
+def insert(
+ value,
+ container
+):
+ return container.union(frozenset({value}))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def ineighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
+def neighbors(
+ loc
+):
+ return dneighbors(loc) | ineighbors(loc)
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
 def index(
  grid,
  loc
@@ -20,98 +112,6 @@ def recolor(
  patch
 ):
  return frozenset((value, index) for index in toindices(patch))
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def insert(
- value,
- container
-):
- return container.union(frozenset({value}))
-def chain(
- h,
- g,
- f
-):
- return lambda x: h(g(f(x)))
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-ONE = 1
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def initset(
- value
-):
- return frozenset({value})
-def first(
- container
-):
- return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
-def astuple(
- a,
- b
-):
- return (a, b)
-FOUR = 4
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def ineighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
- return dneighbors(loc) | ineighbors(loc)
-SIX = 6
-THREE = 3
-EIGHT = 8
-TWO = 2
 def verify_task220(I):
  x0 = lbind(ofcolor, I)
  x1 = lbind(mapply, neighbors)

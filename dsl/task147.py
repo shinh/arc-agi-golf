@@ -1,37 +1,50 @@
+EIGHT = 8
+F = False
+ONE = 1
+T = True
+ZERO = 0
+def colorfilter(
+ objs,
+ value
+):
+ return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
+def difference(
+ a,
+ b
+):
+ return type(a)(e for e in a if e not in b)
+def index(
+ grid,
+ loc
+):
+ i, j = loc
+ h, w = len(grid), len(grid[0])
+ if not (0 <= i < h and 0 <= j < w):
+  return None
+ return grid[loc[0]][loc[1]]
+def toindices(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def merge(
  containers
 ):
  return type(containers)(e for c in containers for e in c)
-T = True
-def first(
- container
-):
- return next(iter(container))
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def other(
- container,
- value
-):
- return first(remove(value, container))
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-ONE = 1
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def add(
  a,
  b
@@ -43,6 +56,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -51,11 +77,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -89,52 +110,31 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-ZERO = 0
+def first(
+ container
+):
+ return next(iter(container))
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def other(
+ container,
+ value
+):
+ return first(remove(value, container))
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
 def sizefilter(
  container,
  n
 ):
  return frozenset(item for item in container if len(item) == n)
-def colorfilter(
- objs,
- value
-):
- return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
-def difference(
- a,
- b
-):
- return type(a)(e for e in a if e not in b)
-F = False
-EIGHT = 8
-def index(
- grid,
- loc
-):
- i, j = loc
- h, w = len(grid), len(grid[0])
- if not (0 <= i < h and 0 <= j < w):
-  return None
- return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task147(I):
  x0 = objects(I, T, F, F)
  x1 = palette(I)

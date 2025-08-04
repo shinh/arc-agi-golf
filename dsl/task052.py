@@ -1,25 +1,22 @@
-def repeat(
- item,
- num
-):
- return tuple(item for i in range(num))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
 FIVE = 5
+ONE = 1
+ZERO = 0
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
 def branch(
  condition,
  if_value,
  else_value
 ):
  return if_value if condition else else_value
-def apply(
- function,
- container
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -33,13 +30,11 @@ def dedupe(
  iterable
 ):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
 def matcher(
  function,
  target
 ):
  return lambda x: function(x) == target
-ZERO = 0
 def rbind(
  function,
  fixed
@@ -51,6 +46,11 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
 def size(
  container
 ):

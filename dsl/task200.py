@@ -1,46 +1,65 @@
-def increment(
- x
-):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def combine(
+FIVE = 5
+FOUR = 4
+THREE = 3
+TWO = 2
+def add(
  a,
  b
 ):
- return type(a)((*a, *b))
-def tojvec(
- j
-):
- return (0, j)
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-FIVE = 5
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+ if isinstance(a, int) and isinstance(b, int):
+  return a + b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] + b[0], a[1] + b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a + b[0], a + b[1])
+ return (a[0] + b, a[1] + b)
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
+def argmin(
+ container,
+ compfunc
 ):
- return merge(apply(function, container))
+ return min(container, key=compfunc, default=None)
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
+def decrement(
+ x
+):
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
 def index(
  grid,
  loc
@@ -58,65 +77,79 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
+def fill(
+ grid,
+ value,
  patch
 ):
- return min(j for i, j in toindices(patch))
-def argmin(
- container,
- compfunc
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def lowermost(
+ patch
 ):
- return min(container, key=compfunc, default=None)
-def add(
- a,
- b
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a + b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] + b[0], a[1] + b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a + b[0], a + b[1])
- return (a[0] + b, a[1] + b)
-def astuple(
- a,
- b
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
 ):
- return (a, b)
-FOUR = 4
-def size(
- container
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def increment(
+ x
 ):
- return len(container)
-def vfrontier(
- location
-):
- return frozenset((i, location[1]) for i in range(30))
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
 def interval(
  start,
  stop,
  step
 ):
  return tuple(range(start, stop, step))
-def palette(
- element
+def lbind(
+ function,
+ fixed
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def leftmost(
+ patch
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
+ return min(j for i, j in toindices(patch))
+def merge(
+ containers
 ):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def size(
+ container
+):
+ return len(container)
+def tojvec(
+ j
+):
+ return (0, j)
+def vfrontier(
+ location
+):
+ return frozenset((i, location[1]) for i in range(30))
 def rightmost(
  patch
 ):
@@ -129,39 +162,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def color(
- obj
-):
- return next(iter(obj))[0]
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-THREE = 3
-TWO = 2
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task200(I):
  x0 = fgpartition(I)
  x1 = argmin(x0, size)

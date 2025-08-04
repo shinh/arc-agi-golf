@@ -1,8 +1,21 @@
-def repeat(
- item,
- num
+F = False
+ONE = 1
+T = True
+def apply(
+ function,
+ container
 ):
- return tuple(item for i in range(num))
+ return type(container)(function(e) for e in container)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def color(
+ obj
+):
+ return next(iter(obj))[0]
 def index(
  grid,
  loc
@@ -12,6 +25,10 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
+def dedupe(
+ iterable
+):
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def toindices(
  patch
 ):
@@ -33,44 +50,23 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-T = True
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def dedupe(
- iterable
-):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-def first(
- container
-):
- return next(iter(container))
 def equality(
  a,
  b
 ):
  return a == b
-def asindices(
- grid
+def first(
+ container
 ):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
+ return next(iter(container))
+def identity(
+ x
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ return x
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
 def add(
  a,
  b
@@ -82,6 +78,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -90,11 +99,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -133,19 +137,15 @@ def order(
  compfunc
 ):
  return tuple(sorted(container, key=compfunc))
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
 def size(
  container
 ):
  return len(container)
-def identity(
- x
-):
- return x
-def color(
- obj
-):
- return next(iter(obj))[0]
-F = False
 def verify_task178(I):
  x0 = first(I)
  x1 = dedupe(x0)

@@ -1,7 +1,26 @@
-def merge(
- containers
+EIGHT = 8
+NEG_ONE = -1
+NEG_TWO = -2
+ONE = 1
+TEN = 10
+THREE = 3
+ZERO = 0
+def apply(
+ function,
+ container
 ):
- return type(containers)(e for c in containers for e in c)
+ return type(container)(function(e) for e in container)
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
 def index(
  grid,
  loc
@@ -32,36 +51,6 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-NEG_ONE = -1
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def double(
- n
-):
- return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
 def lrcorner(
  patch
 ):
@@ -81,22 +70,111 @@ def cmirror(
  if isinstance(piece, tuple):
   return tuple(zip(*(r[::-1] for r in piece[::-1])))
  return vmirror(dmirror(vmirror(piece)))
-def apply(
- function,
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def double(
+ n
+):
+ return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
+def extract(
+ container,
+ condition
+):
+ return next(e for e in container if condition(e))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def first(
  container
 ):
- return type(container)(function(e) for e in container)
+ return next(iter(container))
+def hmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return piece[::-1]
+ d = ulcorner(piece)[0] + lrcorner(piece)[0]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
+ return frozenset((d - i, j) for i, j in piece)
+def identity(
+ x
+):
+ return x
+def initset(
+ value
+):
+ return frozenset({value})
+def interval(
+ start,
+ stop,
+ step
+):
+ return tuple(range(start, stop, step))
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def chain(
- h,
- g,
- f
+def matcher(
+ function,
+ target
 ):
- return lambda x: h(g(f(x)))
+ return lambda x: function(x) == target
 def multiply(
  a,
  b
@@ -108,13 +186,6 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-TEN = 10
-ONE = 1
 def paint(
  grid,
  obj
@@ -125,20 +196,11 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def initset(
+def rapply(
+ functions,
  value
 ):
- return frozenset({value})
-def first(
- container
-):
- return next(iter(container))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-ZERO = 0
+ return type(functions)(function(value) for function in functions)
 def rbind(
  function,
  fixed
@@ -150,40 +212,20 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def astuple(
- a,
- b
+def shift(
+ patch,
+ directions
 ):
- return (a, b)
-def interval(
- start,
- stop,
- step
+ if len(patch) == 0:
+  return patch
+ di, dj = directions
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
+ return frozenset((i + di, j + dj) for i, j in patch)
+def uppermost(
+ patch
 ):
- return tuple(range(start, stop, step))
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-def identity(
- x
-):
- return x
+ return min(i for i, j in toindices(patch))
 def leftmost(
  patch
 ):
@@ -200,48 +242,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
-NEG_TWO = -2
-def shift(
- patch,
- directions
-):
- if len(patch) == 0:
-  return patch
- di, dj = directions
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
- return frozenset((i + di, j + dj) for i, j in patch)
-def hmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return piece[::-1]
- d = ulcorner(piece)[0] + lrcorner(piece)[0]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
- return frozenset((d - i, j) for i, j in piece)
-def rapply(
- functions,
- value
-):
- return type(functions)(function(value) for function in functions)
-THREE = 3
-EIGHT = 8
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task348(I):
  x0 = astuple(identity, dmirror)
  x1 = astuple(cmirror, hmirror)

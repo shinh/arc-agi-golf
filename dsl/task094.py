@@ -1,14 +1,12 @@
+F = False
+NINE = 9
+SIX = 6
 T = True
-def combine(
+def both(
  a,
  b
 ):
- return type(a)((*a, *b))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
+ return a and b
 def index(
  grid,
  loc
@@ -26,6 +24,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -42,44 +56,35 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def center(
  patch
 ):
  return (uppermost(patch) + height(patch) // 2, leftmost(patch) + width(patch) // 2)
-def mostcolor(
- element
+def combine(
+ a,
+ b
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def underfill(
- grid,
- value,
- patch
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
 ):
- h, w = len(grid), len(grid[0])
- bg = mostcolor(grid)
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   if grid_filled[i][j] == bg:
-    grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
+ return lambda x: outer(inner(x))
+def equality(
+ a,
+ b
+):
+ return a == b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def hfrontier(
+ location
+):
+ return frozenset((location[0], j) for j in range(30))
 def lbind(
  function,
  fixed
@@ -91,34 +96,20 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-NINE = 9
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def equality(
- a,
- b
-):
- return a == b
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
 def add(
  a,
  b
@@ -130,6 +121,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -180,27 +184,23 @@ def size(
  container
 ):
  return len(container)
-def both(
- a,
- b
+def underfill(
+ grid,
+ value,
+ patch
 ):
- return a and b
-def hfrontier(
- location
-):
- return frozenset((location[0], j) for j in range(30))
+ h, w = len(grid), len(grid[0])
+ bg = mostcolor(grid)
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   if grid_filled[i][j] == bg:
+    grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def vfrontier(
  location
 ):
  return frozenset((i, location[1]) for i in range(30))
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-SIX = 6
-F = False
 def verify_task094(I):
  x0 = lbind(equality, NINE)
  x1 = compose(x0, size)

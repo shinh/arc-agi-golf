@@ -1,3 +1,26 @@
+ONE = 1
+TWO = 2
+ZERO = 0
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def argmin(
+ container,
+ compfunc
+):
+ return min(container, key=compfunc, default=None)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def color(
+ obj
+):
+ return next(iter(obj))[0]
 def index(
  grid,
  loc
@@ -7,6 +30,10 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
+def dedupe(
+ iterable
+):
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def toindices(
  patch
 ):
@@ -28,14 +55,72 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def uppermost(
+def equality(
+ a,
+ b
+):
+ return a == b
+def extract(
+ container,
+ condition
+):
+ return next(e for e in container if condition(e))
+def fill(
+ grid,
+ value,
  patch
 ):
- return min(i for i, j in toindices(patch))
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def first(
  container
 ):
  return next(iter(container))
+def greater(
+ a,
+ b
+):
+ return a > b
+def lrcorner(
+ patch
+):
+ return tuple(map(max, zip(*toindices(patch))))
+def hmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return piece[::-1]
+ d = ulcorner(piece)[0] + lrcorner(piece)[0]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
+ return frozenset((d - i, j) for i, j in piece)
+def identity(
+ x
+):
+ return x
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def order(
+ container,
+ compfunc
+):
+ return tuple(sorted(container, key=compfunc))
 def remove(
  value,
  container
@@ -46,90 +131,6 @@ def other(
  value
 ):
  return first(remove(value, container))
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-def dedupe(
- iterable
-):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-def argmin(
- container,
- compfunc
-):
- return min(container, key=compfunc, default=None)
-def last(
- container
-):
- return max(enumerate(container))[1]
-def equality(
- a,
- b
-):
- return a == b
-def order(
- container,
- compfunc
-):
- return tuple(sorted(container, key=compfunc))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-ZERO = 0
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-def size(
- container
-):
- return len(container)
-def greater(
- a,
- b
-):
- return a > b
-def identity(
- x
-):
- return x
-def color(
- obj
-):
- return next(iter(obj))[0]
 def palette(
  element
 ):
@@ -144,31 +145,30 @@ def partition(
    (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
   ) for value in palette(grid)
  )
-def lrcorner(
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
+def uppermost(
  patch
 ):
- return tuple(map(max, zip(*toindices(patch))))
-def hmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return piece[::-1]
- d = ulcorner(piece)[0] + lrcorner(piece)[0]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
- return frozenset((d - i, j) for i, j in piece)
-TWO = 2
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
+ return min(i for i, j in toindices(patch))
 def verify_task078(I):
  x0 = first(I)
  x1 = dedupe(x0)

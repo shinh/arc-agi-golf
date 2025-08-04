@@ -1,8 +1,3 @@
-def vconcat(
- a,
- b
-):
- return a + b
 def index(
  grid,
  loc
@@ -20,14 +15,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def hmirror(
  piece
 ):
@@ -37,6 +32,11 @@ def hmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
+def vconcat(
+ a,
+ b
+):
+ return a + b
 def verify_task210(I):
  x0 = hmirror(I)
  x1 = vconcat(I, x0)

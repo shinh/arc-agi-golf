@@ -1,31 +1,47 @@
+F = False
 T = True
-def index(
- grid,
- loc
+def apply(
+ function,
+ container
 ):
- i, j = loc
- h, w = len(grid), len(grid[0])
- if not (0 <= i < h and 0 <= j < w):
-  return None
- return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def recolor(
- value,
- patch
-):
- return frozenset((value, index) for index in toindices(patch))
+ return type(container)(function(e) for e in container)
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
+def difference(
+ a,
+ b
+):
+ return type(a)(e for e in a if e not in b)
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def extract(
+ container,
+ condition
+):
+ return next(e for e in container if condition(e))
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def identity(
+ x
+):
+ return x
+def last(
+ container
+):
+ return max(enumerate(container))[1]
 def lbind(
  function,
  fixed
@@ -37,69 +53,30 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
+def leastcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return min(set(values), key=values.count)
 def merge(
  containers
 ):
  return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
 def mostcolor(
  element
 ):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def underpaint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- bg = mostcolor(grid)
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   if grid_painted[i][j] == bg:
-    grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def subtract(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a - b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] - b[0], a[1] - b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a - b[0], a - b[1])
- return (a[0] - b, a[1] - b)
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-def last(
- container
-):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
 def add(
  a,
  b
@@ -111,6 +88,10 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
 def ineighbors(
  loc
 ):
@@ -152,16 +133,28 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def leastcolor(
- element
+def index(
+ grid,
+ loc
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return min(set(values), key=values.count)
-def matcher(
- function,
- target
+ i, j = loc
+ h, w = len(grid), len(grid[0])
+ if not (0 <= i < h and 0 <= j < w):
+  return None
+ return grid[loc[0]][loc[1]]
+def toindices(
+ patch
 ):
- return lambda x: function(x) == target
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def recolor(
+ value,
+ patch
+):
+ return frozenset((value, index) for index in toindices(patch))
 def sfilter(
  container,
  condition
@@ -191,22 +184,29 @@ def shoot(
  direction
 ):
  return connect(start, (start[0] + 42 * direction[0], start[1] + 42 * direction[1]))
-def identity(
- x
-):
- return x
-def fork(
- outer,
+def subtract(
  a,
  b
 ):
- return lambda x: outer(a(x), b(x))
-def difference(
- a,
- b
+ if isinstance(a, int) and isinstance(b, int):
+  return a - b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] - b[0], a[1] - b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a - b[0], a - b[1])
+ return (a[0] - b, a[1] - b)
+def underpaint(
+ grid,
+ obj
 ):
- return type(a)(e for e in a if e not in b)
-F = False
+ h, w = len(grid), len(grid[0])
+ bg = mostcolor(grid)
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   if grid_painted[i][j] == bg:
+    grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
 def verify_task051(I):
  x0 = objects(I, F, F, T)
  x1 = lbind(matcher, first)

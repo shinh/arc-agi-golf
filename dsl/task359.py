@@ -1,39 +1,20 @@
-def repeat(
- item,
- num
-):
- return tuple(item for i in range(num))
-def mostcommon(
+ONE = 1
+def apply(
+ function,
  container
 ):
- return max(set(container), key=container.count)
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def hupscale(
- grid,
- factor
-):
- upscaled_grid = tuple()
- for row in grid:
-  upscaled_row = tuple()
-  for value in row:
-   upscaled_row = upscaled_row + tuple(value for num in range(factor))
-  upscaled_grid = upscaled_grid + (upscaled_row,)
- return upscaled_grid
+ return type(container)(function(e) for e in container)
 def branch(
  condition,
  if_value,
  else_value
 ):
  return if_value if condition else else_value
-def apply(
- function,
- container
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -47,24 +28,11 @@ def dedupe(
  iterable
 ):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-def size(
- container
-):
- return len(container)
 def greater(
  a,
  b
 ):
  return a > b
-def vupscale(
- grid,
- factor
-):
- upscaled_grid = tuple()
- for row in grid:
-  upscaled_grid = upscaled_grid + tuple(row for num in range(factor))
- return upscaled_grid
 def toindices(
  patch
 ):
@@ -73,6 +41,54 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def hupscale(
+ grid,
+ factor
+):
+ upscaled_grid = tuple()
+ for row in grid:
+  upscaled_row = tuple()
+  for value in row:
+   upscaled_row = upscaled_row + tuple(value for num in range(factor))
+  upscaled_grid = upscaled_grid + (upscaled_row,)
+ return upscaled_grid
+def mostcommon(
+ container
+):
+ return max(set(container), key=container.count)
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
+def size(
+ container
+):
+ return len(container)
+def vupscale(
+ grid,
+ factor
+):
+ upscaled_grid = tuple()
+ for row in grid:
+  upscaled_grid = upscaled_grid + tuple(row for num in range(factor))
+ return upscaled_grid
 def leftmost(
  patch
 ):
@@ -89,22 +105,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def verify_task359(I):
  x0 = rot90(I)
  x1 = apply(mostcommon, I)

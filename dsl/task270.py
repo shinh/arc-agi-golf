@@ -1,14 +1,23 @@
+ONE = 1
 SEVEN = 7
-def combine(
+THREE = 3
+TWO = 2
+def add(
  a,
  b
 ):
- return type(a)((*a, *b))
-def compose(
- outer,
- inner
+ if isinstance(a, int) and isinstance(b, int):
+  return a + b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] + b[0], a[1] + b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a + b[0], a + b[1])
+ return (a[0] + b, a[1] + b)
+def apply(
+ function,
+ container
 ):
- return lambda x: outer(inner(x))
+ return type(container)(function(e) for e in container)
 def index(
  grid,
  loc
@@ -26,6 +35,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -42,42 +67,26 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def center(
  patch
 ):
  return (uppermost(patch) + height(patch) // 2, leftmost(patch) + width(patch) // 2)
-def lbind(
- function,
- fixed
+def chain(
+ h,
+ g,
+ f
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
-def mostcolor(
- element
+ return lambda x: h(g(f(x)))
+def combine(
+ a,
+ b
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def fill(
  grid,
  value,
@@ -89,59 +98,40 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def cover(
  grid,
  patch
 ):
  return fill(grid, mostcolor(grid), toindices(patch))
-def chain(
- h,
- g,
- f
-):
- return lambda x: h(g(f(x)))
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-ONE = 1
 def initset(
  value
 ):
  return frozenset({value})
-def rbind(
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def lbind(
  function,
  fixed
 ):
  n = function.__code__.co_argcount
  if n == 2:
-  return lambda x: function(x, fixed)
+  return lambda y: function(fixed, y)
  elif n == 3:
-  return lambda x, y: function(x, y, fixed)
+  return lambda y, z: function(fixed, y, z)
  else:
-  return lambda x, y, z: function(x, y, z, fixed)
-def add(
- a,
- b
+  return lambda y, z, a: function(fixed, y, z, a)
+def ofcolor(
+ grid,
+ value
 ):
- if isinstance(a, int) and isinstance(b, int):
-  return a + b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] + b[0], a[1] + b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a + b[0], a + b[1])
- return (a[0] + b, a[1] + b)
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
-THREE = 3
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
 def position(
  a,
  b
@@ -156,7 +146,17 @@ def position(
   return (1, 1 if ja < jb else -1)
  elif ia > ib:
   return (-1, 1 if ja < jb else -1)
-TWO = 2
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
 def verify_task270(I):
  x0 = ofcolor(I, ONE)
  x1 = center(x0)

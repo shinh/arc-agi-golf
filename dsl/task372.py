@@ -1,20 +1,33 @@
-def merge(
- containers
+TWO = 2
+def branch(
+ condition,
+ if_value,
+ else_value
 ):
- return type(containers)(e for c in containers for e in c)
-def crop(
- grid,
- start,
- dims
+ return if_value if condition else else_value
+def mostcolor(
+ element
 ):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def hsplit(
- grid,
- n
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
 ):
- h, w = len(grid), len(grid[0]) // n
- offset = len(grid[0]) % n != 0
- return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def first(
+ container
+):
+ return next(iter(container))
 def index(
  grid,
  loc
@@ -54,12 +67,22 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def branch(
- condition,
- if_value,
- else_value
+def lowermost(
+ patch
 ):
- return if_value if condition else else_value
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -76,26 +99,31 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def hline(
  patch
 ):
  return width(patch) == len(patch) and height(patch) == 1
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
+def hsplit(
+ grid,
+ n
+):
+ h, w = len(grid), len(grid[0]) // n
+ offset = len(grid[0]) % n != 0
+ return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def paint(
  grid,
  obj
@@ -106,21 +134,10 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def last(
- container
+def positive(
+ x
 ):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-def vsplit(
- grid,
- n
-):
- h, w = len(grid) // n, len(grid[0])
- offset = len(grid) % n != 0
- return tuple(crop(grid, (h * i + i * offset, 0), (h, w)) for i in range(n))
+ return x > 0
 def sfilter(
  container,
  condition
@@ -130,30 +147,13 @@ def size(
  container
 ):
  return len(container)
-def positive(
- x
+def vsplit(
+ grid,
+ n
 ):
- return x > 0
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-TWO = 2
+ h, w = len(grid) // n, len(grid[0])
+ offset = len(grid) % n != 0
+ return tuple(crop(grid, (h * i + i * offset, 0), (h, w)) for i in range(n))
 def verify_task372(I):
  x0 = frontiers(I)
  x1 = sfilter(x0, hline)

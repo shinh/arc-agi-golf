@@ -1,3 +1,10 @@
+def colorcount(
+ element,
+ value
+):
+ if isinstance(element, tuple):
+  return sum(row.count(value) for row in element)
+ return sum(v == value for v, _ in element)
 def index(
  grid,
  loc
@@ -15,22 +22,27 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
+def lowermost(
  patch
 ):
- return min(j for i, j in toindices(patch))
-def rightmost(
+ return max(i for i, j in toindices(patch))
+def uppermost(
  patch
 ):
- return max(j for i, j in toindices(patch))
-def width(
+ return min(i for i, j in toindices(patch))
+def height(
  piece
 ):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def multiply(
  a,
  b
@@ -53,26 +65,6 @@ def subtract(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a - b[0], a - b[1])
  return (a[0] - b, a[1] - b)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def add(
  a,
  b
@@ -94,6 +86,10 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def upscale(
  element,
  factor
@@ -118,18 +114,22 @@ def upscale(
     for jo in range(factor):
      upscaled_obj.add((value, (i * factor + io, j * factor + jo)))
   return shift(frozenset(upscaled_obj), (di_inv, dj_inv))
-def colorcount(
- element,
- value
+def leftmost(
+ patch
 ):
- if isinstance(element, tuple):
-  return sum(row.count(value) for row in element)
- return sum(v == value for v, _ in element)
-def mostcolor(
- element
+ return min(j for i, j in toindices(patch))
+def rightmost(
+ patch
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
+ return max(j for i, j in toindices(patch))
+def width(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
 def verify_task269(I):
  x0 = mostcolor(I)
  x1 = colorcount(I, x0)

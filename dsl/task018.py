@@ -1,17 +1,17 @@
-def palette(
- element
+F = False
+FOUR = 4
+T = True
+def apply(
+ function,
+ container
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def numcolors(
- element
+ return type(container)(function(e) for e in container)
+def chain(
+ h,
+ g,
+ f
 ):
- return len(palette(element))
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+ return lambda x: h(g(f(x)))
 def index(
  grid,
  loc
@@ -33,6 +33,15 @@ def ulcorner(
  patch
 ):
  return tuple(map(min, zip(*toindices(patch))))
+def dmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(zip(*piece))
+ a, b = ulcorner(piece)
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
+ return frozenset((j - b + a, i - a + b) for i, j in piece)
 def lrcorner(
  patch
 ):
@@ -46,53 +55,17 @@ def vmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def dmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return tuple(zip(*piece))
- a, b = ulcorner(piece)
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
- return frozenset((j - b + a, i - a + b) for i, j in piece)
-T = True
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
 def cmirror(
  piece
 ):
  if isinstance(piece, tuple):
   return tuple(zip(*(r[::-1] for r in piece[::-1])))
  return vmirror(dmirror(vmirror(piece)))
-def apply(
- function,
- container
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
+ return lambda x: outer(inner(x))
 def fill(
  grid,
  value,
@@ -104,17 +77,72 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def cover(
  grid,
  patch
 ):
  return fill(grid, mostcolor(grid), toindices(patch))
-def chain(
- h,
- g,
- f
+def first(
+ container
 ):
- return lambda x: h(g(f(x)))
+ return next(iter(container))
+def flip(
+ b
+):
+ return not b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def hmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return piece[::-1]
+ d = ulcorner(piece)[0] + lrcorner(piece)[0]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
+ return frozenset((d - i, j) for i, j in piece)
+def identity(
+ x
+):
+ return x
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
 def leftmost(
  patch
 ):
@@ -139,6 +167,16 @@ def normalize(
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def numcolors(
+ element
+):
+ return len(palette(element))
 def add(
  a,
  b
@@ -150,42 +188,6 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-F = False
-def occurrences(
- grid,
- obj
-):
- occurrences = set()
- normed = normalize(obj)
- h, w = len(grid), len(grid[0])
- for i in range(h):
-  for j in range(w):
-   occurs = True
-   for v, (a, b) in shift(normed, (i, j)):
-    if 0 <= a < h and 0 <= b < w:
-     if grid[a][b] != v:
-      occurs = False
-      break
-    else:
-     occurs = False
-     break
-   if occurs:
-    occurrences.add((i, j))
- return frozenset(occurrences)
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def first(
- container
-):
- return next(iter(container))
 def asindices(
  grid
 ):
@@ -235,20 +237,37 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def matcher(
- function,
- target
+def occurrences(
+ grid,
+ obj
 ):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
+ occurrences = set()
+ normed = normalize(obj)
+ h, w = len(grid), len(grid[0])
+ for i in range(h):
+  for j in range(w):
+   occurs = True
+   for v, (a, b) in shift(normed, (i, j)):
+    if 0 <= a < h and 0 <= b < w:
+     if grid[a][b] != v:
+      occurs = False
+      break
+    else:
+     occurs = False
+     break
+   if occurs:
+    occurrences.add((i, j))
+ return frozenset(occurrences)
+def paint(
+ grid,
+ obj
 ):
- return type(container)(e for e in container if condition(e))
-def flip(
- b
-):
- return not b
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
 def rbind(
  function,
  fixed
@@ -260,30 +279,11 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-FOUR = 4
-def identity(
- x
+def sfilter(
+ container,
+ condition
 ):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
-def hmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return piece[::-1]
- d = ulcorner(piece)[0] + lrcorner(piece)[0]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
- return frozenset((d - i, j) for i, j in piece)
+ return type(container)(e for e in container if condition(e))
 def verify_task018(I):
  x0 = objects(I, F, F, T)
  x1 = matcher(numcolors, FOUR)

@@ -1,23 +1,37 @@
+def both(
+ a,
+ b
+):
+ return a and b
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
+def color(
+ obj
+):
+ return next(iter(obj))[0]
 def compose(
  outer,
  inner
 ):
  return lambda x: outer(inner(x))
+def equality(
+ a,
+ b
+):
+ return a == b
 def even(
  n
 ):
  return n % 2 == 0
-def lbind(
- function,
- fixed
+def extract(
+ container,
+ condition
 ):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+ return next(e for e in container if condition(e))
 def index(
  grid,
  loc
@@ -35,35 +49,80 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
+):
+ return next(iter(container))
+def flip(
+ b
+):
+ return not b
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
 def uppermost(
  patch
 ):
  return min(i for i, j in toindices(patch))
-def remove(
- value,
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def last(
  container
 ):
- return type(container)(e for e in container if e != value)
-def merge(
- containers
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
 ):
- return type(containers)(e for c in containers for e in c)
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def chain(
- h,
- g,
- f
-):
- return lambda x: h(g(f(x)))
 def multiply(
  a,
  b
@@ -75,90 +134,6 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def subtract(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a - b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] - b[0], a[1] - b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a - b[0], a - b[1])
- return (a[0] - b, a[1] - b)
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
-def first(
- container
-):
- return next(iter(container))
-def equality(
- a,
- b
-):
- return a == b
-def last(
- container
-):
- return max(enumerate(container))[1]
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-def flip(
- b
-):
- return not b
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def size(
- container
-):
- return len(container)
-def both(
- a,
- b
-):
- return a and b
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def color(
- obj
-):
- return next(iter(obj))[0]
 def palette(
  element
 ):
@@ -173,29 +148,54 @@ def partition(
    (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
   ) for value in palette(grid)
  )
-def lowermost(
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
+def subtract(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a - b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] - b[0], a[1] - b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a - b[0], a - b[1])
+ return (a[0] - b, a[1] - b)
+def rightmost(
  patch
 ):
- return max(i for i, j in toindices(patch))
-def height(
+ return max(j for i, j in toindices(patch))
+def width(
  piece
 ):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
 def verify_task085(I):
  x0 = partition(I)
  x1 = fork(multiply, height, width)

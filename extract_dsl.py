@@ -75,8 +75,9 @@ def main():
         for m in re.findall(r"([A-Z_]+|[a-z]+)", func):
             if m != name:
                 reqs.append(m)
-        reqs_map[name] = set(reqs)
+        reqs_map[name] = list(sorted(set(reqs)))
 
+    num_short = 0
     for task_id in range(1, 401):
         task_id_str = f"{task_id:03d}"
         name = "verify_task" + task_id_str
@@ -87,6 +88,9 @@ def main():
         dsl += "def p(g):\n"
         dsl += f" return [list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
         open(f"dsl/task{task_id_str}.py", "w").write(dsl)
+
+        if len(dsl) < 2500:
+            num_short += 1
 
         body = add_indent(func)
         body += f" o=[list(r)for r in verify_task001(tuple(tuple(r) for r in g))]"
@@ -109,6 +113,8 @@ def main():
         main += ' exec(base64.b85decode("' + compressed.decode() + '"))\n'
         main += " return o"
         open(f"cdsl/task{task_id_str}.py", "w").write(main)
+
+    print(f"Number of tasks with short DSL: {num_short} / 400")
 
 
 if __name__ == "__main__":

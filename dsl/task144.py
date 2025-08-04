@@ -1,3 +1,19 @@
+THREE = 3
+def bottomhalf(
+ grid
+):
+ return grid[len(grid) // 2 + len(grid) % 2:]
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def index(
  grid,
  loc
@@ -15,42 +31,21 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
+def fill(
+ grid,
+ value,
  patch
 ):
- return min(j for i, j in toindices(patch))
-def rightmost(
- patch
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
 ):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
-):
- return (height(piece), width(piece))
+ return next(iter(container))
 def ulcorner(
  patch
 ):
@@ -73,82 +68,87 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-def branch(
- condition,
- if_value,
- else_value
+def lowermost(
+ patch
 ):
- return if_value if condition else else_value
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
+def width(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def hline(
+ patch
+):
+ return width(patch) == len(patch) and height(patch) == 1
+def intersection(
+ a,
+ b
+):
+ return a & b
+def tophalf(
+ grid
+):
+ return grid[:len(grid) // 2]
+def lefthalf(
+ grid
+):
+ return rot270(tophalf(rot90(grid)))
 def ofcolor(
  grid,
  value
 ):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def hline(
- patch
-):
- return width(patch) == len(patch) and height(patch) == 1
 def palette(
  element
 ):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def first(
- container
+def positive(
+ x
 ):
- return next(iter(container))
-def canvas(
- value,
- dimensions
+ return x > 0
+def righthalf(
+ grid
 ):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ return rot270(bottomhalf(rot90(grid)))
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def bottomhalf(
- grid
+def shape(
+ piece
 ):
- return grid[len(grid) // 2 + len(grid) % 2:]
+ return (height(piece), width(piece))
 def size(
  container
 ):
  return len(container)
-def positive(
- x
-):
- return x > 0
-def tophalf(
- grid
-):
- return grid[:len(grid) // 2]
-def righthalf(
- grid
-):
- return rot270(bottomhalf(rot90(grid)))
-def intersection(
- a,
- b
-):
- return a & b
-def lefthalf(
- grid
-):
- return rot270(tophalf(rot90(grid)))
-THREE = 3
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task144(I):
  x0 = frontiers(I)
  x1 = sfilter(x0, hline)

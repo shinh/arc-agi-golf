@@ -1,12 +1,14 @@
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+ONE = 1
+TWO = 2
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
@@ -29,6 +31,11 @@ def ofcolor(
  value
 ):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def index(
  grid,
  loc
@@ -46,11 +53,6 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def underfill(
  grid,
  value,
@@ -64,8 +66,6 @@ def underfill(
    if grid_filled[i][j] == bg:
     grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-ONE = 1
-TWO = 2
 def verify_task352(I):
  x0 = ofcolor(I, TWO)
  x1 = mapply(neighbors, x0)

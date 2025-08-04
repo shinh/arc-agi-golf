@@ -1,7 +1,44 @@
-def merge(
- containers
+DOWN = (1, 0)
+NINE = 9
+ONE = 1
+ORIGIN = (0, 0)
+THREE = 3
+TWO_BY_ZERO = (2, 0)
+UNITY = (1, 1)
+def apply(
+ function,
+ container
 ):
- return type(containers)(e for c in containers for e in c)
+ return type(container)(function(e) for e in container)
+def asobject(
+ grid
+):
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def crop(
+ grid,
+ start,
+ dims
+):
+ return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
 def index(
  grid,
  loc
@@ -23,6 +60,98 @@ def ulcorner(
  patch
 ):
  return tuple(map(min, zip(*toindices(patch))))
+def dmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(zip(*piece))
+ a, b = ulcorner(piece)
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
+ return frozenset((j - b + a, i - a + b) for i, j in piece)
+def first(
+ container
+):
+ return next(iter(container))
+def flip(
+ b
+):
+ return not b
+def hconcat(
+ a,
+ b
+):
+ return tuple(i + j for i, j in zip(a, b))
+def hsplit(
+ grid,
+ n
+):
+ h, w = len(grid), len(grid[0]) // n
+ offset = len(grid[0]) % n != 0
+ return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
+def initset(
+ value
+):
+ return frozenset({value})
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def order(
+ container,
+ compfunc
+):
+ return tuple(sorted(container, key=compfunc))
+def rbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda x: function(x, fixed)
+ elif n == 3:
+  return lambda x, y: function(x, y, fixed)
+ else:
+  return lambda x, y, z: function(x, y, z, fixed)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
+def subtract(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a - b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] - b[0], a[1] - b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a - b[0], a - b[1])
+ return (a[0] - b, a[1] - b)
+def vconcat(
+ a,
+ b
+):
+ return a + b
 def lrcorner(
  patch
 ):
@@ -36,135 +165,6 @@ def vmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def dmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return tuple(zip(*piece))
- a, b = ulcorner(piece)
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
- return frozenset((j - b + a, i - a + b) for i, j in piece)
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def crop(
- grid,
- start,
- dims
-):
- return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def hsplit(
- grid,
- n
-):
- h, w = len(grid), len(grid[0]) // n
- offset = len(grid[0]) % n != 0
- return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
-UNITY = (1, 1)
-NINE = 9
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def subtract(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a - b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] - b[0], a[1] - b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a - b[0], a - b[1])
- return (a[0] - b, a[1] - b)
-ONE = 1
-def initset(
- value
-):
- return frozenset({value})
-def first(
- container
-):
- return next(iter(container))
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def order(
- container,
- compfunc
-):
- return tuple(sorted(container, key=compfunc))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def flip(
- b
-):
- return not b
-def rbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda x: function(x, fixed)
- elif n == 3:
-  return lambda x, y: function(x, y, fixed)
- else:
-  return lambda x, y, z: function(x, y, z, fixed)
-ORIGIN = (0, 0)
-TWO_BY_ZERO = (2, 0)
-def astuple(
- a,
- b
-):
- return (a, b)
-def size(
- container
-):
- return len(container)
-def hconcat(
- a,
- b
-):
- return tuple(i + j for i, j in zip(a, b))
-def vconcat(
- a,
- b
-):
- return a + b
-def color(
- obj
-):
- return next(iter(obj))[0]
-THREE = 3
-DOWN = (1, 0)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def asobject(
- grid
-):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
 def verify_task316(I):
  x0 = asobject(I)
  x1 = mostcolor(I)

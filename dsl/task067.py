@@ -1,3 +1,8 @@
+THREE = 3
+def first(
+ container
+):
+ return next(iter(container))
 def crop(
  grid,
  start,
@@ -11,11 +16,6 @@ def hsplit(
  h, w = len(grid), len(grid[0]) // n
  offset = len(grid[0]) % n != 0
  return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
-THREE = 3
-def first(
- container
-):
- return next(iter(container))
 def verify_task067(I):
  x0 = hsplit(I, THREE)
  x1 = first(x0)

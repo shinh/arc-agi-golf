@@ -1,19 +1,42 @@
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def flip(
+ b
+):
+ return not b
 def fork(
  outer,
  a,
  b
 ):
  return lambda x: outer(a(x), b(x))
+def identity(
+ x
+):
+ return x
 def matcher(
  function,
  target
 ):
  return lambda x: function(x) == target
-def apply(
- function,
- container
+def mostcolor(
+ element
 ):
- return type(container)(function(e) for e in container)
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def rbind(
  function,
  fixed
@@ -30,29 +53,6 @@ def sfilter(
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def flip(
- b
-):
- return not b
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def identity(
- x
-):
- return x
 def verify_task032(I):
  x0 = mostcolor(I)
  x1 = rot270(I)

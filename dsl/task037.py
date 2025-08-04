@@ -1,3 +1,96 @@
+TWO = 2
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def connect(
+ a,
+ b
+):
+ ai, aj = a
+ bi, bj = b
+ si = min(ai, bi)
+ ei = max(ai, bi) + 1
+ sj = min(aj, bj)
+ ej = max(aj, bj) + 1
+ if ai == bi:
+  return frozenset((ai, j) for j in range(sj, ej))
+ elif aj == bj:
+  return frozenset((i, aj) for i in range(si, ei))
+ elif bi - ai == bj - aj:
+  return frozenset((i, j) for i, j in zip(range(si, ei), range(sj, ej)))
+ elif bi - ai == aj - bj:
+  return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
+ return frozenset()
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def power(
+ function,
+ n
+):
+ if n == 1:
+  return function
+ return compose(function, power(function, n - 1))
 def index(
  grid,
  loc
@@ -20,99 +113,6 @@ def recolor(
  patch
 ):
  return frozenset((value, index) for index in toindices(patch))
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def connect(
- a,
- b
-):
- ai, aj = a
- bi, bj = b
- si = min(ai, bi)
- ei = max(ai, bi) + 1
- sj = min(aj, bj)
- ej = max(aj, bj) + 1
- if ai == bi:
-  return frozenset((ai, j) for j in range(sj, ej))
- elif aj == bj:
-  return frozenset((i, aj) for i in range(si, ei))
- elif bi - ai == bj - aj:
-  return frozenset((i, j) for i, j in zip(range(si, ei), range(sj, ej)))
- elif bi - ai == aj - bj:
-  return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
- return frozenset()
-def first(
- container
-):
- return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-def power(
- function,
- n
-):
- if n == 1:
-  return function
- return compose(function, power(function, n - 1))
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def color(
- obj
-):
- return next(iter(obj))[0]
-TWO = 2
 def verify_task037(I):
  x0 = fgpartition(I)
  x1 = compose(last, first)

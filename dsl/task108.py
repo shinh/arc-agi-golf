@@ -1,25 +1,23 @@
 FOUR = 4
-def index(
+TWO = 2
+def downscale(
  grid,
- loc
+ factor
 ):
- i, j = loc
  h, w = len(grid), len(grid[0])
- if not (0 <= i < h and 0 <= j < w):
-  return None
- return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
- if len(patch) == 0:
-  return frozenset()
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset(index for value, index in patch)
- return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
+ downscaled_grid = tuple()
+ for i in range(h):
+  downscaled_row = tuple()
+  for j in range(w):
+   if j % factor == 0:
+    downscaled_row = downscaled_row + (grid[i][j],)
+  downscaled_grid = downscaled_grid + (downscaled_row, )
+ h = len(downscaled_grid)
+ downscaled_grid2 = tuple()
+ for i in range(h):
+  if i % factor == 0:
+   downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
+ return downscaled_grid2
 def add(
  a,
  b
@@ -41,6 +39,27 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
+def index(
+ grid,
+ loc
+):
+ i, j = loc
+ h, w = len(grid), len(grid[0])
+ if not (0 <= i < h and 0 <= j < w):
+  return None
+ return grid[loc[0]][loc[1]]
+def toindices(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset()
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset(index for value, index in patch)
+ return patch
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def upscale(
  element,
  factor
@@ -65,25 +84,6 @@ def upscale(
     for jo in range(factor):
      upscaled_obj.add((value, (i * factor + io, j * factor + jo)))
   return shift(frozenset(upscaled_obj), (di_inv, dj_inv))
-TWO = 2
-def downscale(
- grid,
- factor
-):
- h, w = len(grid), len(grid[0])
- downscaled_grid = tuple()
- for i in range(h):
-  downscaled_row = tuple()
-  for j in range(w):
-   if j % factor == 0:
-    downscaled_row = downscaled_row + (grid[i][j],)
-  downscaled_grid = downscaled_grid + (downscaled_row, )
- h = len(downscaled_grid)
- downscaled_grid2 = tuple()
- for i in range(h):
-  if i % factor == 0:
-   downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
- return downscaled_grid2
 def verify_task108(I):
  x0 = rot180(I)
  x1 = downscale(x0, TWO)

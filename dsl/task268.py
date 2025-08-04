@@ -1,8 +1,12 @@
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+DOWN = (1, 0)
 DOWN_LEFT = (1, -1)
+FOUR = 4
+LEFT = (0, -1)
+NEG_UNITY = (-1, -1)
+RIGHT = (0, 1)
+UNITY = (1, 1)
+UP = (-1, 0)
+UP_RIGHT = (-1, 1)
 def index(
  grid,
  loc
@@ -20,14 +24,37 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
+def box(
+ patch
+):
+ if len(patch) == 0:
+  return patch
+ ai, aj = ulcorner(patch)
+ bi, bj = lrcorner(patch)
+ si, sj = min(ai, bi), min(aj, bj)
+ ei, ej = max(ai, bi), max(aj, bj)
+ vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
+ hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
+ return frozenset(vlines | hlines)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
 def backdrop(
  patch
 ):
@@ -43,59 +70,72 @@ def delta(
  if len(patch) == 0:
   return frozenset({})
  return backdrop(patch) - toindices(patch)
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-UNITY = (1, 1)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def mapply(
- function,
- container
-):
- return merge(apply(function, container))
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def box(
- patch
-):
- if len(patch) == 0:
-  return patch
- ai, aj = ulcorner(patch)
- bi, bj = lrcorner(patch)
- si, sj = min(ai, bi), min(aj, bj)
- ei, ej = max(ai, bi), max(aj, bj)
- vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
- hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
- return frozenset(vlines | hlines)
-NEG_UNITY = (-1, -1)
 def equality(
  a,
  b
 ):
  return a == b
-LEFT = (0, -1)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def intersection(
+ a,
+ b
+):
+ return a & b
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def llcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mapply(
+ function,
+ container
+):
+ return merge(apply(function, container))
 def rbind(
  function,
  fixed
@@ -107,8 +147,10 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-FOUR = 4
-UP = (-1, 0)
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
 def connect(
  a,
  b
@@ -133,56 +175,14 @@ def shoot(
  direction
 ):
  return connect(start, (start[0] + 42 * direction[0], start[1] + 42 * direction[1]))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
 def urcorner(
  patch
 ):
  return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def llcorner(
- patch
-):
- return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-RIGHT = (0, 1)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-def intersection(
- a,
- b
-):
- return a & b
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-DOWN = (1, 0)
-UP_RIGHT = (-1, 1)
-def fill(
- grid,
- value,
- patch
-):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
 def verify_task268(I):
  x0 = fgpartition(I)
  x1 = merge(x0)

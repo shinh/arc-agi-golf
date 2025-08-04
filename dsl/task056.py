@@ -1,60 +1,41 @@
-T = True
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def pair(
- a,
- b
-):
- return tuple(zip(a, b))
+F = False
 FIVE = 5
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+FOUR = 4
+ONE = 1
+SIX = 6
+T = True
+TEN = 10
+THREE = 3
+TWO = 2
 UNITY = (1, 1)
+ZERO = 0
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
 def branch(
  condition,
  if_value,
  else_value
 ):
  return if_value if condition else else_value
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def chain(
  h,
  g,
  f
 ):
  return lambda x: h(g(f(x)))
-def apply(
- function,
- container
+def compose(
+ outer,
+ inner
 ):
- return type(container)(function(e) for e in container)
-def multiply(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a * b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] * b[0], a[1] * b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a * b[0], a * b[1])
- return (a[0] * b, a[1] * b)
-def valmax(
- container,
- compfunc
-):
- return compfunc(max(container, key=compfunc, default=0))
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -68,38 +49,90 @@ def dedupe(
  iterable
 ):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-ONE = 1
-TEN = 10
-def initset(
- value
+def divide(
+ a,
+ b
 ):
- return frozenset({value})
-def first(
- container
+ if isinstance(a, int) and isinstance(b, int):
+  return a // b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] // b[0], a[1] // b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a // b[0], a // b[1])
+ return (a[0] // b, a[1] // b)
+def downscale(
+ grid,
+ factor
 ):
- return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
+ h, w = len(grid), len(grid[0])
+ downscaled_grid = tuple()
+ for i in range(h):
+  downscaled_row = tuple()
+  for j in range(w):
+   if j % factor == 0:
+    downscaled_row = downscaled_row + (grid[i][j],)
+  downscaled_grid = downscaled_grid + (downscaled_row, )
+ h = len(downscaled_grid)
+ downscaled_grid2 = tuple()
+ for i in range(h):
+  if i % factor == 0:
+   downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
+ return downscaled_grid2
 def equality(
  a,
  b
 ):
  return a == b
-def canvas(
- value,
- dimensions
+def first(
+ container
 ):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def asindices(
- grid
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
 ):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
+ return lambda x: outer(a(x), b(x))
+def identity(
+ x
 ):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ return x
+def initset(
+ value
+):
+ return frozenset({value})
+def interval(
+ start,
+ stop,
+ step
+):
+ return tuple(range(start, stop, step))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def multiply(
+ a,
+ b
+):
+ if isinstance(a, int) and isinstance(b, int):
+  return a * b
+ elif isinstance(a, tuple) and isinstance(b, tuple):
+  return (a[0] * b[0], a[1] * b[1])
+ elif isinstance(a, int) and isinstance(b, tuple):
+  return (a * b[0], a * b[1])
+ return (a[0] * b, a[1] * b)
 def add(
  a,
  b
@@ -111,6 +144,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -119,11 +165,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -157,7 +198,27 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-ZERO = 0
+def pair(
+ a,
+ b
+):
+ return tuple(zip(a, b))
+def positive(
+ x
+):
+ return x > 0
+def power(
+ function,
+ n
+):
+ if n == 1:
+  return function
+ return compose(function, power(function, n - 1))
+def rapply(
+ functions,
+ value
+):
+ return type(functions)(function(value) for function in functions)
 def rbind(
  function,
  fixed
@@ -174,49 +235,15 @@ def sfilter(
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def divide(
- a,
- b
-):
- if isinstance(a, int) and isinstance(b, int):
-  return a // b
- elif isinstance(a, tuple) and isinstance(b, tuple):
-  return (a[0] // b[0], a[1] // b[1])
- elif isinstance(a, int) and isinstance(b, tuple):
-  return (a // b[0], a // b[1])
- return (a[0] // b, a[1] // b)
-FOUR = 4
-def positive(
- x
-):
- return x > 0
 def size(
  container
 ):
  return len(container)
-def interval(
- start,
- stop,
- step
+def valmax(
+ container,
+ compfunc
 ):
- return tuple(range(start, stop, step))
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def power(
- function,
- n
-):
- if n == 1:
-  return function
- return compose(function, power(function, n - 1))
+ return compfunc(max(container, key=compfunc, default=0))
 def toindices(
  patch
 ):
@@ -241,33 +268,6 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-SIX = 6
-def rapply(
- functions,
- value
-):
- return type(functions)(function(value) for function in functions)
-THREE = 3
-F = False
-TWO = 2
-def downscale(
- grid,
- factor
-):
- h, w = len(grid), len(grid[0])
- downscaled_grid = tuple()
- for i in range(h):
-  downscaled_row = tuple()
-  for j in range(w):
-   if j % factor == 0:
-    downscaled_row = downscaled_row + (grid[i][j],)
-  downscaled_grid = downscaled_grid + (downscaled_row, )
- h = len(downscaled_grid)
- downscaled_grid2 = tuple()
- for i in range(h):
-  if i % factor == 0:
-   downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
- return downscaled_grid2
 def verify_task056(I):
  x0 = lbind(apply, last)
  x1 = compose(positive, first)

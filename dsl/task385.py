@@ -1,13 +1,23 @@
-def palette(
- element
+ONE = 1
+def asobject(
+ grid
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def numcolors(
- element
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+def bottomhalf(
+ grid
 ):
- return len(palette(element))
+ return grid[len(grid) // 2 + len(grid) % 2:]
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -38,68 +48,24 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
 def either(
  a,
  b
 ):
  return a or b
-ONE = 1
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def first(
- container
-):
- return next(iter(container))
 def equality(
  a,
  b
 ):
  return a == b
-def matcher(
- function,
- target
+def first(
+ container
 ):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
+ return next(iter(container))
 def flip(
  b
 ):
  return not b
-def bottomhalf(
- grid
-):
- return grid[len(grid) // 2 + len(grid) % 2:]
-def tophalf(
- grid
-):
- return grid[:len(grid) // 2]
-def identity(
- x
-):
- return x
 def lrcorner(
  patch
 ):
@@ -113,15 +79,49 @@ def hmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
+def identity(
+ x
+):
+ return x
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
 def mostcolor(
  element
 ):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def asobject(
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def numcolors(
+ element
+):
+ return len(palette(element))
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def tophalf(
  grid
 ):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
+ return grid[:len(grid) // 2]
 def verify_task385(I):
  x0 = tophalf(I)
  x1 = numcolors(x0)

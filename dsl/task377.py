@@ -1,9 +1,8 @@
-def fork(
+def compose(
  outer,
- a,
- b
+ inner
 ):
- return lambda x: outer(a(x), b(x))
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -13,6 +12,10 @@ def index(
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
+def dedupe(
+ iterable
+):
+ return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
 def toindices(
  patch
 ):
@@ -34,16 +37,12 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def vconcat(
+def fork(
+ outer,
  a,
  b
 ):
- return a + b
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
+ return lambda x: outer(a(x), b(x))
 def lrcorner(
  patch
 ):
@@ -57,23 +56,24 @@ def hmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
-def dedupe(
- iterable
-):
- return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-def last(
- container
-):
- return max(enumerate(container))[1]
 def identity(
  x
 ):
  return x
+def last(
+ container
+):
+ return max(enumerate(container))[1]
 def remove(
  value,
  container
 ):
  return type(container)(e for e in container if e != value)
+def vconcat(
+ a,
+ b
+):
+ return a + b
 def verify_task377(I):
  x0 = compose(dmirror, dedupe)
  x1 = x0(I)

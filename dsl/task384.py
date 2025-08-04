@@ -1,3 +1,4 @@
+TWO = 2
 def index(
  grid,
  loc
@@ -79,7 +80,6 @@ def upscale(
     for jo in range(factor):
      upscaled_obj.add((value, (i * factor + io, j * factor + jo)))
   return shift(frozenset(upscaled_obj), (di_inv, dj_inv))
-TWO = 2
 def verify_task384(I):
  x0 = compress(I)
  x1 = upscale(x0, TWO)

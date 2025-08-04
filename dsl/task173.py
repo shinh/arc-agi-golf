@@ -1,14 +1,17 @@
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def numcolors(
- element
-):
- return len(palette(element))
+F = False
 T = True
+TWO = 2
+def apply(
+ function,
+ container
+):
+ return type(container)(function(e) for e in container)
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
 def combine(
  a,
  b
@@ -19,6 +22,28 @@ def compose(
  inner
 ):
  return lambda x: outer(inner(x))
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def identity(
+ x
+):
+ return x
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def last(
+ container
+):
+ return max(enumerate(container))[1]
 def lbind(
  function,
  fixed
@@ -34,22 +59,16 @@ def merge(
  containers
 ):
  return type(containers)(e for c in containers for e in c)
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def chain(
- h,
- g,
- f
+def matcher(
+ function,
+ target
 ):
- return lambda x: h(g(f(x)))
+ return lambda x: function(x) == target
 def index(
  grid,
  loc
@@ -91,6 +110,16 @@ def normalize(
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def numcolors(
+ element
+):
+ return len(palette(element))
 def add(
  a,
  b
@@ -102,50 +131,6 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-F = False
-def occurrences(
- grid,
- obj
-):
- occurrences = set()
- normed = normalize(obj)
- h, w = len(grid), len(grid[0])
- for i in range(h):
-  for j in range(w):
-   occurs = True
-   for v, (a, b) in shift(normed, (i, j)):
-    if 0 <= a < h and 0 <= b < w:
-     if grid[a][b] != v:
-      occurs = False
-      break
-    else:
-     occurs = False
-     break
-   if occurs:
-    occurrences.add((i, j))
- return frozenset(occurrences)
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
-def paint(
- grid,
- obj
-):
- h, w = len(grid), len(grid[0])
- grid_painted = list(list(row) for row in grid)
- for value, (i, j) in obj:
-  if 0 <= i < h and 0 <= j < w:
-   grid_painted[i][j] = value
- return tuple(tuple(row) for row in grid_painted)
-def first(
- container
-):
- return next(iter(container))
-def last(
- container
-):
- return max(enumerate(container))[1]
 def asindices(
  grid
 ):
@@ -154,6 +139,11 @@ def dneighbors(
  loc
 ):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -162,11 +152,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -200,35 +185,50 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def matcher(
- function,
- target
+def occurrences(
+ grid,
+ obj
 ):
- return lambda x: function(x) == target
+ occurrences = set()
+ normed = normalize(obj)
+ h, w = len(grid), len(grid[0])
+ for i in range(h):
+  for j in range(w):
+   occurs = True
+   for v, (a, b) in shift(normed, (i, j)):
+    if 0 <= a < h and 0 <= b < w:
+     if grid[a][b] != v:
+      occurs = False
+      break
+    else:
+     occurs = False
+     break
+   if occurs:
+    occurrences.add((i, j))
+ return frozenset(occurrences)
+def paint(
+ grid,
+ obj
+):
+ h, w = len(grid), len(grid[0])
+ grid_painted = list(list(row) for row in grid)
+ for value, (i, j) in obj:
+  if 0 <= i < h and 0 <= j < w:
+   grid_painted[i][j] = value
+ return tuple(tuple(row) for row in grid_painted)
 def sfilter(
  container,
  condition
 ):
  return type(container)(e for e in container if condition(e))
-def identity(
- x
-):
- return x
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
 def totuple(
  container
 ):
  return tuple(container)
-TWO = 2
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def verify_task173(I):
  x0 = objects(I, F, T, T)
  x1 = matcher(numcolors, TWO)

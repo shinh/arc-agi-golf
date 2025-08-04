@@ -1,11 +1,13 @@
-def toivec(
- i
+ORIGIN = (0, 0)
+def astuple(
+ a,
+ b
 ):
- return (i, 0)
-def tojvec(
- j
+ return (a, b)
+def bottomhalf(
+ grid
 ):
- return (0, j)
+ return grid[len(grid) // 2 + len(grid) % 2:]
 def index(
  grid,
  loc
@@ -23,6 +25,22 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -39,35 +57,10 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def center(
  patch
 ):
  return (uppermost(patch) + height(patch) // 2, leftmost(patch) + width(patch) // 2)
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
 def connect(
  a,
  b
@@ -87,33 +80,10 @@ def connect(
  elif bi - ai == aj - bj:
   return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
  return frozenset()
-def leastcolor(
- element
+def decrement(
+ x
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return min(set(values), key=values.count)
-ORIGIN = (0, 0)
-def astuple(
- a,
- b
-):
- return (a, b)
-def bottomhalf(
- grid
-):
- return grid[len(grid) // 2 + len(grid) % 2:]
-def tophalf(
- grid
-):
- return grid[:len(grid) // 2]
-def hfrontier(
- location
-):
- return frozenset((location[0], j) for j in range(30))
-def halve(
- n
-):
- return n // 2 if isinstance(n, int) else (n[0] // 2, n[1] // 2)
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
 def fill(
  grid,
  value,
@@ -125,6 +95,36 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def halve(
+ n
+):
+ return n // 2 if isinstance(n, int) else (n[0] // 2, n[1] // 2)
+def hfrontier(
+ location
+):
+ return frozenset((location[0], j) for j in range(30))
+def leastcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return min(set(values), key=values.count)
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def toivec(
+ i
+):
+ return (i, 0)
+def tojvec(
+ j
+):
+ return (0, j)
+def tophalf(
+ grid
+):
+ return grid[:len(grid) // 2]
 def verify_task028(I):
  x0 = tophalf(I)
  x1 = bottomhalf(I)

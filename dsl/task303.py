@@ -1,7 +1,4 @@
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
+TWO = 2
 def index(
  grid,
  loc
@@ -19,6 +16,17 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
 def ulcorner(
  patch
 ):
@@ -41,18 +49,10 @@ def frontiers(
  hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
  vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
  return hfrontiers | vfrontiers
-TWO = 2
-def fill(
- grid,
- value,
- patch
+def merge(
+ containers
 ):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
+ return type(containers)(e for c in containers for e in c)
 def verify_task303(I):
  x0 = frontiers(I)
  x1 = merge(x0)

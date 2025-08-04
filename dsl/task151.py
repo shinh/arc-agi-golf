@@ -1,27 +1,4 @@
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def last(
- container
-):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
+FOUR = 4
 def index(
  grid,
  loc
@@ -39,46 +16,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def outbox(
- patch
-):
- ai, aj = uppermost(patch) - 1, leftmost(patch) - 1
- bi, bj = lowermost(patch) + 1, rightmost(patch) + 1
- si, sj = min(ai, bi), min(aj, bj)
- ei, ej = max(ai, bi), max(aj, bj)
- vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
- hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
- return frozenset(vlines | hlines)
-FOUR = 4
-def intersection(
- a,
- b
-):
- return a & b
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
+):
+ return tuple(map(min, zip(*toindices(patch))))
 def backdrop(
  patch
 ):
@@ -88,15 +33,6 @@ def backdrop(
  si, sj = ulcorner(indices)
  ei, ej = lrcorner(patch)
  return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
-def totuple(
- container
-):
- return tuple(container)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def fill(
  grid,
  value,
@@ -108,6 +44,70 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def first(
+ container
+):
+ return next(iter(container))
+def intersection(
+ a,
+ b
+):
+ return a & b
+def last(
+ container
+):
+ return max(enumerate(container))[1]
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def outbox(
+ patch
+):
+ ai, aj = uppermost(patch) - 1, leftmost(patch) - 1
+ bi, bj = lowermost(patch) + 1, rightmost(patch) + 1
+ si, sj = min(ai, bi), min(aj, bj)
+ ei, ej = max(ai, bi), max(aj, bj)
+ vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
+ hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
+ return frozenset(vlines | hlines)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def totuple(
+ container
+):
+ return tuple(container)
 def verify_task151(I):
  x0 = mostcolor(I)
  x1 = palette(I)

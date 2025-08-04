@@ -1,7 +1,25 @@
-def merge(
- containers
+F = False
+ONE = 1
+T = True
+def apply(
+ function,
+ container
 ):
- return type(containers)(e for c in containers for e in c)
+ return type(container)(function(e) for e in container)
+def astuple(
+ a,
+ b
+):
+ return (a, b)
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def color(
+ obj
+):
+ return next(iter(obj))[0]
 def index(
  grid,
  loc
@@ -32,35 +50,14 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-T = True
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
 def leftmost(
  patch
 ):
  return min(j for i, j in toindices(patch))
-def valmax(
- container,
- compfunc
+def merge(
+ containers
 ):
- return compfunc(max(container, key=compfunc, default=0))
-ONE = 1
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
- return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+ return type(containers)(e for c in containers for e in c)
 def add(
  a,
  b
@@ -72,6 +69,19 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
+def asindices(
+ grid
+):
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def dneighbors(
+ loc
+):
+ return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def ineighbors(
  loc
 ):
@@ -80,11 +90,6 @@ def neighbors(
  loc
 ):
  return dneighbors(loc) | ineighbors(loc)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def objects(
  grid,
  univalued,
@@ -134,11 +139,6 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def astuple(
- a,
- b
-):
- return (a, b)
 def size(
  container
 ):
@@ -148,11 +148,11 @@ def sizefilter(
  n
 ):
  return frozenset(item for item in container if len(item) == n)
-def color(
- obj
+def valmax(
+ container,
+ compfunc
 ):
- return next(iter(obj))[0]
-F = False
+ return compfunc(max(container, key=compfunc, default=0))
 def verify_task247(I):
  x0 = objects(I, T, F, T)
  x1 = valmax(x0, size)

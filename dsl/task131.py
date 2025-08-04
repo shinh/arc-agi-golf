@@ -1,3 +1,20 @@
+EIGHT = 8
+TWO = 2
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
 def index(
  grid,
  loc
@@ -15,6 +32,31 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
+def fill(
+ grid,
+ value,
+ patch
+):
+ h, w = len(grid), len(grid[0])
+ grid_filled = list(list(row) for row in grid)
+ for i, j in toindices(patch):
+  if 0 <= i < h and 0 <= j < w:
+   grid_filled[i][j] = value
+ return tuple(tuple(row) for row in grid_filled)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def cover(
+ grid,
+ patch
+):
+ return fill(grid, mostcolor(grid), toindices(patch))
+def decrement(
+ x
+):
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
 def ulcorner(
  patch
 ):
@@ -28,55 +70,50 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def increment(
- x
+def extract(
+ container,
+ condition
 ):
- return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def tojvec(
- j
-):
- return (0, j)
-def compose(
- outer,
- inner
-):
- return lambda x: outer(inner(x))
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def mostcolor(
+ return next(e for e in container if condition(e))
+def palette(
  element
 ):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fill(
- grid,
- value,
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def flip(
+ b
+):
+ return not b
+def greater(
+ a,
+ b
+):
+ return a > b
+def lowermost(
  patch
 ):
- h, w = len(grid), len(grid[0])
- grid_filled = list(list(row) for row in grid)
- for i, j in toindices(patch):
-  if 0 <= i < h and 0 <= j < w:
-   grid_filled[i][j] = value
- return tuple(tuple(row) for row in grid_filled)
-def cover(
- grid,
+ return max(i for i, j in toindices(patch))
+def uppermost(
  patch
 ):
- return fill(grid, mostcolor(grid), toindices(patch))
-def ofcolor(
- grid,
- value
+ return min(i for i, j in toindices(patch))
+def height(
+ piece
 ):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
 def leftmost(
  patch
 ):
@@ -93,31 +130,37 @@ def width(
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def height(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
 def hline(
  patch
 ):
  return width(patch) == len(patch) and height(patch) == 1
-def extract(
- container,
- condition
+def identity(
+ x
 ):
- return next(e for e in container if condition(e))
+ return x
+def increment(
+ x
+):
+ return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
+def invert(
+ n
+):
+ return -n if isinstance(n, int) else (-n[0], -n[1])
+def manhattan(
+ a,
+ b
+):
+ return min(abs(ai - bi) + abs(aj - bj) for ai, aj in toindices(a) for bi, bj in toindices(b))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
 def paint(
  grid,
  obj
@@ -128,55 +171,6 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def flip(
- b
-):
- return not b
-def greater(
- a,
- b
-):
- return a > b
-def vfrontier(
- location
-):
- return frozenset((i, location[1]) for i in range(30))
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-def identity(
- x
-):
- return x
-def invert(
- n
-):
- return -n if isinstance(n, int) else (-n[0], -n[1])
-def color(
- obj
-):
- return next(iter(obj))[0]
-def manhattan(
- a,
- b
-):
- return min(abs(ai - bi) + abs(aj - bj) for ai, aj in toindices(a) for bi, bj in toindices(b))
 def shift(
  patch,
  directions
@@ -187,8 +181,14 @@ def shift(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-EIGHT = 8
-TWO = 2
+def tojvec(
+ j
+):
+ return (0, j)
+def vfrontier(
+ location
+):
+ return frozenset((i, location[1]) for i in range(30))
 def verify_task131(I):
  x0 = ofcolor(I, TWO)
  x1 = hline(x0)

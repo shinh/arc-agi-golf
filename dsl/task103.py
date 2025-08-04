@@ -1,3 +1,27 @@
+ONE = 1
+SEVEN = 7
+UNITY = (1, 1)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def either(
+ a,
+ b
+):
+ return a or b
+def equality(
+ a,
+ b
+):
+ return a == b
 def index(
  grid,
  loc
@@ -15,31 +39,14 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
 def lrcorner(
  patch
 ):
  return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
- piece
+def ulcorner(
+ patch
 ):
- if isinstance(piece, tuple):
-  return tuple(row[::-1] for row in piece)
- d = ulcorner(piece)[1] + lrcorner(piece)[1]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
- return frozenset((i, d - j) for i, j in piece)
-UNITY = (1, 1)
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-SEVEN = 7
+ return tuple(map(min, zip(*toindices(patch))))
 def hmirror(
  piece
 ):
@@ -49,22 +56,15 @@ def hmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
-def either(
- a,
- b
+def vmirror(
+ piece
 ):
- return a or b
-ONE = 1
-def equality(
- a,
- b
-):
- return a == b
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ if isinstance(piece, tuple):
+  return tuple(row[::-1] for row in piece)
+ d = ulcorner(piece)[1] + lrcorner(piece)[1]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
+ return frozenset((i, d - j) for i, j in piece)
 def verify_task103(I):
  x0 = vmirror(I)
  x1 = equality(x0, I)

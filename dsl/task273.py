@@ -1,7 +1,17 @@
+NEG_ONE = -1
+ONE = 1
+SEVEN = 7
+THREE = 3
+TWO = 2
 def asindices(
  grid
 ):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def astuple(
+ a,
+ b
+):
+ return (a, b)
 def index(
  grid,
  loc
@@ -19,23 +29,107 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def recolor(
- value,
+def lrcorner(
  patch
 ):
- return frozenset((value, index) for index in toindices(patch))
-SEVEN = 7
-NEG_ONE = -1
-def compose(
- outer,
- inner
+ return tuple(map(max, zip(*toindices(patch))))
+def ulcorner(
+ patch
 ):
- return lambda x: outer(inner(x))
+ return tuple(map(min, zip(*toindices(patch))))
+def backdrop(
+ patch
+):
+ if len(patch) == 0:
+  return frozenset({})
+ indices = toindices(patch)
+ si, sj = ulcorner(indices)
+ ei, ej = lrcorner(patch)
+ return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def chain(
+ h,
+ g,
+ f
+):
+ return lambda x: h(g(f(x)))
 def combine(
  a,
  b
 ):
  return type(a)((*a, *b))
+def compose(
+ outer,
+ inner
+):
+ return lambda x: outer(inner(x))
+def llcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def urcorner(
+ patch
+):
+ return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
+def corners(
+ patch
+):
+ return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
+def difference(
+ a,
+ b
+):
+ return type(a)(e for e in a if e not in b)
+def first(
+ container
+):
+ return next(iter(container))
+def fork(
+ outer,
+ a,
+ b
+):
+ return lambda x: outer(a(x), b(x))
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def lowermost(
+ patch
+):
+ return max(i for i, j in toindices(patch))
+def rightmost(
+ patch
+):
+ return max(j for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def inbox(
+ patch
+):
+ ai, aj = uppermost(patch) + 1, leftmost(patch) + 1
+ bi, bj = lowermost(patch) - 1, rightmost(patch) - 1
+ si, sj = min(ai, bi), min(aj, bj)
+ ei, ej = max(ai, bi), max(aj, bj)
+ vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
+ hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
+ return frozenset(vlines | hlines)
+def interval(
+ start,
+ stop,
+ step
+):
+ return tuple(range(start, stop, step))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
 def lbind(
  function,
  fixed
@@ -47,36 +141,25 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def product(
- a,
- b
-):
- return frozenset((i, j) for j in b for i in a)
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def chain(
- h,
- g,
- f
+def mostcolor(
+ element
 ):
- return lambda x: h(g(f(x)))
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
 def multiply(
  a,
  b
@@ -88,31 +171,8 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
+F = False
 T = True
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
-def shift(
- patch,
- directions
-):
- if len(patch) == 0:
-  return patch
- di, dj = directions
- if isinstance(next(iter(patch))[1], tuple):
-  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
- return frozenset((i + di, j + dj) for i, j in patch)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def normalize(
- patch
-):
- if len(patch) == 0:
-  return patch
- return shift(patch, (-uppermost(patch), -leftmost(patch)))
 def add(
  a,
  b
@@ -124,7 +184,22 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-F = False
+def shift(
+ patch,
+ directions
+):
+ if len(patch) == 0:
+  return patch
+ di, dj = directions
+ if isinstance(next(iter(patch))[1], tuple):
+  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
+ return frozenset((i + di, j + dj) for i, j in patch)
+def normalize(
+ patch
+):
+ if len(patch) == 0:
+  return patch
+ return shift(patch, (-uppermost(patch), -leftmost(patch)))
 def occurrences(
  grid,
  obj
@@ -146,13 +221,11 @@ def occurrences(
    if occurs:
     occurrences.add((i, j))
  return frozenset(occurrences)
-def palette(
- element
+def order(
+ container,
+ compfunc
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-ONE = 1
+ return tuple(sorted(container, key=compfunc))
 def paint(
  grid,
  obj
@@ -163,44 +236,24 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def last(
- container
+def palette(
+ element
 ):
- return max(enumerate(container))[1]
-def first(
- container
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def power(
+ function,
+ n
 ):
- return next(iter(container))
-def canvas(
- value,
- dimensions
+ if n == 1:
+  return function
+ return compose(function, power(function, n - 1))
+def product(
+ a,
+ b
 ):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def order(
- container,
- compfunc
-):
- return tuple(sorted(container, key=compfunc))
-def ulcorner(
- patch
-):
- return tuple(map(min, zip(*toindices(patch))))
-def urcorner(
- patch
-):
- return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def llcorner(
- patch
-):
- return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def lrcorner(
- patch
-):
- return tuple(map(max, zip(*toindices(patch))))
-def corners(
- patch
-):
- return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
+ return frozenset((i, j) for j in b for i in a)
 def rbind(
  function,
  fixed
@@ -212,73 +265,20 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def astuple(
- a,
- b
+def recolor(
+ value,
+ patch
 ):
- return (a, b)
+ return frozenset((value, index) for index in toindices(patch))
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
 def size(
  container
 ):
  return len(container)
-def interval(
- start,
- stop,
- step
-):
- return tuple(range(start, stop, step))
-def fork(
- outer,
- a,
- b
-):
- return lambda x: outer(a(x), b(x))
-def power(
- function,
- n
-):
- if n == 1:
-  return function
- return compose(function, power(function, n - 1))
-TWO = 2
-def difference(
- a,
- b
-):
- return type(a)(e for e in a if e not in b)
-def lowermost(
- patch
-):
- return max(i for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def inbox(
- patch
-):
- ai, aj = uppermost(patch) + 1, leftmost(patch) + 1
- bi, bj = lowermost(patch) - 1, rightmost(patch) - 1
- si, sj = min(ai, bi), min(aj, bj)
- ei, ej = max(ai, bi), max(aj, bj)
- vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
- hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
- return frozenset(vlines | hlines)
-def backdrop(
- patch
-):
- if len(patch) == 0:
-  return frozenset({})
- indices = toindices(patch)
- si, sj = ulcorner(indices)
- ei, ej = lrcorner(patch)
- return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
-THREE = 3
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def verify_task273(I):
  x0 = mostcolor(I)
  x1 = palette(I)

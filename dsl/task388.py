@@ -1,27 +1,42 @@
+EIGHT = 8
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
 def hconcat(
  a,
  b
 ):
  return tuple(i + j for i, j in zip(a, b))
-def merge(
- containers
-):
- return type(containers)(e for c in containers for e in c)
 def apply(
  function,
  container
 ):
  return type(container)(function(e) for e in container)
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
 def mapply(
  function,
  container
 ):
  return merge(apply(function, container))
-def vconcat(
- a,
- b
-):
- return a + b
 def index(
  grid,
  loc
@@ -39,11 +54,6 @@ def toindices(
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def underfill(
  grid,
  value,
@@ -57,25 +67,15 @@ def underfill(
    if grid_filled[i][j] == bg:
     grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-EIGHT = 8
+def vconcat(
+ a,
+ b
+):
+ return a + b
 def vfrontier(
  location
 ):
  return frozenset((i, location[1]) for i in range(30))
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
 def verify_task388(I):
  x0 = fgpartition(I)
  x1 = mapply(toindices, x0)

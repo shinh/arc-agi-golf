@@ -1,17 +1,30 @@
-def palette(
- element
+def argmax(
+ container,
+ compfunc
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def numcolors(
- element
+ return max(container, key=compfunc, default=None)
+def asindices(
+ grid
 ):
- return len(palette(element))
-def merge(
- containers
+ return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
+def astuple(
+ a,
+ b
 ):
- return type(containers)(e for c in containers for e in c)
+ return (a, b)
+def bottomhalf(
+ grid
+):
+ return grid[len(grid) // 2 + len(grid) % 2:]
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def combine(
+ a,
+ b
+):
+ return type(a)((*a, *b))
 def index(
  grid,
  loc
@@ -33,33 +46,6 @@ def ulcorner(
  patch
 ):
  return tuple(map(min, zip(*toindices(patch))))
-def lrcorner(
- patch
-):
- return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return tuple(row[::-1] for row in piece)
- d = ulcorner(piece)[1] + lrcorner(piece)[1]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
- return frozenset((i, d - j) for i, j in piece)
-def asindices(
- grid
-):
- return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def combine(
- a,
- b
-):
- return type(a)((*a, *b))
-def argmax(
- container,
- compfunc
-):
- return max(container, key=compfunc, default=None)
 def dmirror(
  piece
 ):
@@ -69,80 +55,17 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def frontiers(
- grid
-):
- h, w = len(grid), len(grid[0])
- row_indices = tuple(i for i, r in enumerate(grid) if len(set(r)) == 1)
- column_indices = tuple(j for j, c in enumerate(dmirror(grid)) if len(set(c)) == 1)
- hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
- vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
- return hfrontiers | vfrontiers
 def compress(
  grid
 ):
  ri = tuple(i for i, r in enumerate(grid) if len(set(r)) == 1)
  ci = tuple(j for j, c in enumerate(dmirror(grid)) if len(set(c)) == 1)
  return tuple(tuple(v for j, v in enumerate(r) if j not in ci) for i, r in enumerate(grid) if i not in ri)
-def ofcolor(
- grid,
- value
-):
- return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def astuple(
- a,
- b
-):
- return (a, b)
-def bottomhalf(
- grid
-):
- return grid[len(grid) // 2 + len(grid) % 2:]
-def tophalf(
- grid
-):
- return grid[:len(grid) // 2]
-def righthalf(
- grid
-):
- return rot270(bottomhalf(rot90(grid)))
-def hconcat(
- a,
- b
-):
- return tuple(i + j for i, j in zip(a, b))
-def lefthalf(
- grid
-):
- return rot270(tophalf(rot90(grid)))
-def vconcat(
- a,
- b
-):
- return a + b
-def color(
- obj
-):
- return next(iter(obj))[0]
 def difference(
  a,
  b
 ):
  return type(a)(e for e in a if e not in b)
-def hmirror(
- piece
-):
- if isinstance(piece, tuple):
-  return piece[::-1]
- d = ulcorner(piece)[0] + lrcorner(piece)[0]
- if isinstance(next(iter(piece))[1], tuple):
-  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
- return frozenset((d - i, j) for i, j in piece)
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
 def fill(
  grid,
  value,
@@ -154,6 +77,83 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def frontiers(
+ grid
+):
+ h, w = len(grid), len(grid[0])
+ row_indices = tuple(i for i, r in enumerate(grid) if len(set(r)) == 1)
+ column_indices = tuple(j for j, c in enumerate(dmirror(grid)) if len(set(c)) == 1)
+ hfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for j in range(w)}) for i in row_indices})
+ vfrontiers = frozenset({frozenset({(grid[i][j], (i, j)) for i in range(h)}) for j in column_indices})
+ return hfrontiers | vfrontiers
+def hconcat(
+ a,
+ b
+):
+ return tuple(i + j for i, j in zip(a, b))
+def lrcorner(
+ patch
+):
+ return tuple(map(max, zip(*toindices(patch))))
+def hmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return piece[::-1]
+ d = ulcorner(piece)[0] + lrcorner(piece)[0]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (d - i, j)) for v, (i, j) in piece)
+ return frozenset((d - i, j) for i, j in piece)
+def tophalf(
+ grid
+):
+ return grid[:len(grid) // 2]
+def lefthalf(
+ grid
+):
+ return rot270(tophalf(rot90(grid)))
+def merge(
+ containers
+):
+ return type(containers)(e for c in containers for e in c)
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def numcolors(
+ element
+):
+ return len(palette(element))
+def ofcolor(
+ grid,
+ value
+):
+ return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
+def righthalf(
+ grid
+):
+ return rot270(bottomhalf(rot90(grid)))
+def vconcat(
+ a,
+ b
+):
+ return a + b
+def vmirror(
+ piece
+):
+ if isinstance(piece, tuple):
+  return tuple(row[::-1] for row in piece)
+ d = ulcorner(piece)[1] + lrcorner(piece)[1]
+ if isinstance(next(iter(piece))[1], tuple):
+  return frozenset((v, (i, d - j)) for v, (i, j) in piece)
+ return frozenset((i, d - j) for i, j in piece)
 def verify_task109(I):
  x0 = frontiers(I)
  x1 = merge(x0)

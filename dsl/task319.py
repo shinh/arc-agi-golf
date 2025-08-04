@@ -1,9 +1,8 @@
-def replace(
- grid,
- replacee,
- replacer
+TWO = 2
+def asobject(
+ grid
 ):
- return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
+ return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
 def index(
  grid,
  loc
@@ -25,43 +24,18 @@ def leftmost(
  patch
 ):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
- return max(j for i, j in toindices(patch))
-def width(
- piece
-):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
 def lowermost(
  patch
 ):
  return max(i for i, j in toindices(patch))
-def height(
- piece
+def rightmost(
+ patch
 ):
- if len(piece) == 0:
-  return 0
- if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
-def shape(
- piece
+ return max(j for i, j in toindices(patch))
+def uppermost(
+ patch
 ):
- return (height(piece), width(piece))
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
+ return min(i for i, j in toindices(patch))
 def bordering(
  patch,
  grid
@@ -73,7 +47,65 @@ def branch(
  else_value
 ):
  return if_value if condition else else_value
-T = True
+def canvas(
+ value,
+ dimensions
+):
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+def color(
+ obj
+):
+ return next(iter(obj))[0]
+def downscale(
+ grid,
+ factor
+):
+ h, w = len(grid), len(grid[0])
+ downscaled_grid = tuple()
+ for i in range(h):
+  downscaled_row = tuple()
+  for j in range(w):
+   if j % factor == 0:
+    downscaled_row = downscaled_row + (grid[i][j],)
+  downscaled_grid = downscaled_grid + (downscaled_row, )
+ h = len(downscaled_grid)
+ downscaled_grid2 = tuple()
+ for i in range(h):
+  if i % factor == 0:
+   downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
+ return downscaled_grid2
+def extract(
+ container,
+ condition
+):
+ return next(e for e in container if condition(e))
+def mostcolor(
+ element
+):
+ values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+ return max(set(values), key=values.count)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def fgpartition(
+ grid
+):
+ return frozenset(
+  frozenset(
+   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+  ) for value in palette(grid) - {mostcolor(grid)}
+ )
+def first(
+ container
+):
+ return next(iter(container))
+def last(
+ container
+):
+ return max(enumerate(container))[1]
 def shift(
  patch,
  directions
@@ -90,6 +122,8 @@ def normalize(
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
+F = False
+T = True
 def add(
  a,
  b
@@ -101,7 +135,6 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-F = False
 def occurrences(
  grid,
  obj
@@ -123,11 +156,6 @@ def occurrences(
    if occurs:
     occurrences.add((i, j))
  return frozenset(occurrences)
-def extract(
- container,
- condition
-):
- return next(e for e in container if condition(e))
 def paint(
  grid,
  obj
@@ -138,19 +166,10 @@ def paint(
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def last(
- container
+def positive(
+ x
 ):
- return max(enumerate(container))[1]
-def first(
- container
-):
- return next(iter(container))
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
+ return x > 0
 def rbind(
  function,
  fixed
@@ -162,38 +181,45 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def replace(
+ grid,
+ replacee,
+ replacer
+):
+ return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
+def height(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def width(
+ piece
+):
+ if len(piece) == 0:
+  return 0
+ if isinstance(piece, tuple):
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
+def shape(
+ piece
+):
+ return (height(piece), width(piece))
 def size(
  container
 ):
  return len(container)
-def positive(
- x
+def totuple(
+ container
 ):
- return x > 0
-def palette(
- element
-):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-def mostcolor(
- element
-):
- values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
- return max(set(values), key=values.count)
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
-  ) for value in palette(grid) - {mostcolor(grid)}
- )
-def color(
- obj
-):
- return next(iter(obj))[0]
-TWO = 2
+ return tuple(container)
 def ulcorner(
  patch
 ):
@@ -222,32 +248,6 @@ def upscale(
     for jo in range(factor):
      upscaled_obj.add((value, (i * factor + io, j * factor + jo)))
   return shift(frozenset(upscaled_obj), (di_inv, dj_inv))
-def totuple(
- container
-):
- return tuple(container)
-def asobject(
- grid
-):
- return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
-def downscale(
- grid,
- factor
-):
- h, w = len(grid), len(grid[0])
- downscaled_grid = tuple()
- for i in range(h):
-  downscaled_row = tuple()
-  for j in range(w):
-   if j % factor == 0:
-    downscaled_row = downscaled_row + (grid[i][j],)
-  downscaled_grid = downscaled_grid + (downscaled_row, )
- h = len(downscaled_grid)
- downscaled_grid2 = tuple()
- for i in range(h):
-  if i % factor == 0:
-   downscaled_grid2 = downscaled_grid2 + (downscaled_grid[i],)
- return downscaled_grid2
 def verify_task319(I):
  x0 = fgpartition(I)
  x1 = rbind(bordering, I)

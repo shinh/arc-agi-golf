@@ -1,29 +1,9 @@
-def tojvec(
- j
-):
- return (0, j)
-def decrement(
- x
-):
- return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
+FOUR = 4
+ONE = 1
+ORIGIN = (0, 0)
 THREE_BY_THREE = (3, 3)
-def lbind(
- function,
- fixed
-):
- n = function.__code__.co_argcount
- if n == 2:
-  return lambda y: function(fixed, y)
- elif n == 3:
-  return lambda y, z: function(fixed, y, z)
- else:
-  return lambda y, z, a: function(fixed, y, z, a)
+TWO = 2
 UNITY = (1, 1)
-def remove(
- value,
- container
-):
- return type(container)(e for e in container if e != value)
 def argmax(
  container,
  compfunc
@@ -35,13 +15,11 @@ def branch(
  else_value
 ):
  return if_value if condition else else_value
-def palette(
- element
+def canvas(
+ value,
+ dimensions
 ):
- if isinstance(element, tuple):
-  return frozenset({v for r in element for v in r})
- return frozenset({v for v, _ in element})
-ONE = 1
+ return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
 def colorcount(
  element,
  value
@@ -49,10 +27,6 @@ def colorcount(
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def initset(
- value
-):
- return frozenset({value})
 def connect(
  a,
  b
@@ -72,19 +46,15 @@ def connect(
  elif bi - ai == aj - bj:
   return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
  return frozenset()
+def decrement(
+ x
+):
+ return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
 def equality(
  a,
  b
 ):
  return a == b
-def canvas(
- value,
- dimensions
-):
- return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-ORIGIN = (0, 0)
-FOUR = 4
-TWO = 2
 def index(
  grid,
  loc
@@ -113,6 +83,36 @@ def fill(
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
+def initset(
+ value
+):
+ return frozenset({value})
+def lbind(
+ function,
+ fixed
+):
+ n = function.__code__.co_argcount
+ if n == 2:
+  return lambda y: function(fixed, y)
+ elif n == 3:
+  return lambda y, z: function(fixed, y, z)
+ else:
+  return lambda y, z, a: function(fixed, y, z, a)
+def palette(
+ element
+):
+ if isinstance(element, tuple):
+  return frozenset({v for r in element for v in r})
+ return frozenset({v for v, _ in element})
+def remove(
+ value,
+ container
+):
+ return type(container)(e for e in container if e != value)
+def tojvec(
+ j
+):
+ return (0, j)
 def verify_task186(I):
  x0 = palette(I)
  x1 = remove(ONE, x0)

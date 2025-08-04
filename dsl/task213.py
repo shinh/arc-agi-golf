@@ -1,8 +1,19 @@
-def repeat(
- item,
- num
+ONE = 1
+def apply(
+ function,
+ container
 ):
- return tuple(item for i in range(num))
+ return type(container)(function(e) for e in container)
+def branch(
+ condition,
+ if_value,
+ else_value
+):
+ return if_value if condition else else_value
+def color(
+ obj
+):
+ return next(iter(obj))[0]
 def index(
  grid,
  loc
@@ -33,81 +44,56 @@ def dmirror(
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def uppermost(
- patch
-):
- return min(i for i, j in toindices(patch))
-def branch(
- condition,
- if_value,
- else_value
-):
- return if_value if condition else else_value
-def apply(
- function,
- container
-):
- return type(container)(function(e) for e in container)
-def leftmost(
- patch
-):
- return min(j for i, j in toindices(patch))
 def either(
  a,
  b
 ):
  return a or b
-ONE = 1
-def order(
- container,
- compfunc
-):
- return tuple(sorted(container, key=compfunc))
-def matcher(
- function,
- target
-):
- return lambda x: function(x) == target
-def sfilter(
- container,
- condition
-):
- return type(container)(e for e in container if condition(e))
-def size(
- container
-):
- return len(container)
-def greater(
- a,
- b
-):
- return a > b
-def identity(
- x
-):
- return x
 def fork(
  outer,
  a,
  b
 ):
  return lambda x: outer(a(x), b(x))
-def rightmost(
+def greater(
+ a,
+ b
+):
+ return a > b
+def lowermost(
  patch
 ):
- return max(j for i, j in toindices(patch))
-def width(
+ return max(i for i, j in toindices(patch))
+def uppermost(
+ patch
+):
+ return min(i for i, j in toindices(patch))
+def height(
  piece
 ):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
-  return len(piece[0])
- return rightmost(piece) - leftmost(piece) + 1
-def color(
- obj
+  return len(piece)
+ return lowermost(piece) - uppermost(piece) + 1
+def identity(
+ x
 ):
- return next(iter(obj))[0]
+ return x
+def leftmost(
+ patch
+):
+ return min(j for i, j in toindices(patch))
+def matcher(
+ function,
+ target
+):
+ return lambda x: function(x) == target
+def order(
+ container,
+ compfunc
+):
+ return tuple(sorted(container, key=compfunc))
 def palette(
  element
 ):
@@ -122,18 +108,32 @@ def partition(
    (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
   ) for value in palette(grid)
  )
-def lowermost(
+def repeat(
+ item,
+ num
+):
+ return tuple(item for i in range(num))
+def sfilter(
+ container,
+ condition
+):
+ return type(container)(e for e in container if condition(e))
+def size(
+ container
+):
+ return len(container)
+def rightmost(
  patch
 ):
- return max(i for i, j in toindices(patch))
-def height(
+ return max(j for i, j in toindices(patch))
+def width(
  piece
 ):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
-  return len(piece)
- return lowermost(piece) - uppermost(piece) + 1
+  return len(piece[0])
+ return rightmost(piece) - leftmost(piece) + 1
 def verify_task213(I):
  x0 = partition(I)
  x1 = matcher(height, ONE)
