@@ -16,7 +16,6 @@ from dataclasses import dataclass
 import heapq
 import builtins
 import keyword
-import string
 from collections import Counter
 from typing import Dict, Iterable, List, Tuple, Union
 
@@ -489,29 +488,17 @@ def get_identifier_positions(source_code):
 # ---------------------------------------------------------------------------
 
 
-def _alias_generator(alphabet: str = string.ascii_lowercase):
-    """Yield a stream of short, valid Python identifiers.
+def _alias_generator():
+    """Yield a stream of short, valid Python identifiers."""
 
-    Parameters
-    ----------
-    alphabet:
-        A string containing the characters to use when generating names.
-        The order of characters determines which identifiers are produced
-        first.  By default the standard English alphabet is used, but
-        callers may provide a custom ordering to bias the output.
-    """
-
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
     index = 0
-    base = len(alphabet)
     while True:
         n = index
         name = ""
-        # Convert *index* to a string in the given base using the supplied
-        # alphabet.  This effectively counts in base ``base`` and maps each
-        # digit to the corresponding character in ``alphabet``.
         while True:
-            name = alphabet[n % base] + name
-            n //= base
+            name = alphabet[n % 26] + name
+            n //= 26
             if n == 0:
                 break
         index += 1
@@ -532,28 +519,8 @@ def _build_identifier_mapping(positions) -> Dict[str, str]:
     reserved = set(keyword.kwlist) | set(dir(builtins))
     reserved.update(name for name in counts if name.startswith("__"))
 
-    # Build a custom alphabet ordered by letter frequency among the
-    # identifiers we actually intend to rename.  Using a tailored alphabet
-    # means the shortest aliases start with characters that are more common
-    # in the source, potentially improving compression.
-    letter_counts: Counter[str] = Counter()
-    for name, freq in counts.items():
-        if name in reserved:
-            continue
-        for ch in name:
-            ch = ch.lower()
-            if ch in string.ascii_lowercase:
-                letter_counts[ch] += freq
-
-    # Sort letters by decreasing frequency, breaking ties alphabetically so
-    # that the result is deterministic even when counts are equal.
-    ordered_letters = sorted(
-        string.ascii_lowercase, key=lambda c: (-letter_counts[c], c)
-    )
-    alphabet = "".join(ordered_letters)
-
     mapping: Dict[str, str] = {}
-    gen = _alias_generator(alphabet=alphabet)
+    gen = _alias_generator()
     for name, _ in counts.most_common():
         if name in reserved:
             continue
