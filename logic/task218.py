@@ -1,20 +1,12 @@
 def p(g):
-    r=[]
-    for y in range(0,21,7):
-        q=[]
-        for x in range(0,21,7):
-            m={}
-            for j in range(7):
-                for i in range(7):
-                    v=g[y+j][x+i]
-                    if v:m[v]=m.get(v,0)+1
-            q.append(max(m,key=m.get) if m else 0)
-        r.append(q)
-    t=[]
-    for c in zip(*r):
-        if any(c) and (not t or c!=t[-1]):t.append(c)
-    r=[list(c) for c in zip(*t)]
-    t=[]
-    for c in r:
-        if any(c) and (not t or c!=t[-1]):t.append(c)
-    return t
+    for _ in "0000":
+        g=[r for r in g if any(r)]
+        g=[list(r)for r in zip(*g)]
+    u=[]
+    for r in g:
+        if r not in u:u+=r,
+    g=[list(r)for r in zip(*u)]
+    u=[]
+    for r in g:
+        if r not in u:u+=r,
+    return [list(r)for r in zip(*u)]
