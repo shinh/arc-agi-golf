@@ -157,12 +157,8 @@ def p(g):
   return type(container)(e for e in container if e != value)
  def rot90(grid):
   return tuple(row for row in zip(*grid[::-1]))
- def height(piece):
-  return len(piece)
- def width(piece):
-  return len(piece[0])
  def shape(piece):
-  return (height(piece), width(piece))
+  return (len(piece), len(piece[0]))
  def trim(grid):
   return [list(r[1:-1])for r in grid[1:-1]]
  def verify_task255(I):
@@ -227,7 +223,7 @@ def p(g):
   x64 = x60(x63)
   x65 = trim(x64)
   h = len(x65)
-  if [sum(r[j]==3 for r in x65) for j in range(len(x65[0]))].count(h)==8:
+  if sum(all(r[j]==3 for r in x65)for j in range(len(x65[0])))==8:
    for r in x65:
     c=r.count(3)
     if c==17:r[-1-r[::-1].index(3)]=0
