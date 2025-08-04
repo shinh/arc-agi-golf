@@ -1,53 +1,52 @@
 def p(g):
- h=len(g);w=len(g[0])
- c={}
+ h=len(g);w=len(g[0]);c={}
  for r in g:
   for v in r:c[v]=c.get(v,0)+1
- bg=max(c,key=c.get);c.pop(bg);M=max(c,key=c.get)
- vis=set();comps=[]
+ bg=max(c,key=c.get);c.pop(bg);m=max(c,key=c.get)
+ V=set();C=[]
  for i in range(h):
   for j in range(w):
-   if g[i][j]!=bg and (i,j)not in vis:
-    q=[(i,j)];vis.add((i,j));comp=[]
+   if g[i][j]!=bg and (i,j)not in V:
+    q=[(i,j)];V.add((i,j));t=b=i;l=r=j;n=0
     while q:
-     x,y=q.pop();comp.append((x,y))
+     x,y=q.pop();n+=1
+     if x<t:t=x
+     if x>b:b=x
+     if y<l:l=y
+     if y>r:r=y
      for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
       nx,ny=x+dx,y+dy
-      if 0<=nx<h and 0<=ny<w and g[nx][ny]!=bg and (nx,ny)not in vis:
-       vis.add((nx,ny));q.append((nx,ny))
-    comps.append(comp)
- big=max(comps,key=len)
- T=min(i for i,j in big);B=max(i for i,j in big)
- L=min(j for i,j in big);R=max(j for i,j in big)
- orig=[row[L:R+1] for row in g[T:B+1]]
- res=[[M]*len(orig[0]) for _ in orig]
- objs=[]
- for comp in comps:
-  if comp==big:continue
-  xs=[i for i,j in comp];ys=[j for i,j in comp]
-  t,b=min(xs),max(xs);l,r=min(ys),max(ys)
-  if (b-t+1)*(r-l+1)!=len(comp):continue
-  patch=[row[l:r+1] for row in g[t:b+1]]
-  cols={v for row in patch for v in row}
-  if len(cols)==2 and M in cols:objs.append(patch)
- def trans(p):
+      if 0<=nx<h and 0<=ny<w and g[nx][ny]!=bg and (nx,ny)not in V:
+       V.add((nx,ny));q.append((nx,ny))
+    C.append((n,t,b,l,r))
+ C.sort();n,t,b,l,r=C.pop()
+ o=[row[l:r+1] for row in g[t:b+1]]
+ R=[[m]*len(o[0]) for _ in o]
+ O=[]
+ for n,t,b,l,r in C:
+  if (b-t+1)*(r-l+1)!=n:continue
+  pch=[row[l:r+1] for row in g[t:b+1]]
+  s={v for row in pch for v in row}
+  if len(s)==2 and m in s:O.append(pch)
+ def tr(p):
   r=[p]
-  for _ in range(3):
-   p=[list(z) for z in zip(*p[::-1])];r.append(p)
+  for _ in'123':
+   p=[list(z) for z in zip(*p[::-1])];r+=[p]
   return r+[[row[::-1] for row in q] for q in r]
- H0=len(orig);W0=len(orig[0])
- for pch in objs:
-  for t in trans(pch):
-   ph=len(t);pw=len(t[0]);slots=[]
-   for i in range(H0-ph+1):
-    for j in range(W0-pw+1):
-     if all((t[a][b]==M)==(orig[i+a][j+b]==0) for a in range(ph) for b in range(pw)):
-      slots.append((i,j))
-   if slots:
-    i,j=slots[-1]
-    if i==0 or j==0 or i+ph==H0 or j+pw==W0:i,j=slots[0]
+ H=len(o);W=len(o[0])
+ for P in O:
+  for t in tr(P):
+   ph=len(t);pw=len(t[0]);f=s=None
+   for i in range(H-ph+1):
+    for j in range(W-pw+1):
+     if all((t[a][b]==m)==(o[i+a][j+b]==0) for a in range(ph) for b in range(pw)):
+      s=(i,j);f=f or s
+   if s:
+    i,j=s
+    if i*j==0 or i+ph==H or j+pw==W:i,j=f
     for a in range(ph):
      for b in range(pw):
-      res[i+a][j+b]=t[a][b];orig[i+a][j+b]=M
+      R[i+a][j+b]=t[a][b];o[i+a][j+b]=m
     break
- return res
+ return R
+
