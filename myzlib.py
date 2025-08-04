@@ -441,34 +441,50 @@ def get_identifier_positions(source_code):
 
     tree = ast.parse(source_code)
     positions = []
+    lines = source_code.splitlines()
 
     class IdentifierVisitor(ast.NodeVisitor):
         """Collect identifier occurrences with their location and kind."""
 
-        def record(self, node, name, kind):
+        def record(self, node, name, kind, lineno=None, col_offset=None):
+            """Record *name* occurring at the given position and *kind*.
+
+            ``lineno`` and ``col_offset`` default to the values from ``node``.
+            They can be provided explicitly for cases where the AST node's
+            position does not directly point at the identifier (e.g. function
+            and class definitions where ``node.col_offset`` references the
+            ``def``/``class`` keyword).  Identifier names never span multiple
+            lines, so ``end_lineno`` is identical to ``lineno`` and ``end``
+            positions are computed from ``col_offset`` and ``len(name)``.
+            """
+
             if hasattr(node, "lineno") and hasattr(node, "col_offset"):
-                end_lineno = getattr(node, "end_lineno", node.lineno)
-                end_col_offset = getattr(
-                    node, "end_col_offset", node.col_offset + len(name)
-                )
-                positions.append(
-                    (name, node.lineno, node.col_offset, end_lineno, end_col_offset, kind)
-                )
+                lineno = lineno if lineno is not None else node.lineno
+                col_offset = col_offset if col_offset is not None else node.col_offset
+                end_lineno = lineno
+                end_col_offset = col_offset + len(name)
+                positions.append((name, lineno, col_offset, end_lineno, end_col_offset, kind))
 
         def visit_Name(self, node):
             self.record(node, node.id, "name")
             self.generic_visit(node)
 
         def visit_FunctionDef(self, node):
-            self.record(node, node.name, "func")
+            line = lines[node.lineno - 1]
+            col = line.find(node.name, node.col_offset)
+            self.record(node, node.name, "func", lineno=node.lineno, col_offset=col)
             self.generic_visit(node)
 
         def visit_AsyncFunctionDef(self, node):
-            self.record(node, node.name, "func")
+            line = lines[node.lineno - 1]
+            col = line.find(node.name, node.col_offset)
+            self.record(node, node.name, "func", lineno=node.lineno, col_offset=col)
             self.generic_visit(node)
 
         def visit_ClassDef(self, node):
-            self.record(node, node.name, "class")
+            line = lines[node.lineno - 1]
+            col = line.find(node.name, node.col_offset)
+            self.record(node, node.name, "class", lineno=node.lineno, col_offset=col)
             self.generic_visit(node)
 
         def visit_Attribute(self, node):
@@ -684,12 +700,15 @@ def compress(data: Union[str, bytes], is_python: bool) -> bytes:
 
 
 def map_identifiers(source: str) -> str:
-    """Map identifiers in *source* to short aliases and return the modified source.
+    """Return *source* with identifiers replaced by short aliases.
 
-    This function is intended for use with Python source code.  It returns
-    a tuple of the modified source code and a mapping from original names
-    to their aliases.
+    The function analyses Python source code and rewrites identifiers using
+    :func:`get_identifier_positions` and the helper routines for building and
+    applying an identifier mapping.  Only the modified source code is
+    returned; callers interested in the mapping itself can invoke the helper
+    functions directly.
     """
+
     positions = get_identifier_positions(source)
     mapping = _build_identifier_mapping(positions)
     mapped_source = _apply_identifier_mapping(source, positions, mapping)
