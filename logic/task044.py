@@ -17,7 +17,7 @@ def p(g):
                             elif t!=5:e=0
                         else:e=0
                 if e:z.append(c)
-    o={};v=set()
+    o={};v=set();cnt=[0]*10
     for y in range(h):
         for x in range(w):
             c=g[y][x]
@@ -30,17 +30,18 @@ def p(g):
                     for dy,dx in D:
                         ny=y1+dy;nx=x1+dx
                         if 0<=ny<h and 0<=nx<w:s.append((ny,nx))
+                cnt[c]+=1
                 m=min(y for y,x in r);n=min(x for y,x in r)
                 k=tuple(sorted((y-m,x-n) for y,x in r))
-                b=m==0 or n==0 or max(y for y,_ in r)==h-1 or max(x for _,x in r)==w-1
-                o.setdefault(k,[[],[]])[b].append((r,c))
+                o.setdefault(k,[]).append((r,c))
     for c in z:
         m=min(y for y,x in c);n=min(x for y,x in c)
         k=tuple(sorted((y-m,x-n) for y,x in c))
         if k in o:
-            a=o[k][0] or o[k][1]
-            if a:
-                r,col=a.pop(0)
+            a=o[k]
+            j=next((i for i,(r,col) in enumerate(a) if cnt[col]==1),-1)
+            if j+1:
+                r,col=a.pop(j)
                 for y,x in r:g[y][x]=0
                 for y,x in c:g[y][x]=col
     return g
