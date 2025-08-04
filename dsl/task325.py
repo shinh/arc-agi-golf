@@ -2,58 +2,36 @@ F = False
 ORIGIN = (0, 0)
 T = True
 UNITY = (1, 1)
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def canvas(
- value,
- dimensions
-):
+def canvas(value,dimensions):
  return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def leastcolor(
- element
-):
+def leastcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return min(set(values), key=values.count)
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -61,28 +39,15 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def asindices(
- grid
-):
+def asindices(grid):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
+def dneighbors(loc):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def ineighbors(
- loc
-):
+def ineighbors(loc):
  return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
+def neighbors(loc):
  return dneighbors(loc) | ineighbors(loc)
-def objects(
- grid,
- univalued,
- diagonal,
- without_bg
-):
+def objects(grid,univalued,diagonal,without_bg):
  bg = mostcolor(grid) if without_bg else None
  objs = set()
  occupied = set()
@@ -110,10 +75,7 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def connect(
- a,
- b
-):
+def connect(a,b):
  ai, aj = a
  bi, bj = b
  si = min(ai, bi)
@@ -129,14 +91,9 @@ def connect(
  elif bi - ai == aj - bj:
   return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
  return frozenset()
-def shoot(
- start,
- direction
-):
+def shoot(start,direction):
  return connect(start, (start[0] + 42 * direction[0], start[1] + 42 * direction[1]))
-def size(
- container
-):
+def size(container):
  return len(container)
 def verify_task325(I):
  x0 = objects(I, T, F, T)

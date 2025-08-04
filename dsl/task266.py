@@ -6,73 +6,45 @@ SIX = 6
 THREE = 3
 UNITY = (1, 1)
 UP_RIGHT = (-1, 1)
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def leastcolor(
- element
-):
+def leastcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return min(set(values), key=values.count)
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def paint(
- grid,
- obj
-):
+def paint(grid,obj):
  h, w = len(grid), len(grid[0])
  grid_painted = list(list(row) for row in grid)
  for value, (i, j) in obj:
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def recolor(
- value,
- patch
-):
+def recolor(value,patch):
  return frozenset((value, index) for index in toindices(patch))
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions

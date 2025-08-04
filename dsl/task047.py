@@ -1,69 +1,38 @@
 TWO = 2
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def fork(
- outer,
- a,
- b
-):
+def fork(outer,a,b):
  return lambda x: outer(a(x), b(x))
-def hfrontier(
- location
-):
+def hfrontier(location):
  return frozenset((location[0], j) for j in range(30))
-def intersection(
- a,
- b
-):
+def intersection(a,b):
  return a & b
-def last(
- container
-):
+def last(container):
  return max(enumerate(container))[1]
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -71,48 +40,26 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mapply(
- function,
- container
-):
+def mapply(function,container):
  return merge(apply(function, container))
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def remove(
- value,
- container
-):
+def remove(value,container):
  return type(container)(e for e in container if e != value)
-def totuple(
- container
-):
+def totuple(container):
  return tuple(container)
-def vfrontier(
- location
-):
+def vfrontier(location):
  return frozenset((i, location[1]) for i in range(30))
 def verify_task047(I):
  x0 = mostcolor(I)

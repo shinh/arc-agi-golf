@@ -1,7 +1,4 @@
-def hconcat(
- a,
- b
-):
+def hconcat(a,b):
  return tuple(i + j for i, j in zip(a, b))
 def verify_task249(I):
  x0 = hconcat(I, I)

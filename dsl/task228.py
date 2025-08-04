@@ -2,10 +2,7 @@ DOWN_LEFT = (1, -1)
 NEG_UNITY = (-1, -1)
 UNITY = (1, 1)
 UP_RIGHT = (-1, 1)
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -13,77 +10,47 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def cover(
- grid,
- patch
-):
+def cover(grid,patch):
  return fill(grid, mostcolor(grid), toindices(patch))
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+def fgpartition(grid):
+ return frozenset(frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
   ) for value in palette(grid) - {mostcolor(grid)}
  )
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def inbox(
- patch
-):
+def inbox(patch):
  ai, aj = uppermost(patch) + 1, leftmost(patch) + 1
  bi, bj = lowermost(patch) - 1, rightmost(patch) - 1
  si, sj = min(ai, bi), min(aj, bj)
@@ -91,29 +58,17 @@ def inbox(
  vlines = {(i, sj) for i in range(si, ei + 1)} | {(i, ej) for i in range(si, ei + 1)}
  hlines = {(si, j) for j in range(sj, ej + 1)} | {(ei, j) for j in range(sj, ej + 1)}
  return frozenset(vlines | hlines)
-def initset(
- value
-):
+def initset(value):
  return frozenset({value})
-def llcorner(
- patch
-):
+def llcorner(patch):
  return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def urcorner(
- patch
-):
+def urcorner(patch):
  return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
 def verify_task228(I):
  x0 = fgpartition(I)

@@ -6,52 +6,33 @@ ONE = 1
 SEVEN = 7
 SIX = 6
 T = True
-def colorfilter(
- objs,
- value
-):
+def colorfilter(objs,value):
  return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -59,28 +40,15 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def asindices(
- grid
-):
+def asindices(grid):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
+def dneighbors(loc):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def ineighbors(
- loc
-):
+def ineighbors(loc):
  return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
+def neighbors(loc):
  return dneighbors(loc) | ineighbors(loc)
-def objects(
- grid,
- univalued,
- diagonal,
- without_bg
-):
+def objects(grid,univalued,diagonal,without_bg):
  bg = mostcolor(grid) if without_bg else None
  objs = set()
  occupied = set()
@@ -108,10 +76,7 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def sizefilter(
- container,
- n
-):
+def sizefilter(container,n):
  return frozenset(item for item in container if len(item) == n)
 def verify_task302(I):
  x0 = objects(I, T, F, F)

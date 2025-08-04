@@ -1,94 +1,54 @@
 ONE = 1
 ZERO = 0
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def canvas(
- value,
- dimensions
-):
+def canvas(value,dimensions):
  return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def chain(
- h,
- g,
- f
-):
+def chain(h,g,f):
  return lambda x: h(g(f(x)))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def dmirror(
- piece
-):
+def dmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*piece))
  a, b = ulcorner(piece)
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
- piece
-):
+def vmirror(piece):
  if isinstance(piece, tuple):
   return tuple(row[::-1] for row in piece)
  d = ulcorner(piece)[1] + lrcorner(piece)[1]
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def cmirror(
- piece
-):
+def cmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*(r[::-1] for r in piece[::-1])))
  return vmirror(dmirror(vmirror(piece)))
-def color(
- obj
-):
+def color(obj):
  return next(iter(obj))[0]
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def fork(
- outer,
- a,
- b
-):
+def fork(outer,a,b):
  return lambda x: outer(a(x), b(x))
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -96,33 +56,19 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def order(
- container,
- compfunc
-):
+def order(container,compfunc):
  return tuple(sorted(container, key=compfunc))
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def partition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+def partition(grid):
+ return frozenset(frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
   ) for value in palette(grid)
  )
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -130,14 +76,9 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def size(
- container
-):
+def size(container):
  return len(container)
-def subtract(
- a,
- b
-):
+def subtract(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a - b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -145,15 +86,9 @@ def subtract(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a - b[0], a - b[1])
  return (a[0] - b, a[1] - b)
-def valmax(
- container,
- compfunc
-):
+def valmax(container,compfunc):
  return compfunc(max(container, key=compfunc, default=0))
-def vconcat(
- a,
- b
-):
+def vconcat(a,b):
  return a + b
 def verify_task239(I):
  x0 = partition(I)

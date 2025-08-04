@@ -1,55 +1,28 @@
 UNITY = (1, 1)
-def branch(
- condition,
- if_value,
- else_value
-):
+def branch(condition,if_value,else_value):
  return if_value if condition else else_value
-def canvas(
- value,
- dimensions
-):
+def canvas(value,dimensions):
  return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def initset(
- value
-):
+def initset(value):
  return frozenset({value})
-def last(
- container
-):
+def last(container):
  return max(enumerate(container))[1]
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def dneighbors(
- loc
-):
+def dneighbors(loc):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def ineighbors(
- loc
-):
+def ineighbors(loc):
  return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
+def neighbors(loc):
  return dneighbors(loc) | ineighbors(loc)
 F = False
 T = True
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -57,51 +30,34 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def normalize(
- patch
-):
+def normalize(patch):
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
-def occurrences(
- grid,
- obj
-):
+def occurrences(grid,obj):
  occurrences = set()
  normed = normalize(obj)
  h, w = len(grid), len(grid[0])
@@ -119,33 +75,19 @@ def occurrences(
    if occurs:
     occurrences.add((i, j))
  return frozenset(occurrences)
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def positive(
- x
-):
+def positive(x):
  return x > 0
-def recolor(
- value,
- patch
-):
+def recolor(value,patch):
  return frozenset((value, index) for index in toindices(patch))
-def remove(
- value,
- container
-):
+def remove(value,container):
  return type(container)(e for e in container if e != value)
-def size(
- container
-):
+def size(container):
  return len(container)
-def totuple(
- container
-):
+def totuple(container):
  return tuple(container)
 def verify_task346(I):
  x0 = mostcolor(I)

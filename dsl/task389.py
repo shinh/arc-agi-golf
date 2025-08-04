@@ -1,52 +1,33 @@
 FIVE = 5
 ZERO = 0
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def remove(
- value,
- container
-):
+def remove(value,container):
  return type(container)(e for e in container if e != value)
 def verify_task389(I):
  x0 = palette(I)

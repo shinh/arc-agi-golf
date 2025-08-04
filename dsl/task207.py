@@ -1,32 +1,16 @@
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def bottomhalf(
- grid
-):
+def bottomhalf(grid):
  return grid[len(grid) // 2 + len(grid) % 2:]
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def leastcommon(
- container
-):
+def leastcommon(container):
  return min(set(container), key=container.count)
-def tophalf(
- grid
-):
+def tophalf(grid):
  return grid[:len(grid) // 2]
-def lefthalf(
- grid
-):
+def lefthalf(grid):
  return rot270(tophalf(rot90(grid)))
-def righthalf(
- grid
-):
+def righthalf(grid):
  return rot270(bottomhalf(rot90(grid)))
 def verify_task207(I):
  x0 = lefthalf(I)

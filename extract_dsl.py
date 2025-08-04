@@ -67,6 +67,9 @@ def main():
         func, _  = re.subn(r"\) -> [A-Z]\w+", ")", func)
         func = reindent(func) + "\n"
         # func, _ = re.subn(r"tuple", "list", func)
+        func, _ = re.subn(r"\(\n\s*","(", func)
+        func, _ = re.subn(r",\n\s*",",", func)
+        func, _ = re.subn(r"\n\)",")", func)
         defs[name] = func
 
     reqs_map = {}

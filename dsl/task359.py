@@ -1,66 +1,37 @@
 ONE = 1
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def branch(
- condition,
- if_value,
- else_value
-):
+def branch(condition,if_value,else_value):
  return if_value if condition else else_value
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def dedupe(
- iterable
-):
+def dedupe(iterable):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-def greater(
- a,
- b
-):
+def greater(a,b):
  return a > b
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def hupscale(
- grid,
- factor
-):
+def hupscale(grid,factor):
  upscaled_grid = tuple()
  for row in grid:
   upscaled_row = tuple()
@@ -68,38 +39,22 @@ def hupscale(
    upscaled_row = upscaled_row + tuple(value for num in range(factor))
   upscaled_grid = upscaled_grid + (upscaled_row,)
  return upscaled_grid
-def mostcommon(
- container
-):
+def mostcommon(container):
  return max(set(container), key=container.count)
-def repeat(
- item,
- num
-):
+def repeat(item,num):
  return tuple(item for i in range(num))
-def size(
- container
-):
+def size(container):
  return len(container)
-def vupscale(
- grid,
- factor
-):
+def vupscale(grid,factor):
  upscaled_grid = tuple()
  for row in grid:
   upscaled_grid = upscaled_grid + tuple(row for num in range(factor))
  return upscaled_grid
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):

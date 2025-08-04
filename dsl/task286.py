@@ -1,92 +1,49 @@
 F = False
 T = True
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def manhattan(
- a,
- b
-):
+def manhattan(a,b):
  return min(abs(ai - bi) + abs(aj - bj) for ai, aj in toindices(a) for bi, bj in toindices(b))
-def adjacent(
- a,
- b
-):
+def adjacent(a,b):
  return manhattan(a, b) == 1
-def argmin(
- container,
- compfunc
-):
+def argmin(container,compfunc):
  return min(container, key=compfunc, default=None)
-def chain(
- h,
- g,
- f
-):
+def chain(h,g,f):
  return lambda x: h(g(f(x)))
-def colorcount(
- element,
- value
-):
+def colorcount(element,value):
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def colorfilter(
- objs,
- value
-):
+def colorfilter(objs,value):
  return frozenset(obj for obj in objs if next(iter(obj))[0] == value)
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def difference(
- a,
- b
-):
+def difference(a,b):
  return type(a)(e for e in a if e not in b)
-def even(
- n
-):
+def even(n):
  return n % 2 == 0
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def initset(
- value
-):
+def initset(value):
  return frozenset({value})
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -94,51 +51,26 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def leastcolor(
- element
-):
+def leastcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return min(set(values), key=values.count)
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mapply(
- function,
- container
-):
+def mapply(function,container):
  return merge(apply(function, container))
-def sfilter(
- container,
- condition
-):
+def sfilter(container,condition):
  return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
-):
+def mfilter(container,function):
  return merge(sfilter(container, function))
-def dneighbors(
- loc
-):
+def dneighbors(loc):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def ineighbors(
- loc
-):
+def ineighbors(loc):
  return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
+def neighbors(loc):
  return dneighbors(loc) | ineighbors(loc)
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -146,21 +78,12 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def asindices(
- grid
-):
+def asindices(grid):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def objects(
- grid,
- univalued,
- diagonal,
- without_bg
-):
+def objects(grid,univalued,diagonal,without_bg):
  bg = mostcolor(grid) if without_bg else None
  objs = set()
  occupied = set()
@@ -188,21 +111,13 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -210,15 +125,9 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def remove(
- value,
- container
-):
+def remove(value,container):
  return type(container)(e for e in container if e != value)
-def toobject(
- patch,
- grid
-):
+def toobject(patch,grid):
  h, w = len(grid), len(grid[0])
  return frozenset((grid[i][j], (i, j)) for i, j in toindices(patch) if 0 <= i < h and 0 <= j < w)
 def verify_task286(I):

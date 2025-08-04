@@ -1,23 +1,12 @@
 TWO = 2
 ZERO = 0
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def asobject(
- grid
-):
+def asobject(grid):
  return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
-def canvas(
- value,
- dimensions
-):
+def canvas(value,dimensions):
  return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -25,19 +14,11 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mapply(
- function,
- container
-):
+def mapply(function,container):
  return merge(apply(function, container))
-def multiply(
- a,
- b
-):
+def multiply(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a * b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -45,25 +26,16 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def paint(
- grid,
- obj
-):
+def paint(grid,obj):
  h, w = len(grid), len(grid[0])
  grid_painted = list(list(row) for row in grid)
  for value, (i, j) in obj:
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -71,63 +43,41 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def shape(
- piece
-):
+def shape(piece):
  return (height(piece), width(piece))
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions

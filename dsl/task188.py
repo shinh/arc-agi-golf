@@ -1,29 +1,14 @@
-def branch(
- condition,
- if_value,
- else_value
-):
+def branch(condition,if_value,else_value):
  return if_value if condition else else_value
-def equality(
- a,
- b
-):
+def equality(a,b):
  return a == b
-def tophalf(
- grid
-):
+def tophalf(grid):
  return grid[:len(grid) // 2]
-def lefthalf(
- grid
-):
+def lefthalf(grid):
  return rot270(tophalf(rot90(grid)))
-def bottomhalf(
- grid
-):
+def bottomhalf(grid):
  return grid[len(grid) // 2 + len(grid) % 2:]
-def righthalf(
- grid
-):
+def righthalf(grid):
  return rot270(bottomhalf(rot90(grid)))
 def verify_task188(I):
  x0 = lefthalf(I)

@@ -1,61 +1,35 @@
 F = False
 ONE = 1
 T = True
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def llcorner(
- patch
-):
+def llcorner(patch):
  return tuple(map(lambda ix: {0: max, 1: min}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def urcorner(
- patch
-):
+def urcorner(patch):
  return tuple(map(lambda ix: {0: min, 1: max}[ix[0]](ix[1]), enumerate(zip(*toindices(patch)))))
-def corners(
- patch
-):
+def corners(patch):
  return frozenset({ulcorner(patch), urcorner(patch), llcorner(patch), lrcorner(patch)})
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mapply(
- function,
- container
-):
+def mapply(function,container):
  return merge(apply(function, container))
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -63,33 +37,18 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def asindices(
- grid
-):
+def asindices(grid):
  return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
-def dneighbors(
- loc
-):
+def dneighbors(loc):
  return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def ineighbors(
- loc
-):
+def ineighbors(loc):
  return frozenset({(loc[0] - 1, loc[1] - 1), (loc[0] - 1, loc[1] + 1), (loc[0] + 1, loc[1] - 1), (loc[0] + 1, loc[1] + 1)})
-def neighbors(
- loc
-):
+def neighbors(loc):
  return dneighbors(loc) | ineighbors(loc)
-def objects(
- grid,
- univalued,
- diagonal,
- without_bg
-):
+def objects(grid,univalued,diagonal,without_bg):
  bg = mostcolor(grid) if without_bg else None
  objs = set()
  occupied = set()
@@ -117,11 +76,7 @@ def objects(
    cands = neighborhood - occupied
   objs.add(frozenset(obj))
  return frozenset(objs)
-def underfill(
- grid,
- value,
- patch
-):
+def underfill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  bg = mostcolor(grid)
  grid_filled = list(list(row) for row in grid)

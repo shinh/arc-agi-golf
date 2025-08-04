@@ -1,52 +1,33 @@
-def colorcount(
- element,
- value
-):
+def colorcount(element,value):
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def multiply(
- a,
- b
-):
+def multiply(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a * b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -54,10 +35,7 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def subtract(
- a,
- b
-):
+def subtract(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a - b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -65,10 +43,7 @@ def subtract(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a - b[0], a - b[1])
  return (a[0] - b, a[1] - b)
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -76,24 +51,16 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def upscale(
- element,
- factor
-):
+def upscale(element,factor):
  if isinstance(element, tuple):
   upscaled_grid = tuple()
   for row in element:
@@ -114,17 +81,11 @@ def upscale(
     for jo in range(factor):
      upscaled_obj.add((value, (i * factor + io, j * factor + jo)))
   return shift(frozenset(upscaled_obj), (di_inv, dj_inv))
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):

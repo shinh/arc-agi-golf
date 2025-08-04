@@ -1,23 +1,11 @@
 ORIGIN = (0, 0)
-def asobject(
- grid
-):
+def asobject(grid):
  return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def crop(
- grid,
- start,
- dims
-):
+def crop(grid,start,dims):
  return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def divide(
- a,
- b
-):
+def divide(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a // b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -25,78 +13,52 @@ def divide(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a // b[0], a // b[1])
  return (a[0] // b, a[1] // b)
-def double(
- n
-):
+def double(n):
  return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def normalize(
- patch
-):
+def normalize(patch):
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def hperiod(
- obj
-):
+def hperiod(obj):
  normalized = normalize(obj)
  w = width(normalized)
  for p in range(1, w):
@@ -105,22 +67,13 @@ def hperiod(
   if pruned.issubset(normalized):
    return p
  return w
-def increment(
- x
-):
+def increment(x):
  return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def repeat(
- item,
- num
-):
+def repeat(item,num):
  return tuple(item for i in range(num))
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
 def verify_task231(I):
  x0 = width(I)

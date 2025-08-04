@@ -3,78 +3,37 @@ ONE = 1
 TEN = 10
 THREE = 3
 ZERO = 0
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def branch(
- condition,
- if_value,
- else_value
-):
+def branch(condition,if_value,else_value):
  return if_value if condition else else_value
-def chain(
- h,
- g,
- f
-):
+def chain(h,g,f):
  return lambda x: h(g(f(x)))
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def dedupe(
- iterable
-):
+def dedupe(iterable):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-def equality(
- a,
- b
-):
+def equality(a,b):
  return a == b
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def fork(
- outer,
- a,
- b
-):
+def fork(outer,a,b):
  return lambda x: outer(a(x), b(x))
-def identity(
- x
-):
+def identity(x):
  return x
-def initset(
- value
-):
+def initset(value):
  return frozenset({value})
-def interval(
- start,
- stop,
- step
-):
+def interval(start,stop,step):
  return tuple(range(start, stop, step))
-def last(
- container
-):
+def last(container):
  return max(enumerate(container))[1]
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -82,18 +41,11 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def tophalf(
- grid
-):
+def tophalf(grid):
  return grid[:len(grid) // 2]
-def lefthalf(
- grid
-):
+def lefthalf(grid):
  return rot270(tophalf(rot90(grid)))
-def multiply(
- a,
- b
-):
+def multiply(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a * b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -101,31 +53,17 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def pair(
- a,
- b
-):
+def pair(a,b):
  return tuple(zip(a, b))
-def positive(
- x
-):
+def positive(x):
  return x > 0
-def power(
- function,
- n
-):
+def power(function,n):
  if n == 1:
   return function
  return compose(function, power(function, n - 1))
-def rapply(
- functions,
- value
-):
+def rapply(functions,value):
  return type(functions)(function(value) for function in functions)
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -133,14 +71,9 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def sfilter(
- container,
- condition
-):
+def sfilter(container,condition):
  return type(container)(e for e in container if condition(e))
-def size(
- container
-):
+def size(container):
  return len(container)
 def verify_task039(I):
  x0 = lbind(apply, last)

@@ -1,33 +1,16 @@
 ONE = 1
 ZERO = 0
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def asobject(
- grid
-):
+def asobject(grid):
  return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def contained(
- value,
- container
-):
+def contained(value,container):
  return value in container
-def divide(
- a,
- b
-):
+def divide(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a // b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -35,95 +18,63 @@ def divide(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a // b[0], a // b[1])
  return (a[0] // b, a[1] // b)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def dmirror(
- piece
-):
+def dmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*piece))
  a, b = ulcorner(piece)
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def flip(
- b
-):
+def flip(b):
  return not b
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def normalize(
- patch
-):
+def normalize(patch):
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def hperiod(
- obj
-):
+def hperiod(obj):
  normalized = normalize(obj)
  w = width(normalized)
  for p in range(1, w):
@@ -132,24 +83,13 @@ def hperiod(
   if pruned.issubset(normalized):
    return p
  return w
-def increment(
- x
-):
+def increment(x):
  return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def interval(
- start,
- stop,
- step
-):
+def interval(start,stop,step):
  return tuple(range(start, stop, step))
-def invert(
- n
-):
+def invert(n):
  return -n if isinstance(n, int) else (-n[0], -n[1])
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -157,28 +97,15 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mapply(
- function,
- container
-):
+def mapply(function,container):
  return merge(apply(function, container))
-def matcher(
- function,
- target
-):
+def matcher(function,target):
  return lambda x: function(x) == target
-def maximum(
- container
-):
+def maximum(container):
  return max(container, default=0)
-def multiply(
- a,
- b
-):
+def multiply(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a * b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -186,50 +113,26 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def paint(
- grid,
- obj
-):
+def paint(grid,obj):
  h, w = len(grid), len(grid[0])
  grid_painted = list(list(row) for row in grid)
  for value, (i, j) in obj:
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def product(
- a,
- b
-):
+def product(a,b):
  return frozenset((i, j) for j in b for i in a)
-def sfilter(
- container,
- condition
-):
+def sfilter(container,condition):
  return type(container)(e for e in container if condition(e))
-def crop(
- grid,
- start,
- dims
-):
+def crop(grid,start,dims):
  return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def shape(
- piece
-):
+def shape(piece):
  return (height(piece), width(piece))
-def subgrid(
- patch,
- grid
-):
+def subgrid(patch,grid):
  return crop(grid, ulcorner(patch), shape(patch))
-def vsplit(
- grid,
- n
-):
+def vsplit(grid,n):
  h, w = len(grid) // n, len(grid[0])
  offset = len(grid) % n != 0
  return tuple(crop(grid, (h * i + i * offset, 0), (h, w)) for i in range(n))

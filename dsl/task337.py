@@ -1,10 +1,6 @@
 EIGHT = 8
 FIVE = 5
-def switch(
- grid,
- a,
- b
-):
+def switch(grid,a,b):
  return tuple(tuple(v if (v != a and v != b) else {a: b, b: a}[v] for v in r) for r in grid)
 def verify_task337(I):
  x0 = switch(I, FIVE, EIGHT)

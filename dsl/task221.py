@@ -1,72 +1,42 @@
 ZERO = 0
-def canvas(
- value,
- dimensions
-):
+def canvas(value,dimensions):
  return tuple(tuple(value for j in range(dimensions[1])) for i in range(dimensions[0]))
-def colorcount(
- element,
- value
-):
+def colorcount(element,value):
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def dmirror(
- piece
-):
+def dmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*piece))
  a, b = ulcorner(piece)
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def crop(
- grid,
- start,
- dims
-):
+def crop(grid,start,dims):
  return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def hsplit(
- grid,
- n
-):
+def hsplit(grid,n):
  h, w = len(grid), len(grid[0]) // n
  offset = len(grid[0]) % n != 0
  return tuple(crop(grid, (0, w * i + i * offset), (h, w)) for i in range(n))
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def multiply(
- a,
- b
-):
+def multiply(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a * b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -74,71 +44,41 @@ def multiply(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a * b[0], a * b[1])
  return (a[0] * b, a[1] * b)
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def remove(
- value,
- container
-):
+def remove(value,container):
  return type(container)(e for e in container if e != value)
-def other(
- container,
- value
-):
+def other(container,value):
  return first(remove(value, container))
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def repeat(
- item,
- num
-):
+def repeat(item,num):
  return tuple(item for i in range(num))
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def shape(
- piece
-):
+def shape(piece):
  return (height(piece), width(piece))
-def subtract(
- a,
- b
-):
+def subtract(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a - b
  elif isinstance(a, tuple) and isinstance(b, tuple):

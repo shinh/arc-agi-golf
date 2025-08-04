@@ -6,11 +6,7 @@ ONE = 1
 SIX = 6
 THREE = 3
 TWO = 2
-def switch(
- grid,
- a,
- b
-):
+def switch(grid,a,b):
  return tuple(tuple(v if (v != a and v != b) else {a: b, b: a}[v] for v in r) for r in grid)
 def verify_task016(I):
  x0 = switch(I, THREE, FOUR)

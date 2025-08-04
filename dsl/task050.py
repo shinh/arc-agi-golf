@@ -1,14 +1,8 @@
 ONE = 1
 THREE = 3
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def connect(
- a,
- b
-):
+def connect(a,b):
  ai, aj = a
  bi, bj = b
  si = min(ai, bi)
@@ -24,120 +18,67 @@ def connect(
  elif bi - ai == aj - bj:
   return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
  return frozenset()
-def either(
- a,
- b
-):
+def either(a,b):
  return a or b
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def fork(
- outer,
- a,
- b
-):
+def fork(outer,a,b):
  return lambda x: outer(a(x), b(x))
-def greater(
- a,
- b
-):
+def greater(a,b):
  return a > b
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def hline(
- patch
-):
+def hline(patch):
  return width(patch) == len(patch) and height(patch) == 1
-def leastcolor(
- element
-):
+def leastcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return min(set(values), key=values.count)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def sfilter(
- container,
- condition
-):
+def sfilter(container,condition):
  return type(container)(e for e in container if condition(e))
-def mfilter(
- container,
- function
-):
+def mfilter(container,function):
  return merge(sfilter(container, function))
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def prapply(
- function,
- a,
- b
-):
+def prapply(function,a,b):
  return frozenset(function(i, j) for j in b for i in a)
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -145,13 +86,9 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def size(
- container
-):
+def size(container):
  return len(container)
-def vline(
- patch
-):
+def vline(patch):
  return height(patch) == len(patch) and width(patch) == 1
 def verify_task050(I):
  x0 = leastcolor(I)

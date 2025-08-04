@@ -1,12 +1,6 @@
-def hconcat(
- a,
- b
-):
+def hconcat(a,b):
  return tuple(i + j for i, j in zip(a, b))
-def vconcat(
- a,
- b
-):
+def vconcat(a,b):
  return a + b
 def verify_task106(I):
  x0 = rot90(I)

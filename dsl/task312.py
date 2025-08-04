@@ -1,126 +1,74 @@
 ONE = 1
 ORIGIN = (0, 0)
 ZERO = 0
-def argmax(
- container,
- compfunc
-):
+def argmax(container,compfunc):
  return max(container, key=compfunc, default=None)
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def chain(
- h,
- g,
- f
-):
+def chain(h,g,f):
  return lambda x: h(g(f(x)))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def dmirror(
- piece
-):
+def dmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*piece))
  a, b = ulcorner(piece)
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
- piece
-):
+def vmirror(piece):
  if isinstance(piece, tuple):
   return tuple(row[::-1] for row in piece)
  d = ulcorner(piece)[1] + lrcorner(piece)[1]
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def cmirror(
- piece
-):
+def cmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*(r[::-1] for r in piece[::-1])))
  return vmirror(dmirror(vmirror(piece)))
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def crop(
- grid,
- start,
- dims
-):
+def crop(grid,start,dims):
  return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def dedupe(
- iterable
-):
+def dedupe(iterable):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-def fill(
- grid,
- value,
- patch
-):
+def fill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  grid_filled = list(list(row) for row in grid)
  for i, j in toindices(patch):
   if 0 <= i < h and 0 <= j < w:
    grid_filled[i][j] = value
  return tuple(tuple(row) for row in grid_filled)
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def hupscale(
- grid,
- factor
-):
+def hupscale(grid,factor):
  upscaled_grid = tuple()
  for row in grid:
   upscaled_row = tuple()
@@ -128,28 +76,15 @@ def hupscale(
    upscaled_row = upscaled_row + tuple(value for num in range(factor))
   upscaled_grid = upscaled_grid + (upscaled_row,)
  return upscaled_grid
-def identity(
- x
-):
+def identity(x):
  return x
-def initset(
- value
-):
+def initset(value):
  return frozenset({value})
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def rapply(
- functions,
- value
-):
+def rapply(functions,value):
  return type(functions)(function(value) for function in functions)
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -157,21 +92,13 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def size(
- container
-):
+def size(container):
  return len(container)
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):

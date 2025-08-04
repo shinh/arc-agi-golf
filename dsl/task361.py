@@ -2,10 +2,7 @@ NEG_ONE = -1
 ONE = 1
 ORIGIN = (0, 0)
 SEVEN = 7
-def add(
- a,
- b
-):
+def add(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a + b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -13,211 +10,111 @@ def add(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a + b[0], a + b[1])
  return (a[0] + b, a[1] + b)
-def argmin(
- container,
- compfunc
-):
+def argmin(container,compfunc):
  return min(container, key=compfunc, default=None)
-def asobject(
- grid
-):
+def asobject(grid):
  return frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r))
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def backdrop(
- patch
-):
+def backdrop(patch):
  if len(patch) == 0:
   return frozenset({})
  indices = toindices(patch)
  si, sj = ulcorner(indices)
  ei, ej = lrcorner(patch)
  return frozenset((i, j) for i in range(si, ei + 1) for j in range(sj, ej + 1))
-def both(
- a,
- b
-):
+def both(a,b):
  return a and b
-def branch(
- condition,
- if_value,
- else_value
-):
+def branch(condition,if_value,else_value):
  return if_value if condition else else_value
-def lowermost(
- patch
-):
+def lowermost(patch):
  return max(i for i, j in toindices(patch))
-def uppermost(
- patch
-):
+def uppermost(patch):
  return min(i for i, j in toindices(patch))
-def height(
- piece
-):
+def height(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece)
  return lowermost(piece) - uppermost(piece) + 1
-def leftmost(
- patch
-):
+def leftmost(patch):
  return min(j for i, j in toindices(patch))
-def rightmost(
- patch
-):
+def rightmost(patch):
  return max(j for i, j in toindices(patch))
-def width(
- piece
-):
+def width(piece):
  if len(piece) == 0:
   return 0
  if isinstance(piece, tuple):
   return len(piece[0])
  return rightmost(piece) - leftmost(piece) + 1
-def center(
- patch
-):
+def center(patch):
  return (uppermost(patch) + height(patch) // 2, leftmost(patch) + width(patch) // 2)
-def chain(
- h,
- g,
- f
-):
+def chain(h,g,f):
  return lambda x: h(g(f(x)))
-def colorcount(
- element,
- value
-):
+def colorcount(element,value):
  if isinstance(element, tuple):
   return sum(row.count(value) for row in element)
  return sum(v == value for v, _ in element)
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def decrement(
- x
-):
+def decrement(x):
  return x - 1 if isinstance(x, int) else (x[0] - 1, x[1] - 1)
-def difference(
- a,
- b
-):
+def difference(a,b):
  return type(a)(e for e in a if e not in b)
-def equality(
- a,
- b
-):
+def equality(a,b):
  return a == b
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def palette(
- element
-):
+def palette(element):
  if isinstance(element, tuple):
   return frozenset({v for r in element for v in r})
  return frozenset({v for v, _ in element})
-def fgpartition(
- grid
-):
- return frozenset(
-  frozenset(
-   (v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
+def fgpartition(grid):
+ return frozenset(frozenset((v, (i, j)) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value
   ) for value in palette(grid) - {mostcolor(grid)}
  )
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def fork(
- outer,
- a,
- b
-):
+def fork(outer,a,b):
  return lambda x: outer(a(x), b(x))
-def greater(
- a,
- b
-):
+def greater(a,b):
  return a > b
-def halve(
- n
-):
+def halve(n):
  return n // 2 if isinstance(n, int) else (n[0] // 2, n[1] // 2)
-def identity(
- x
-):
+def identity(x):
  return x
-def increment(
- x
-):
+def increment(x):
  return x + 1 if isinstance(x, int) else (x[0] + 1, x[1] + 1)
-def initset(
- value
-):
+def initset(value):
  return frozenset({value})
-def insert(
- value,
- container
-):
+def insert(value,container):
  return container.union(frozenset({value}))
-def interval(
- start,
- stop,
- step
-):
+def interval(start,stop,step):
  return tuple(range(start, stop, step))
-def invert(
- n
-):
+def invert(n):
  return -n if isinstance(n, int) else (-n[0], -n[1])
-def last(
- container
-):
+def last(container):
  return max(enumerate(container))[1]
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -225,34 +122,17 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def manhattan(
- a,
- b
-):
+def manhattan(a,b):
  return min(abs(ai - bi) + abs(aj - bj) for ai, aj in toindices(a) for bi, bj in toindices(b))
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def merge(
- containers
-):
+def merge(containers):
  return type(containers)(e for c in containers for e in c)
-def mapply(
- function,
- container
-):
+def mapply(function,container):
  return merge(apply(function, container))
-def matcher(
- function,
- target
-):
+def matcher(function,target):
  return lambda x: function(x) == target
-def multiply(
- a,
- b
-):
+def multiply(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a * b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -262,26 +142,18 @@ def multiply(
  return (a[0] * b, a[1] * b)
 F = False
 T = True
-def shift(
- patch,
- directions
-):
+def shift(patch,directions):
  if len(patch) == 0:
   return patch
  di, dj = directions
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  return frozenset((i + di, j + dj) for i, j in patch)
-def normalize(
- patch
-):
+def normalize(patch):
  if len(patch) == 0:
   return patch
  return shift(patch, (-uppermost(patch), -leftmost(patch)))
-def occurrences(
- grid,
- obj
-):
+def occurrences(grid,obj):
  occurrences = set()
  normed = normalize(obj)
  h, w = len(grid), len(grid[0])
@@ -299,25 +171,16 @@ def occurrences(
    if occurs:
     occurrences.add((i, j))
  return frozenset(occurrences)
-def paint(
- grid,
- obj
-):
+def paint(grid,obj):
  h, w = len(grid), len(grid[0])
  grid_painted = list(list(row) for row in grid)
  for value, (i, j) in obj:
   if 0 <= i < h and 0 <= j < w:
    grid_painted[i][j] = value
  return tuple(tuple(row) for row in grid_painted)
-def product(
- a,
- b
-):
+def product(a,b):
  return frozenset((i, j) for j in b for i in a)
-def rbind(
- function,
- fixed
-):
+def rbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda x: function(x, fixed)
@@ -325,35 +188,17 @@ def rbind(
   return lambda x, y: function(x, y, fixed)
  else:
   return lambda x, y, z: function(x, y, z, fixed)
-def repeat(
- item,
- num
-):
+def repeat(item,num):
  return tuple(item for i in range(num))
-def sfilter(
- container,
- condition
-):
+def sfilter(container,condition):
  return type(container)(e for e in container if condition(e))
-def shape(
- piece
-):
+def shape(piece):
  return (height(piece), width(piece))
-def crop(
- grid,
- start,
- dims
-):
+def crop(grid,start,dims):
  return tuple(r[start[1]:start[1]+dims[1]] for r in grid[start[0]:start[0]+dims[0]])
-def subgrid(
- patch,
- grid
-):
+def subgrid(patch,grid):
  return crop(grid, ulcorner(patch), shape(patch))
-def subtract(
- a,
- b
-):
+def subtract(a,b):
  if isinstance(a, int) and isinstance(b, int):
   return a - b
  elif isinstance(a, tuple) and isinstance(b, tuple):
@@ -361,10 +206,7 @@ def subtract(
  elif isinstance(a, int) and isinstance(b, tuple):
   return (a - b[0], a - b[1])
  return (a[0] - b, a[1] - b)
-def valmax(
- container,
- compfunc
-):
+def valmax(container,compfunc):
  return compfunc(max(container, key=compfunc, default=0))
 def verify_task361(I):
  x0 = fgpartition(I)

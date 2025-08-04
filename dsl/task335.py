@@ -1,20 +1,11 @@
 EIGHT = 8
 FOUR = 4
 TWO = 2
-def astuple(
- a,
- b
-):
+def astuple(a,b):
  return (a, b)
-def combine(
- a,
- b
-):
+def combine(a,b):
  return type(a)((*a, *b))
-def connect(
- a,
- b
-):
+def connect(a,b):
  ai, aj = a
  bi, bj = b
  si = min(ai, bi)
@@ -30,46 +21,28 @@ def connect(
  elif bi - ai == aj - bj:
   return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
  return frozenset()
-def first(
- container
-):
+def first(container):
  return next(iter(container))
-def last(
- container
-):
+def last(container):
  return max(enumerate(container))[1]
-def ofcolor(
- grid,
- value
-):
+def ofcolor(grid,value):
  return frozenset((i, j) for i, r in enumerate(grid) for j, v in enumerate(r) if v == value)
-def mostcolor(
- element
-):
+def mostcolor(element):
  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
  return max(set(values), key=values.count)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def underfill(
- grid,
- value,
- patch
-):
+def underfill(grid,value,patch):
  h, w = len(grid), len(grid[0])
  bg = mostcolor(grid)
  grid_filled = list(list(row) for row in grid)

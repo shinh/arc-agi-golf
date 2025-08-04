@@ -1,78 +1,46 @@
-def compose(
- outer,
- inner
-):
+def compose(outer,inner):
  return lambda x: outer(inner(x))
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def dedupe(
- iterable
-):
+def dedupe(iterable):
  return tuple(e for i, e in enumerate(iterable) if iterable.index(e) == i)
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def dmirror(
- piece
-):
+def dmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*piece))
  a, b = ulcorner(piece)
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def fork(
- outer,
- a,
- b
-):
+def fork(outer,a,b):
  return lambda x: outer(a(x), b(x))
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def hmirror(
- piece
-):
+def hmirror(piece):
  if isinstance(piece, tuple):
   return piece[::-1]
  d = ulcorner(piece)[0] + lrcorner(piece)[0]
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
-def identity(
- x
-):
+def identity(x):
  return x
-def last(
- container
-):
+def last(container):
  return max(enumerate(container))[1]
-def remove(
- value,
- container
-):
+def remove(value,container):
  return type(container)(e for e in container if e != value)
-def vconcat(
- a,
- b
-):
+def vconcat(a,b):
  return a + b
 def verify_task377(I):
  x0 = compose(dmirror, dedupe)

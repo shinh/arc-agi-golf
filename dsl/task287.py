@@ -1,72 +1,49 @@
 FOUR = 4
 NEG_ONE = -1
-def apply(
- function,
- container
-):
+def apply(function,container):
  return type(container)(function(e) for e in container)
-def index(
- grid,
- loc
-):
+def index(grid,loc):
  i, j = loc
  h, w = len(grid), len(grid[0])
  if not (0 <= i < h and 0 <= j < w):
   return None
  return grid[loc[0]][loc[1]]
-def toindices(
- patch
-):
+def toindices(patch):
  if len(patch) == 0:
   return frozenset()
  if isinstance(next(iter(patch))[1], tuple):
   return frozenset(index for value, index in patch)
  return patch
-def ulcorner(
- patch
-):
+def ulcorner(patch):
  return tuple(map(min, zip(*toindices(patch))))
-def dmirror(
- piece
-):
+def dmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*piece))
  a, b = ulcorner(piece)
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
  return frozenset((j - b + a, i - a + b) for i, j in piece)
-def lrcorner(
- patch
-):
+def lrcorner(patch):
  return tuple(map(max, zip(*toindices(patch))))
-def vmirror(
- piece
-):
+def vmirror(piece):
  if isinstance(piece, tuple):
   return tuple(row[::-1] for row in piece)
  d = ulcorner(piece)[1] + lrcorner(piece)[1]
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (i, d - j)) for v, (i, j) in piece)
  return frozenset((i, d - j) for i, j in piece)
-def cmirror(
- piece
-):
+def cmirror(piece):
  if isinstance(piece, tuple):
   return tuple(zip(*(r[::-1] for r in piece[::-1])))
  return vmirror(dmirror(vmirror(piece)))
-def hmirror(
- piece
-):
+def hmirror(piece):
  if isinstance(piece, tuple):
   return piece[::-1]
  d = ulcorner(piece)[0] + lrcorner(piece)[0]
  if isinstance(next(iter(piece))[1], tuple):
   return frozenset((v, (d - i, j)) for v, (i, j) in piece)
  return frozenset((d - i, j) for i, j in piece)
-def lbind(
- function,
- fixed
-):
+def lbind(function,fixed):
  n = function.__code__.co_argcount
  if n == 2:
   return lambda y: function(fixed, y)
@@ -74,26 +51,13 @@ def lbind(
   return lambda y, z: function(fixed, y, z)
  else:
   return lambda y, z, a: function(fixed, y, z, a)
-def maximum(
- container
-):
+def maximum(container):
  return max(container, default=0)
-def pair(
- a,
- b
-):
+def pair(a,b):
  return tuple(zip(a, b))
-def papply(
- function,
- a,
- b
-):
+def papply(function,a,b):
  return tuple(function(i, j) for i, j in zip(a, b))
-def replace(
- grid,
- replacee,
- replacer
-):
+def replace(grid,replacee,replacer):
  return tuple(tuple(replacer if v == replacee else v for v in r) for r in grid)
 def verify_task287(I):
  x0 = replace(I, FOUR, NEG_ONE)
