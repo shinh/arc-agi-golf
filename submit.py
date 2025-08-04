@@ -119,20 +119,23 @@ def check_task(task_id, filename, verbose):
     code = reindent(code)
     #code = squeeze(code)
 
-    #code = myzlib.map_identifiers(code, ["p"])
+    if task_id in (133,157,193,234,291):
+        rename_locals = True
+    else:
+        code = myzlib.map_identifiers(code, ["p"])
+        rename_locals = False
     #print(code, flush=True)
 
-    if task_id != 71:
-        code = python_minifier.minify(code)
-        zlib_code = compress(code,"zlib")
-        lzma_code = compress(code,"lzma")
-        if len(zlib_code) < len(code):
-            if len(lzma_code) < len(zlib_code):
-                code = lzma_code
-            else:
-                code = zlib_code
-        elif len(lzma_code) < len(code):
+    code = python_minifier.minify(code, rename_locals=rename_locals)
+    zlib_code = compress(code,"zlib")
+    lzma_code = compress(code,"lzma")
+    if len(zlib_code) < len(code):
+        if len(lzma_code) < len(zlib_code):
             code = lzma_code
+        else:
+            code = zlib_code
+    elif len(lzma_code) < len(code):
+        code = lzma_code
 
     task_path = f"{basedir}/task{task_id:03d}.py"
     write_code(code, task_path)

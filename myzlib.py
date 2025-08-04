@@ -551,7 +551,7 @@ def _build_identifier_mapping(positions, excludes: List[str] = []) -> Dict[str, 
         if name in reserved:
             continue
         alias = next(gen)
-        while alias in reserved or alias in counts or alias in mapping.values():
+        while alias in reserved:
             alias = next(gen)
         mapping[name] = alias
     return mapping
