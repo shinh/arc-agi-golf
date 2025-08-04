@@ -7,6 +7,7 @@ def p(g):
     for c in range(9):
         if (g[0][0]==c)+(g[-1][0]==c)+(g[0][-1]==c)+(g[0][-1]==c)>=3:
             b=c
+            continue
         sy=sx=999
         ey=ex=-1
         cnt=0
@@ -41,5 +42,10 @@ def p(g):
                 if pat is not None:
                     pats.append(pat)
                     break
+            if pat is None:
+                # TODO: Fix this!
+                raise RuntimeError(f"Patter not found!!! {c} cnt={cnt}")
+
+        # So now we have sx+ox and sy+oy and l, we can finish the pattern.
 
     return g
