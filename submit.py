@@ -63,27 +63,10 @@ def inline_create(code):
 
 
 def compress(code, algo="zlib"):
-    first_line, *body_orig = code.splitlines()
-    if first_line.strip() != "def p(g):":
-        return code
-
-    body = []
-    has_return = False
-    for line in body_orig:
-        if "return" in line:
-            if has_return:
-                return code
-            has_return = True
-            line, _ = re.subn(r"return\s*","o=",line)
-        body.append(line[1:])
-
     if algo == "zlib":
         main = "import base64,zlib\n"
-        main += "def p(g):\n"
-        main += " O={'g':g,'o':None}\n"
-        compressed = base64.b85encode(zlib.compress("\n".join(body).encode(),9))
-        main += ' exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
-        main += " return O['o']\n"
+        compressed = base64.b85encode(zlib.compress(code.encode()),9)
+        main += 'exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")))'
     elif algo == "lzma":
         main = "import base64,lzma\n"
         main += "def p(g):\n"
@@ -93,7 +76,7 @@ def compress(code, algo="zlib"):
         main += " return O['o']\n"
 
     if len(main) < len(code):
-        print(f"Use compressed code! {len(code)} => {len(main)}")
+        print(f"Use {algo} compressed code! {len(code)} => {len(main)}")
         return main
 
     return code
