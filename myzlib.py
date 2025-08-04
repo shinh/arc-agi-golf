@@ -726,6 +726,9 @@ if __name__ == "__main__":
         assert zlib.decompress(compress(sample, False)) == sample.encode()
 
         assert map_identifiers("def ppp(g):return len(g)") == "def b(a):return len(a)"
+    elif sys.argv[1] == "--map":
+        source = open(sys.argv[2]).read()
+        print(map_identifiers(source, excludes=["p"]))
     else:
         stats = {}
 
