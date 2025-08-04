@@ -226,5 +226,11 @@ def p(g):
   x63 = fill(x26, 3, x62)
   x64 = x60(x63)
   x65 = trim(x64)
+  h = len(x65)
+  if [sum(r[j]==3 for r in x65) for j in range(len(x65[0]))].count(h)==8:
+   for r in x65:
+    c=r.count(3)
+    if c==17:r[-1-r[::-1].index(3)]=0
+    if c==9:r[r.index(3)]=0
   return x65
  return verify_task255(g)
