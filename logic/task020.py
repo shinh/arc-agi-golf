@@ -1,16 +1,13 @@
 def p(g):
-    a=b=9;c=d=0
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v:a=min(a,x);c=max(c,x);b=min(b,y);d=max(d,y)
-    x=(a+c)//2;y=(b+d)//2
-    for i in range(y):
-        r=g[i]
-        for k in range(a,x):
-            l=x*2-k;v=r[k];w=r[l]
-            if v*w==0:r[k]=r[l]=v or w
-        g[y*2-i]=r[:]
-    u=g[b][x];r=g[y]
-    for k in range(a,c+1):
-        if g[b][k] and k!=x and r[k]==0:r[k]=u
-    return g
+    h=len(g);w=len(g[0]);pts=[(y,x,g[y][x])for y in range(h)for x in range(w)if g[y][x]]
+    if not pts:return g
+    ys=[y for y,_,_ in pts];xs=[x for _,x,_ in pts];b,d=min(ys),max(ys);a,c=min(xs),max(xs)
+    cx=(a+c)/2;cy=(b+d)/2
+    o=[[0]*w for _ in range(h)]
+    for y,x,v in pts:
+        xx=x-cx;yy=y-cy
+        for Y,X in((y,x),(cy+xx,cx-yy),(2*cy-y,2*cx-x),(cy-xx,cx+yy)):
+            Y=int(round(Y));X=int(round(X))
+            if 0<=Y<h and 0<=X<w:o[Y][X]=v
+    return o
+
