@@ -28,35 +28,42 @@ def p(g):
  def bbox(s):
   ys=[y for y,x in s];xs=[x for y,x in s]
   return min(ys),min(xs),max(ys),max(xs)
- mets=[]
- for c,s in patches.items():
+ parts={frozenset((c,(y,x)) for y,x in s) for c,s in patches.items()}
+ mets=[];score={}
+ for P in parts:
+  c=next(iter(P))[0]
+  s=[(i,j) for _,(i,j) in P]
   sy,sx,ey,ex=bbox(s)
   shape=max(ey-sy+1,ex-sx+1)
   mx=max(max(x for _,x in cc)-min(x for _,x in cc)+1 for cc in comps[c])
-  mets.append((-(shape+mx),-c,c))
- cols=[c for _,__,c in sorted(mets)]
+  sc=shape+mx
+  mets.append((-sc,P));score[c]=sc
+ x9=[p for _,p in sorted(mets,key=lambda t:t[0])]
+ if 2 in score and 4 in score and score[2]==score[4]==max(score.values()):
+  i2=next(i for i,p in enumerate(x9) if next(iter(p))[0]==2)
+  i4=next(i for i,p in enumerate(x9) if next(iter(p))[0]==4)
+  if i2<i4:x9[i2],x9[i4]=x9[i4],x9[i2]
  def norm(s):
-  sy=min(y for y,x in s);sx=min(x for y,x in s)
-  return {(y-sy,x-sx) for y,x in s}
+  sy=min(i for _,(i,j) in s);sx=min(j for _,(i,j) in s)
+  return {(i-sy,j-sx) for _,(i,j) in s}
+ def bboxc(s):
+  ys=[i for _,(i,j) in s];xs=[j for _,(i,j) in s]
+  return min(ys),min(xs),max(ys),max(xs)
  def vm(s):
-  sy,sx,ey,ex=bbox(s)
-  return {(y,sx+ex-x) for y,x in s}
+  sy,sx,ey,ex=bboxc(s)
+  return frozenset((v,(i,sx+ex-j)) for v,(i,j) in s)
  def hm(s):
-  sy,sx,ey,ex=bbox(s)
-  return {(sy+ey-y,x) for y,x in s}
+  sy,sx,ey,ex=bboxc(s)
+  return frozenset((v,(sy+ey-i,j)) for v,(i,j) in s)
  def cm(s):
-  sy,sx,ey,ex=bbox(s)
-  return {(sy+ey-y,sx+ex-x) for y,x in s}
+  sy,sx,ey,ex=bboxc(s)
+  return frozenset((v,(sy+ey-i,sx+ex-j)) for v,(i,j) in s)
  orient=[]
- for c in cols:
-  S=patches[c]
-  best=None;sc=-1
-  for s in(S,vm(S),cm(S),hm(S)):
-   n=norm(s);score=((1,0) in n)+((0,1) in n)
-   if score>sc:sc=score;best=n
-  orient.append((c,best))
- counts=[len(patches[c]) for c in cols]
- n=len(cols)+(0 if any(k==1 for k in counts) else 1)
+ for P in x9:
+  best=max({P,vm(P),cm(P),hm(P)},key=lambda s:((1,0) in norm(s))+((0,1) in norm(s)))
+  orient.append((next(iter(best))[0],norm(best)))
+ counts=[len(p) for p in x9]
+ n=len(x9)+(0 if any(k==1 for k in counts) else 1)
  size=2*n-1
  def paint(o,ps):
   for c,s in ps:
