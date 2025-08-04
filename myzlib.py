@@ -471,19 +471,29 @@ def get_identifier_positions(source_code):
 
         def visit_FunctionDef(self, node):
             line = lines[node.lineno - 1]
-            col = line.find(node.name, node.col_offset)
+            # ``node.col_offset`` points to the ``def`` keyword.  Search for the
+            # actual function name after this keyword to avoid capturing the
+            # "d" from ``def`` when the function name itself is also ``d``.
+            start = node.col_offset + 4  # len("def ")
+            col = line.find(node.name, start)
             self.record(node, node.name, "func", lineno=node.lineno, col_offset=col)
             self.generic_visit(node)
 
         def visit_AsyncFunctionDef(self, node):
             line = lines[node.lineno - 1]
-            col = line.find(node.name, node.col_offset)
+            # ``async def`` spans two keywords.  Skip both to locate the function
+            # name correctly and avoid renaming parts of the keywords.
+            start = node.col_offset + 10  # len("async def ")
+            col = line.find(node.name, start)
             self.record(node, node.name, "func", lineno=node.lineno, col_offset=col)
             self.generic_visit(node)
 
         def visit_ClassDef(self, node):
             line = lines[node.lineno - 1]
-            col = line.find(node.name, node.col_offset)
+            # ``class`` is followed by a space before the class name.  Start the
+            # search after that to ensure the name's position is correct.
+            start = node.col_offset + 6  # len("class ")
+            col = line.find(node.name, start)
             self.record(node, node.name, "class", lineno=node.lineno, col_offset=col)
             self.generic_visit(node)
 
