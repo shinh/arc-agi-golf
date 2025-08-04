@@ -19,9 +19,9 @@ def p(g):
    return frozenset(index for value, index in patch)
   return patch
  def lrcorner(patch):
-  return tuple(map(max, zip(*toindices(patch))))
+  return map(max, zip(*toindices(patch)))
  def ulcorner(patch):
-  return tuple(map(min, zip(*toindices(patch))))
+  return map(min, zip(*toindices(patch)))
  def backdrop(patch):
   indices = toindices(patch)
   si, sj = ulcorner(indices)
@@ -67,11 +67,9 @@ def p(g):
   for i, j in toindices(patch):
    if 0 <= i < h and 0 <= j < w:
     grid_filled[i][j] = value
-  return tuple(tuple(row) for row in grid_filled)
- def fork(outer,a,b):
-  return lambda x: outer(a(x), b(x))
- def identity(x):
-  return x
+  return [list(row) for row in grid_filled]
+ def fork(outer,b):
+  return lambda x: outer(x, b(x))
  def initset(value):
   return frozenset({value})
  def insert(value,container):
@@ -183,7 +181,7 @@ def p(g):
   x15 = lbind(mapply, x14)
   x16 = rbind(occurrences, x12)
   x17 = compose(x15, x16)
-  x18 = fork(paint, identity, x17)
+  x18 = fork(paint, x17)
   x19 = x18(x6)
   x20 = ofcolor(x19, 3)
   x21 = dmirror(x6)
@@ -213,12 +211,12 @@ def p(g):
   x48 = lbind(mapply, x47)
   x49 = rbind(occurrences, x33)
   x50 = compose(x48, x49)
-  x51 = fork(paint, identity, x50)
+  x51 = fork(paint, x50)
   x52 = lbind(shift, x46)
   x53 = lbind(mapply, x52)
   x54 = rbind(occurrences, x45)
   x55 = compose(x53, x54)
-  x56 = fork(paint, identity, x55)
+  x56 = fork(paint, x55)
   x57 = compose(x51, x56)
   x58 = compose(rot90, x57)
   x59 = power(x58, 4)
