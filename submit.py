@@ -125,9 +125,7 @@ def check_task(task_id, filename, verbose):
     if task_id != 71:
         code = python_minifier.minify(code)
         zlib_code = compress(code,"zlib")
-        # TODO: Check if why lzma is useless.
-        # lzma_code = compress(code,"lzma")
-        lzma_code = code
+        lzma_code = compress(code,"lzma")
         if len(zlib_code) < len(code):
             if len(lzma_code) < len(zlib_code):
                 code = lzma_code
