@@ -81,8 +81,7 @@ def compress(code):
     main += "def p(g):\n"
     main += " O={'g':g,'o':None}\n"
     compressed = base64.b85encode(zlib.compress("\n".join(body).encode()))
-    main += ' try:exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
-    main += ' except:0\n'
+    main += ' exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")),O)\n'
     main += " return O['o']\n"
 
     if len(main) < len(code):
