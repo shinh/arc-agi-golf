@@ -107,7 +107,15 @@ def compress(data: Union[str, bytes]) -> bytes:
 
 
 if __name__ == "__main__":
+    import sys
     import zlib
-    orig = 'if __name__ == "__main__":'
-    decompressed = zlib.decompress(compress(orig)).decode("utf-8")
-    assert decompressed == orig
+
+    if len(sys.argv) == 1:
+        orig = 'if __name__ == "__main__":'
+        decompressed = zlib.decompress(compress(orig)).decode("utf-8")
+        assert decompressed == orig
+    else:
+        test = open(sys.argv[1]).read()
+        print("orig:", len(test))
+        print("zlib:", len(zlib.compress(test.encode(),9)))
+        print("mine:", len(compress(test.encode())))
