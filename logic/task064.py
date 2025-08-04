@@ -1,4 +1,4 @@
-def p(g):
+ef p(g):
     t=[[]for _ in range(10)]
     for y,r in enumerate(g):
         for x,v in enumerate(r):t[v]+=((y,x),)

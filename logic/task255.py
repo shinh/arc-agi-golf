@@ -1,17 +1,9 @@
 def p(g):
  DOWN = (1, 0)
- FOUR = 4
- ONE = 1
  RIGHT = (0, 1)
  UNITY = (1, 1)
  def add(a,b):
-  if isinstance(a, int) and isinstance(b, int):
-   return a + b
-  elif isinstance(a, tuple) and isinstance(b, tuple):
-   return (a[0] + b[0], a[1] + b[1])
-  elif isinstance(a, int) and isinstance(b, tuple):
-   return (a + b[0], a + b[1])
-  return (a[0] + b, a[1] + b)
+  return (a + b[0], a + b[1])
  def asindices(grid):
   return frozenset((i, j) for i in range(len(grid)) for j in range(len(grid[0])))
  def asobject(grid):
@@ -74,16 +66,9 @@ def p(g):
    return frozenset((i, j) for i, j in zip(range(si, ei), range(ej - 1, sj - 1, -1)))
   return frozenset()
  def dmirror(piece):
-  if isinstance(piece, tuple):
-   return tuple(zip(*piece))
-  a, b = ulcorner(piece)
-  if isinstance(next(iter(piece))[1], tuple):
-   return frozenset((v, (j - b + a, i - a + b)) for v, (i, j) in piece)
-  return frozenset((j - b + a, i - a + b) for i, j in piece)
+  return tuple(zip(*piece))
  def dneighbors(loc):
   return frozenset({(loc[0] - 1, loc[1]), (loc[0] + 1, loc[1]), (loc[0], loc[1] - 1), (loc[0], loc[1] + 1)})
- def double(n):
-  return n * 2 if isinstance(n, int) else (n[0] * 2, n[1] * 2)
  def fill(grid,value,patch):
   h, w = len(grid), len(grid[0])
   grid_filled = list(list(row) for row in grid)
@@ -114,7 +99,7 @@ def p(g):
  def mapply(function,container):
   return merge(apply(function, container))
  def mostcolor(element):
-  values = [v for r in element for v in r] if isinstance(element, tuple) else [v for v, _ in element]
+  values = [v for r in element for v in r]
   return max(set(values), key=values.count)
  F = False
  T = True
@@ -124,9 +109,7 @@ def p(g):
   if len(patch) == 0:
    return patch
   di, dj = directions
-  if isinstance(next(iter(patch))[1], tuple):
-   return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
-  return frozenset((i + di, j + dj) for i, j in patch)
+  return frozenset((value, (i + di, j + dj)) for value, (i, j) in patch)
  def uppermost(patch):
   return min(i for i, j in toindices(patch))
  def normalize(patch):
@@ -177,13 +160,7 @@ def p(g):
    return function
   return compose(function, power(function, n - 1))
  def rbind(function,fixed):
-  n = function.__code__.co_argcount
-  if n == 2:
-   return lambda x: function(x, fixed)
-  elif n == 3:
-   return lambda x, y: function(x, y, fixed)
-  else:
-   return lambda x, y, z: function(x, y, z, fixed)
+  return lambda x: function(x, fixed)
  def recolor(value,patch):
   return frozenset((value, index) for index in toindices(patch))
  def remove(value,container):
@@ -191,17 +168,9 @@ def p(g):
  def rot90(grid):
   return tuple(row for row in zip(*grid[::-1]))
  def height(piece):
-  if len(piece) == 0:
-   return 0
-  if isinstance(piece, tuple):
-   return len(piece)
-  return lowermost(piece) - uppermost(piece) + 1
+  return len(piece)
  def width(piece):
-  if len(piece) == 0:
-   return 0
-  if isinstance(piece, tuple):
-   return len(piece[0])
-  return rightmost(piece) - leftmost(piece) + 1
+  return len(piece[0])
  def shape(piece):
   return (height(piece), width(piece))
  def trim(grid):
@@ -214,8 +183,8 @@ def p(g):
   x4 = asobject(I)
   x5 = shift(x4, UNITY)
   x6 = paint(x3, x5)
-  x7 = double(6)
-  x8 = astuple(ONE, x7)
+  x7 = 12
+  x8 = astuple(1, x7)
   x9 = connect(UNITY, x8)
   x10 = outbox(x9)
   x11 = backdrop(x10)
@@ -234,7 +203,7 @@ def p(g):
   x24 = ofcolor(x23, 3)
   x25 = combine(x20, x24)
   x26 = fill(x6, 3, x25)
-  x27 = astuple(2, ONE)
+  x27 = astuple(2, 1)
   x28 = dneighbors(UNITY)
   x29 = remove(x27, x28)
   x30 = recolor(x0, x29)
@@ -242,13 +211,13 @@ def p(g):
   x32 = recolor(3, x31)
   x33 = combine(x30, x32)
   x34 = recolor(x0, x33)
-  x35 = astuple(ONE, 3)
+  x35 = astuple(1, 3)
   x36 = initset(x35)
   x37 = insert((0,2), x36)
   x38 = insert(RIGHT, x37)
   x39 = insert(DOWN, x38)
   x40 = recolor(x0, x39)
-  x41 = astuple(ONE, 2)
+  x41 = astuple(1, 2)
   x42 = initset(x41)
   x43 = insert(UNITY, x42)
   x44 = recolor(3, x43)
@@ -266,7 +235,7 @@ def p(g):
   x56 = fork(paint, identity, x55)
   x57 = compose(x51, x56)
   x58 = compose(rot90, x57)
-  x59 = power(x58, FOUR)
+  x59 = power(x58, 4)
   x60 = power(x59, 2)
   x61 = asindices(x26)
   x62 = box(x61)
