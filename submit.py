@@ -67,7 +67,14 @@ def compress(code, algo="zlib"):
     if algo == "zlib":
         main = "import base64,zlib\n"
         z1 = zlib.compress(code.encode(),9)
-        z2 = zopfli.zlib.compress(code.encode())
+        #z2 = zopfli.zlib.compress(code.encode())
+        z2 = zopfli.zlib.compress(
+            code.encode(),
+            numiterations=1000,
+            blocksplitting=True,
+            blocksplittinglast=False,
+            blocksplittingmax=100
+        )
         if len(z2) < len(z1):
             algo = "zopfli"
             z1 = z2
