@@ -5,9 +5,6 @@ def p(g):
     H=len(g)
     W=len(g[0])
     for c in range(9):
-        if (g[0][0]==c)+(g[-1][0]==c)+(g[0][-1]==c)+(g[0][-1]==c)>=3:
-            b=c
-            continue
         sy=sx=999
         ey=ex=-1
         cnt=0
@@ -19,11 +16,14 @@ def p(g):
                     ey=max(ey,y)
                     ex=max(ex,x)
                     cnt+=1
+        if cnt>100:
+            b=c
+            continue
         if ey>=0:
             pat=None
             for l in range(1,30,2):
-                for oy in range(sy-ey,1):
-                    for ox in range(sx-ex,1):
+                for oy in range(sy-ey-l,1):
+                    for ox in range(sx-ex-l,1):
                         cnt2=0
                         for y in range(oy+sy,min(oy+sy+l,H)):
                             for x in range(ox+sx,min(ox+sx+l,W)):
