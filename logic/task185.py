@@ -29,11 +29,10 @@ def p(g):
       v[Y][X]=1;q+=Y,X
       a=min(a,Y);b=max(b,Y);c=min(c,X);d=max(d,X)
    P+=[[a,c,b,d]]
- P.sort();R=[];i=0
- while i<len(P):
-  t=P[i][0];row=[]
-  while i<len(P) and P[i][0]==t:
-   a,c,b,d=P[i];i+=1
+ P.sort();R=[]
+ for i in range(0,len(P),3):
+  row=[]
+  for a,c,b,d in P[i:i+3]:
    f={s[u][v]for u,v in((a-1,c-1),(a-1,d+1),(b+1,c-1),(b+1,d+1))if 0<=u<h and 0<=v<w}
    row+=[(len(f)==1 and not f&{A,B} and f.pop()) or A]
   R+=row,
