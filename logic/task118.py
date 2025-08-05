@@ -1,9 +1,9 @@
 def p(g):
  h=len(g);w=len(g[0])
- c=min({v for r in g for v in r},key=lambda k:sum(r.count(k)for r in g))
- O={(y,x)for y in range(h)for x in range(w)if g[y][x]==c}
- S=set(O)
- while 1:
+ t=sum(g,[]);c=min({*t},key=t.count)
+ S={(y,x)for y in range(h)for x in range(w)if g[y][x]==c}
+ s=0
+ while s-len(S):
   s=len(S)
   for y in range(h):
    xs=[x for x in range(w)if(y,x)in S]
@@ -13,7 +13,6 @@ def p(g):
    ys=[y for y in range(h)if(y,x)in S]
    for a,b in zip(ys,ys[1:]):
     if b-a<5:S|={(y,x)for y in range(a+1,b)}
-  if len(S)==s:break
  T={(y,x)for y,x in S if{(y-1,x),(y+1,x)}&S and{(y,x-1),(y,x+1)}&S}
  L=0;M=set()
  for y in range(h):
@@ -43,7 +42,5 @@ def p(g):
   for d in range(-m,m+1):
    if 0<=y+d<h:S.add((y+d,x))
    if 0<=x+d<w:S.add((y,x+d))
- R=[r[:]for r in g]
- for y,x in S:R[y][x]=8
- for y,x in O:R[y][x]=c
- return R
+ for y,x in S:g[y][x]=(8,c)[g[y][x]==c]
+ return g
