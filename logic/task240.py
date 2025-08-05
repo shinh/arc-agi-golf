@@ -1,5 +1,5 @@
 def p(g):
-    n=len(g)
+    n=19
     for y in range(n):
         for x in range(n):
             c=g[y][x]

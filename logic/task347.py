@@ -1,5 +1,5 @@
 def p(g):
-    h,w=len(g),len(g[0])
+    h,w=3,6
     v=[[r[:w//2]for r in g],[r[w//2:]for r in g]]
     a,b=v if all(len({c for r in p for c in r})==2 for p in v) else [g[:h//2],g[h//2:]]
     s=lambda p:set(sum(p,[]))

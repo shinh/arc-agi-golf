@@ -1,6 +1,5 @@
 def p(g):
-    h=len(g)
-    for x in range(len(g[0])):
+    for x in range(10):
         c=[r[x] for r in g];n=c.count(2)
         if n:
             c=[v for v in c if v-2]
@@ -9,6 +8,6 @@ def p(g):
                 if v:i+=1
                 else:break
             c[i:i]=[2]*n
-            c+=h*[0];
-            for y in range(h):g[y][x]=c[y]
+            c+=10*[0]
+            for y in range(10):g[y][x]=c[y]
     return g

@@ -1,2 +1,2 @@
 def p(g):
-    return [[0]*len(g[0])]+g[:-1]
+    return [[0]*3]+g[:-1]
