@@ -7,10 +7,10 @@ def p(g):
    if y<T[v]:T[v]=y
    if x>R[v]:R[v]=x
    if y>B[v]:B[v]=y
- b=max(range(10),key=C.__getitem__)
+ b=0
  f=lx=rx=ty=by=a=0
  for v in range(10):
-  if C[v] and v-b:
+  if C[v] and v:
    l,r,t,u=L[v],R[v],T[v],B[v]
    ok=1
    for y in range(t,u+1):
@@ -22,7 +22,7 @@ def p(g):
     if A>a:f=v;lx,rx,ty,by=l,r,t,u;a=A
  px=py=99;qx=qy=0
  for v in range(10):
-  if C[v] and v-b and v-f:
+  if C[v] and v and v-f:
    if L[v]<px:px=L[v]
    if T[v]<py:py=T[v]
    if R[v]>qx:qx=R[v]
@@ -35,7 +35,7 @@ def p(g):
  for y in range(py,qy+1):
   for x in range(px,qx+1):
    v=g[y][x]
-   if v-b and v-f:
+   if v and v-f:
     for dy in range(ky):
      for dx in range(kx):o[1+(y-py)*ky+dy][1+(x-px)*kx+dx]=v
  return o
