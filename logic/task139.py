@@ -1,8 +1,8 @@
 def p(g):
-    h=len(g);w=len(g[0]);f=sum(g,[]);bg=max(f,key=f.count);v=set();m=[]
+    h=len(g);w=len(g[0]);v=set();m=[]
     for y in range(h):
         for x in range(w):
-            if g[y][x]!=bg and (y,x)not in v:
+            if g[y][x] and (y,x)not in v:
                 t=g[y][x];q=[(y,x)];v.add((y,x));s={(y,x)};a=b=y;c=d=x
                 while q:
                     i,j=q.pop();a=min(a,i);b=max(b,i);c=min(c,j);d=max(d,j)

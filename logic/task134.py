@@ -1,8 +1,6 @@
 def p(g):
     h=len(g);w=len(g[0])
-    br=g[0]+g[-1]+[r[0] for r in g]+[r[-1] for r in g]
-    b=max(set(br),key=br.count)
-    cols=[c for c in {v for r in g for v in r} if c!=b]
+    cols=[c for c in {v for r in g for v in r} if c]
     def iso(c):
         for y,r in enumerate(g):
             for x,v in enumerate(r):
@@ -17,7 +15,7 @@ def p(g):
     for y,r in enumerate(sub):
         for x,v in enumerate(r):
             if v==a:r[x]=b2
-            elif v==b2:r[x]=b
+            elif v==b2:r[x]=0
     H,W=len(sub),len(sub[0])
     for f in range(min(H,W)-(H==W),1,-1):
         if H%f or W%f:continue
