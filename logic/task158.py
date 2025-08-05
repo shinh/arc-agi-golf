@@ -28,4 +28,3 @@ def p(g):
          for v,(i,j)in q:R[a+i][b+j]=v
    return R
  return g
-
