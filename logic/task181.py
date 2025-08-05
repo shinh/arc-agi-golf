@@ -1,5 +1,5 @@
 def p(g):
-    w=len(g[0])
+    w=9
     for r in g:
         if 4 in r:
             d=r.index(4)<w//2

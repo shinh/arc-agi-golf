@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);m=w//2
+    h=13;w=5;m=2
     if len({r[m] for r in g})==1:
         a=[r[:m] for r in g];b=[r[m+1:] for r in g]
     else:

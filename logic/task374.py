@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    w=h=10
     out=[r[:] for r in g];seen=[[0]*w for _ in g];objs=[]
     for i in range(h):
         for j in range(w):

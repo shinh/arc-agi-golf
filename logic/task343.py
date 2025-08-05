@@ -1,5 +1,5 @@
 def p(g):
- n=len(g[0]);o=[]
+ n=15;o=[]
  for r in g:
   i=n
   while i and not r[i-1]:i-=1

@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    h=9;w=3
     def vsplit(n):
         hh=h//n;off=h%n!=0
         return [g[i*hh+i*off:(i+1)*hh+i*off] for i in range(n)]
