@@ -1,6 +1,6 @@
 def p(g):
  o=[[5]*10 for _ in g]
- c=max(map(max,g))
+ c=max(sum(g,[]))
  s={(y,x)for y in range(10)for x in range(10)if g[y][x]}
  O=[]
  while s:
@@ -9,10 +9,9 @@ def p(g):
    for Y,X in(y+1,x),(y-1,x),(y,x+1),(y,x-1):
     if(Y,X)in s:s.remove((Y,X));q+=[(Y,X)];r|={(Y,X)};o[Y][X]=c
   O+=r,
- B=lambda R:(min(x for _,x in R),max(x for _,x in R),min(y for y,_ in R),max(y for y,_ in R))
- a=min(O,key=lambda R:max(B(R)[3]-B(R)[2],B(R)[1]-B(R)[0]));O.remove(a)
+ a=min(O,key=lambda R:(lambda Y,X:max(max(Y)-min(Y),max(X)-min(X)))(*zip(*R)));O.remove(a)
  b=min(O,key=lambda R:min(abs(i-x)+abs(j-y)for i,j in R for x,y in a))
- L,R,U,D=B(a);l,r,u,d=B(b)
+ Y,X=zip(*a);U,D,L,R=min(Y),max(Y),min(X),max(X);Y,X=zip(*b);u,d,l,r=min(Y),max(Y),min(X),max(X)
  H=max(r-R,L-l);V=max(d-D,U-u)
  for _ in range(15):
   U-=V;L-=H;D+=V;R+=H
