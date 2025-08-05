@@ -1,11 +1,11 @@
 def p(g):
  h,w=len(g),len(g[0])
  r=sum(len({*R})<2 for R in g)
- c=sum(len({g[i][j]for i in range(h)})<2 for j in range(w))
+ c=sum(len({*C})<2 for C in zip(*g))
  if r>c:a=g[:h//2];b=g[(h+1)//2:]
  else:a=[R[:w//2]for R in g];b=[R[(w+1)//2:]for R in g]
- if len({*sum(a,[])})<=len({*sum(b,[])}) :B=[R[:]for R in a];O=b
- else:B=[R[:]for R in b];O=a
+ if len({*sum(a,[])})>len({*sum(b,[])}) :a,b=b,a
+ B=[R[:]for R in a];O=b
  fb=sum(B,[]);bc=max(fb,key=fb.count)
  fo=sum(O,[]);bg=max(fo,key=fo.count);fo=[v for v in fo if v-bg]
  if not fo:return B
