@@ -7,10 +7,9 @@ def p(g):
    if y<T[v]:T[v]=y
    if x>R[v]:R[v]=x
    if y>B[v]:B[v]=y
- b=0
  f=lx=rx=ty=by=a=0
- for v in range(10):
-  if C[v] and v:
+ for v in range(1,10):
+  if C[v]:
    l,r,t,u=L[v],R[v],T[v],B[v]
    ok=1
    for y in range(t,u+1):
@@ -21,8 +20,8 @@ def p(g):
     A=(r-l+1)*(u-t+1)
     if A>a:f=v;lx,rx,ty,by=l,r,t,u;a=A
  px=py=99;qx=qy=0
- for v in range(10):
-  if C[v] and v and v-f:
+ for v in range(1,10):
+  if v-f:
    if L[v]<px:px=L[v]
    if T[v]<py:py=T[v]
    if R[v]>qx:qx=R[v]
