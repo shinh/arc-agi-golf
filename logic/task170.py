@@ -1,5 +1,5 @@
 def p(g):
-    H,W=len(g),len(g[0]);f=[c for r in g for c in r];b=max(set(f),key=f.count)
+    H,W=len(g),len(g[0]);b=max(g[0])
     s=set();o=[];d=[(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
     for i in range(H):
         for j in range(W):
