@@ -7,9 +7,7 @@ def p(g):
             x,y=q.pop();o+=(g[x][y],x,y),
             for a in(-1,0,1):
                 for b in(-1,0,1):
-                    if a|b:
-                        p=x+a,y+b
-                        if p in s:s.remove(p);q+=p,
+                    if a|b and(p:=(x+a,y+b))in s:s.remove(p);q+=p,
         if len(o)>len(m):m,o=o,m
         C|={v for v,_,_ in o}
     B=[(r,c,v)for v,r,c in m]
