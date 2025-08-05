@@ -1,6 +1,6 @@
 def p(g):
     h=len(g);w=len(g[0])
-    v=set()
+    v={}
     for y in range(h):
         for x in range(w):
             if g[y][x]==0 and (y,x) not in v:
@@ -8,7 +8,7 @@ def p(g):
                 while s:
                     y1,x1=s.pop()
                     if (y1,x1) in v or g[y1][x1]!=0: continue
-                    v.add((y1,x1));r.append((y1,x1))
+                    v[(y1,x1)]=1;r.append((y1,x1))
                     for dy,dx in ((1,0),(-1,0),(0,1),(0,-1)):
                         ny,nx=y1+dy,x1+dx
                         if ny<0 or ny>=h or nx<0 or nx>=w:
