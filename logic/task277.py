@@ -1,26 +1,20 @@
 def p(g):
- h=w=10;v=set();c=[]
- for i in range(h):
-  for j in range(w):
-   if g[i][j]and (i,j)not in v:
-    q=[(i,j)];v.add((i,j));o=[]
+ cnt={};c=[]
+ for i in range(10):
+  for j in range(10):
+   if g[i][j]:
+    q=[(i,j)];g[i][j]=0;o=[]
     while q:
      x,y=q.pop();o.append((x,y))
-     for dx in(-1,0,1):
-      for dy in(-1,0,1):
-       if dx or dy:
-        nx,ny=x+dx,y+dy
-        if 0<=nx<h and 0<=ny<w and g[nx][ny] and (nx,ny)not in v:
-         v.add((nx,ny));q.append((nx,ny))
-    c.append(o)
- sh=[];cnt={}
- for o in c:
-  mi=min(i for i,_ in o);mj=min(j for _,j in o)
-  s=frozenset((i-mi,j-mj)for i,j in o)
-  sh.append(s);cnt[s]=cnt.get(s,0)+1
- t=min(range(len(c)),key=lambda i:cnt[sh[i]])
- r=[row[:] for row in g]
- for k,o in enumerate(c):
-  col=2 if k==t else 1
-  for i,j in o:r[i][j]=col
- return r
+     for d in(-1,0,1):
+      for e in(-1,0,1):
+       if d|e:
+        u,v=x+d,y+e
+        if -1<u<10 and-1<v<10 and g[u][v]:
+         g[u][v]=0;q.append((u,v))
+    a=min(x for x,_ in o);b=min(y for _,y in o)
+    s=tuple(sorted((x-a,y-b)for x,y in o));c.append((o,s));cnt[s]=cnt.get(s,0)+1
+ t=min(range(len(c)),key=lambda i:cnt[c[i][1]])
+ for k,(o,_) in enumerate(c):
+  for i,j in o:g[i][j]=1+(k==t)
+ return g
