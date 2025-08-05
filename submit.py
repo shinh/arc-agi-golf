@@ -14,6 +14,7 @@ import myzlib
 
 
 def write_code(code, filename):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     if isinstance(code, bytes):
         with open(filename, "wb") as f:
             f.write(code)
@@ -124,6 +125,8 @@ def check_task(task_id, filename, verbose):
     #print(code, flush=True)
 
     code = python_minifier.minify(code, rename_locals=rename_locals)
+    write_code(code, f"stages/task{task_id:03d}.py")
+
     zlib_code = compress(code,"zlib")
     lzma_code = compress(code,"lzma")
     if len(zlib_code) < len(code):
