@@ -1,12 +1,9 @@
 def p(g):
- h=len(g);w=len(g[0]);cnt={}
- for r in g:
-  for v in r:cnt[v]=cnt.get(v,0)+1
- bg=max(cnt,key=cnt.get)
+ h=len(g);w=len(g[0])
  v=[[0]*w for _ in g];objs=[];allc=[]
  for y in range(h):
   for x in range(w):
-   if g[y][x]!=bg and not v[y][x]:
+   if g[y][x] and not v[y][x]:
     c=g[y][x];s=[(y,x)];v[y][x]=1;r=[]
     while s:
      i,j=s.pop();r.append((i,j))
