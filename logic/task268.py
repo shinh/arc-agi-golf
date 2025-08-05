@@ -1,7 +1,7 @@
 def p(g):
     g=[r[:]for r in g];h=len(g);w=len(g[0])
-    bg=max(range(10),key=lambda c:sum(r.count(c)for r in g))
-    fg={(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v!=bg}
+    bg=0
+    fg={(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v}
     t=min(i for i,_ in fg);b=max(i for i,_ in fg);l=min(j for _,j in fg);R=max(j for _,j in fg)
     s={(i,j)for j in range(l,R+1)for i in(t,b)if(i,j)not in fg}|{(i,j)for i in range(t,b+1)for j in(l,R)if(i,j)not in fg}
     for i in range(t,b+1):

@@ -8,7 +8,7 @@ def p(g):
         return max(max(xs)-min(xs)+1,max(ys)-min(ys)+1)
     a=min(C,key=box)
     cnt={c:sum(r.count(c)for r in g)for c in C}
-    b=max(cnt,key=cnt.get)
+    b=0
     d=min([c for c in C if c!=a],key=cnt.get)
     p=[[b]*(w+2)for _ in range(h+2)]
     for i,r in enumerate(g):
