@@ -1,40 +1,32 @@
 def p(g):
-    h=w=13
-    seen=[[0]*w for _ in range(h)];objs=[]
-    dirs=[(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
-    for i in range(h):
-        for j in range(w):
-            if seen[i][j] or not g[i][j]:continue
-            q=[(i,j)];seen[i][j]=1;o=[]
-            while q:
-                y,x=q.pop();o.append((y,x,g[y][x]))
-                for dy,dx in dirs:
-                    ny=y+dy;nx=x+dx
-                    if 0<=ny<h and 0<=nx<w and not seen[ny][nx] and g[ny][nx]:
-                        seen[ny][nx]=1;q.append((ny,nx))
-            objs.append(o)
-    def norm(o):
-        mn=min(y for y,_,_ in o);ml=min(x for _,x,_ in o)
-        return [(c,y-mn,x-ml)for y,x,c in o]
-    def anc(p,c):
-        t=[(y,x)for col,y,x in p if col==c]
-        return(min(t) if t else(0,0))
-    out=[r[:]for r in g]
-    def app(k,p,orig=set()):
-        ay,ax=anc(p,k)
-        for i in range(h):
-            for j in range(w):
-                if g[i][j]==k and (i,j)not in orig:
-                    for c,dy,dx in p:
-                        y=i+dy-ay;x=j+dx-ax
-                        if 0<=y<h and 0<=x<w:out[y][x]=c
-    ob3=[o for o in objs if any(c==3 for _,_,c in o)]
-    if ob3:app(3,norm(max(ob3,key=lambda o:len({c for _,_,c in o}))))
-    ob2=[o for o in objs if any(c==2 for _,_,c in o)]
-    if ob2:
-        o2=max(ob2,key=lambda o:len({c for _,_,c in o}))
-        minc=min(x for y,x,_ in o2);maxc=max(x for y,x,_ in o2)
-        p2=[(c,y,maxc-(x-minc))for y,x,c in o2]
-        p2=norm([(y,x,c)for c,y,x in p2])
-        app(2,p2,{(y,x)for y,x,c in o2 if c==2})
-    return out
+ d=[(a,b)for a in(-1,0,1)for b in(-1,0,1)if a|b]
+ v=set();o2=o3=l2=l3=0
+ for y in range(13):
+  for x in range(13):
+   if g[y][x]and(y,x)not in v:
+    q=[(y,x)];o=[];s=set()
+    while q:
+     y,x=q.pop();v.add((y,x));c=g[y][x];o+=[(y,x,c)];s.add(c)
+     for a,b in d:
+      Y=y+a;X=x+b
+      if 0<=Y<13 and 0<=X<13 and g[Y][X]and(Y,X)not in v:q+=[(Y,X)]
+    t=len(s)
+    if 3 in s and t>l3:o3=o;l3=t
+    if 2 in s and t>l2:o2=o;l2=t
+ out=[r[:]for r in g]
+ def app(k,o,orig=()):
+  ay=min(y for y,x,c in o if c==k);ax=min(x for y,x,c in o if c==k)
+  p=[(c,y-ay,x-ax)for y,x,c in o]
+  for y in range(13):
+   for x in range(13):
+    if g[y][x]==k and(y,x)not in orig:
+     for c,dy,dx in p:
+      Y=y+dy;X=x+dx
+      if 0<=Y<13 and 0<=X<13:out[Y][X]=c
+ if o3:app(3,o3)
+ if o2:
+  mn=min(x for y,x,_ in o2);mx=max(x for y,x,_ in o2)
+  o=[(y,mx-x+mn,c)for y,x,c in o2]
+  app(2,o,{(y,x)for y,x,c in o2 if c==2})
+ return out
+
