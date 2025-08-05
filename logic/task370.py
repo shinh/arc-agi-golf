@@ -1,6 +1,6 @@
 def p(g):
     h=len(g);w=len(g[0])
-    f=sum(g,[]);bg=max(set(f),key=f.count)
+    bg=g[0][0]
     cols={}
     for i,r in enumerate(g):
         for j,v in enumerate(r):
