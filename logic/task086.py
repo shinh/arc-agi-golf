@@ -1,17 +1,16 @@
 def p(g):
     h=len(g);w=len(g[0])
-    bg=max(sum(g,[]),key=sum(g,[]).count)
     o=[r[:]for r in g]
     seen=[[0]*w for _ in range(h)]
     for i in range(h):
         for j in range(w):
-            if seen[i][j] or g[i][j]==bg:continue
+            if seen[i][j] or not g[i][j]:continue
             q=[(i,j)];seen[i][j]=1;pts=[]
             while q:
                 y,x=q.pop();pts.append((y,x,g[y][x]))
                 for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
                     ny=y+dy;nx=x+dx
-                    if 0<=ny<h and 0<=nx<w and not seen[ny][nx] and g[ny][nx]!=bg:
+                    if 0<=ny<h and 0<=nx<w and not seen[ny][nx] and g[ny][nx]:
                         seen[ny][nx]=1;q.append((ny,nx))
             colors={c for _,_,c in pts};a=pts[0][2];b=(colors-{a}).pop()
             ys=[y for y,_,_ in pts];xs=[x for _,x,_ in pts]

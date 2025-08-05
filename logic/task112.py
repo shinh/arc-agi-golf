@@ -1,11 +1,8 @@
 def p(g):
-    h=len(g);w=len(g[0]);cnt={}
-    for row in g:
-        for c in row:cnt[c]=cnt.get(c,0)+1
-    bg=max(cnt,key=cnt.get);m={}
+    h=len(g);w=len(g[0]);bg=0;m={}
     for y,row in enumerate(g):
         for x,c in enumerate(row):
-            if c!=bg:m.setdefault(c,[]).append((y,x))
+            if c:m.setdefault(c,[]).append((y,x))
     for s in m.values():
         if len(s)==4:
             ys=[y for y,_ in s];xs=[x for _,x in s]
@@ -14,7 +11,7 @@ def p(g):
     r=[r[:]for r in g]
     for y,row in enumerate(g):
         for x,c in enumerate(row):
-            if c!=bg:
+            if c:
                 for Y,X in((y,x),(S-y,x),(y,T-x),(S-y,T-x)):
                     if 0<=Y<h and 0<=X<w:r[Y][X]=c
     return r

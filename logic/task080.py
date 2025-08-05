@@ -3,17 +3,16 @@ def p(g):
  sr=next(i for i in range(1,h)if len(set(g[i]))==1)+1
  sc=next(j for j in range(1,w)if len({g[k][j]for k in range(h)})==1)+1
  B=[r[::sc]for r in g[::sr]];H=len(B);W=len(B[0])
- f=sum(B,[]);bg=max(f,key=f.count)
- D=(1,0,-1,0,1);S=set();objs=[]
+ bg=0;D=(1,0,-1,0,1);S=set();objs=[]
  for i in range(H):
   for j in range(W):
-   if(i,j)in S or B[i][j]==bg:continue
+   if(i,j)in S or B[i][j]==0:continue
    q=[(i,j)];S.add((i,j));o=[]
    while q:
     y,x=q.pop();o.append((y,x))
     for k in range(4):
      ny=y+D[k];nx=x+D[k+1]
-     if 0<=ny<H and 0<=nx<W and(ny,nx)not in S and B[ny][nx]!=bg:S.add((ny,nx));q.append((ny,nx))
+     if 0<=ny<H and 0<=nx<W and(ny,nx)not in S and B[ny][nx]:S.add((ny,nx));q.append((ny,nx))
    objs.append(o)
  if not objs:return g
  obj=max(objs,key=lambda o:len({B[y][x]for y,x in o}))

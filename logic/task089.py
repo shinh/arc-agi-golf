@@ -1,17 +1,17 @@
 def p(g):
     h=len(g);w=len(g[0])
-    flat=sum(g,[]);bg=max(set(flat),key=flat.count)
+    bg=0
     seen=[[0]*w for _ in range(h)];objs=[]
     dirs=[(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
     for i in range(h):
         for j in range(w):
-            if seen[i][j] or g[i][j]==bg:continue
+            if seen[i][j] or not g[i][j]:continue
             q=[(i,j)];seen[i][j]=1;o=[]
             while q:
                 y,x=q.pop();o.append((y,x,g[y][x]))
                 for dy,dx in dirs:
                     ny=y+dy;nx=x+dx
-                    if 0<=ny<h and 0<=nx<w and not seen[ny][nx] and g[ny][nx]!=bg:
+                    if 0<=ny<h and 0<=nx<w and not seen[ny][nx] and g[ny][nx]:
                         seen[ny][nx]=1;q.append((ny,nx))
             objs.append(o)
     def norm(o):
