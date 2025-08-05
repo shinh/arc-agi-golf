@@ -1,29 +1,32 @@
 def p(g):
-    h=len(g);W=len(g[0]);v=set();o=[];d={}
+    h=len(g);w=len(g[0]);s=set();o=[];d=[0]*10
     for y in range(h):
-        for x in range(W):
-            if g[y][x]<1 or(y,x)in v:continue
-            q=[(y,x)];v.add((y,x));c=[];s=set()
+        for x in range(w):
+            if g[y][x]<1 or(y,x)in s:continue
+            q=[(y,x)];s.add((y,x));c=[]
             while q:
-                i,j=q.pop();c+=[(i,j)];s.add(g[i][j])
+                i,j=q.pop();c+=[(i,j)]
                 for dy in(-1,0,1):
                     for dx in(-1,0,1):
                         ni=i+dy;nj=j+dx
-                        if dy|dx and 0<=ni<h and 0<=nj<W and g[ni][nj]and(ni,nj)not in v:
-                            q+=[(ni,nj)];v.add((ni,nj))
-            for a in s:d[a]=1+d.get(a,0)
+                        if dy|dx and 0<=ni<h and 0<=nj<w and g[ni][nj]and(ni,nj)not in s:
+                            q+=[(ni,nj)];s.add((ni,nj))
+            for a in{g[i][j]for i,j in c}:d[a]+=1
             o+=[c]
-    k=max(d,key=d.get);s=[sum(g[i][j]==k for i,j in x)for x in o]
-    t=max([x for x,r in zip(o,s)if r==min(s)],key=len);o=[x for x in o if x!=t]
-    ti=min(i for i,_ in t);tj=min(j for _,j in t)
-    t=[(i-ti,j-tj,g[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
-    r=[x[:]for x in g]
+    k=d.index(max(d));t=o[0];m=sum(g[i][j]==k for i,j in t)
     for e in o:
-        xs=[(i,j)for i,j in e if g[i][j]==k]
-        Y=min(i for i,j in xs);X=min(j for i,j in xs);n=max(j for i,j in xs)-X+1
-        oc=next(g[i][j] for i,j in e if g[i][j]!=k)
+        c=sum(g[i][j]==k for i,j in e)
+        if c<m or c==m and len(e)>len(t):t=e;m=c
+    o.remove(t)
+    ti,tj=map(min,zip(*t))
+    t=[(i-ti,j-tj,g[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
+    r=[r[:]for r in g]
+    for e in o:
+        ys,xs=zip(*[(i,j)for i,j in e if g[i][j]==k])
+        Y=min(ys);X=min(xs);n=max(xs)+1-X
+        oc=next(v for i,j in e if(v:=g[i][j])!=k)
         for i,j,v in t:
             for a in range(n*n):
                 ii=i*n+a//n+Y-y*n;jj=j*n+a%n+X-x*n
-                if 0<=ii<h and 0<=jj<W:r[ii][jj]=k if v else oc
+                if 0<=ii<h and 0<=jj<w:r[ii][jj]=[oc,k][v]
     return r
