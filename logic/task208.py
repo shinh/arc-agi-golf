@@ -1,32 +1,20 @@
 def p(g):
-    W=H=21;s=[[0]*W for _ in g];R=[]
-    for i in range(H):
-        for j in range(W):
-            if s[i][j]:continue
-            c=g[i][j];S=[(i,j)];s[i][j]=1;C=[]
-            while S:
-                x,y=S.pop();C.append((x,y))
-                for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
-                    nx,ny=x+dx,y+dy
-                    if 0<=nx<H and 0<=ny<W and not s[nx][ny] and g[nx][ny]==c:
-                        s[nx][ny]=1;S.append((nx,ny))
-            r0=min(x for x,_ in C);r1=max(x for x,_ in C)
-            c0=min(y for _,y in C);c1=max(y for _,y in C)
-            if r1-r0>1 and c1-c0>1:
-                B={(x,y)for x in range(r0,r1+1)for y in range(c0,c1+1)if x in{r0,r1}or y in{c0,c1}}
-                if set(C)==B:R.append((c,r0,c0,r1,c1))
-    col={}
-    for c,*_ in R:col[c]=col.get(c,0)+1
-    col=min(col,key=lambda k:(col[k],k))
-    for c,r0,c0,r1,c1 in R:
-        if c==col:
-            ring=[(x-r0,y-c0)for x in range(r0,r1+1)for y in range(c0,c1+1)if x in{r0,r1}or y in{c0,c1}]
-            ih=r1-r0-1;iw=c1-c0-1;break
-    res=[r[:] for r in g]
-    for i in range(H-ih+1):
-        for j in range(W-iw+1):
-            if all(g[i+x][j+y]==0 for x in range(ih)for y in range(iw)if x in{0,ih-1}or y in{0,iw-1}):
-                for x,y in ring:
-                    a=i-1+x;b=j-1+y
-                    if 0<=a<H and 0<=b<W:res[a][b]=col
-    return res
+ n=len(g);s=[[0]*n for _ in g];d={};B={}
+ for i in range(n):
+  for j in range(n):
+   if s[i][j]:continue
+   c=g[i][j];t=[(i,j)];s[i][j]=1;C=[];r0=r1=i;c0=c1=j
+   while t:
+    x,y=t.pop();C.append((x,y));r0=min(r0,x);r1=max(r1,x);c0=min(c0,y);c1=max(c1,y)
+    for u,v in((1,0),(0,1),(-1,0),(0,-1)):
+     nx,ny=x+u,y+v
+     if 0<=nx<n and 0<=ny<n and not s[nx][ny] and g[nx][ny]==c:s[nx][ny]=1;t.append((nx,ny))
+   if r1>r0+1 and c1>c0+1 and len(C)==2*(r1-r0+c1-c0)and all(x in(r0,r1)or y in(c0,c1)for x,y in C):d[c]=d.get(c,0)+1;B.setdefault(c,(r0,c0,r1,c1))
+ C=min(d,key=lambda k:(d[k],k));r0,c0,r1,c1=B[C];h=r1-r0+1;w=c1-c0+1;iH=h-2;iW=w-2;R=[(x,y)for x in range(h)for y in range(w)if x in(0,h-1)or y in(0,w-1)];o=[r[:]for r in g]
+ for i in range(n-iH+1):
+  for j in range(n-iW+1):
+   if all(g[i+x][j+y]==0 for x in range(iH)for y in range(iW)if x in(0,iH-1)or y in(0,iW-1)):
+    for x,y in R:
+     a=i-1+x;b=j-1+y
+     if 0<=a<n and 0<=b<n:o[a][b]=C
+ return o
