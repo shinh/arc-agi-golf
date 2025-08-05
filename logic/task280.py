@@ -1,14 +1,14 @@
 def p(g):
-    h=len(g);w=len(g[0]);f=sum(g,[]);bg=max(f,key=f.count);v=set();o=[]
+    h=len(g);w=len(g[0]);v=set();o=[]
     for y in range(h):
         for x in range(w):
-            if g[y][x]==bg or (y,x)in v:continue
+            if g[y][x]==0 or (y,x)in v:continue
             q=[(y,x)];v.add((y,x));c=[];cnt={}
             while q:
                 i,j=q.pop();c.append((i,j));d=g[i][j];cnt[d]=cnt.get(d,0)+1
                 for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
                     ni,nj=i+dy,j+dx
-                    if 0<=ni<h and 0<=nj<w and g[ni][nj]!=bg and (ni,nj)not in v:
+                    if 0<=ni<h and 0<=nj<w and g[ni][nj]and (ni,nj)not in v:
                         v.add((ni,nj));q.append((ni,nj))
             o.append((c,cnt))
     for c,cnt in o:
