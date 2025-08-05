@@ -1,26 +1,23 @@
-def p(g):
-    h=len(g);w=len(g[0]);s=set();o=[];d=[0]*10
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]<1 or(y,x)in s:continue
-            q=[(y,x)];s.add((y,x));c=[]
-            while q:
-                i,j=q.pop();c+=[(i,j)]
-                for dy in(-1,0,1):
-                    for dx in(-1,0,1):
-                        ni=i+dy;nj=j+dx
-                        if dy|dx and 0<=ni<h and 0<=nj<w and g[ni][nj]and(ni,nj)not in s:
-                            q+=[(ni,nj)];s.add((ni,nj))
-            for a in{g[i][j]for i,j in c}:d[a]+=1
-            o+=[c]
-    k=d.index(max(d));t=min(o,key=lambda e:(sum(g[i][j]==k for i,j in e),-len(e)));o.remove(t)
-    ti,tj=map(min,zip(*t))
-    t=[(i-ti,j-tj,g[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
-    r=[r[:]for r in g]
+def p(G):
+    r=[r[:]for r in G];h=len(r);w=len(r[0]);g=sum(r,[]);d=[0]*10;o=[];s=set()
+    for z in range(len(g)):
+        if g[z]<1 or z in s:continue
+        q=[z];s|={z};c=[z]
+        for z in q:
+            i,j=divmod(z,w)
+            for I in range(i-1,i+2):
+                for J in range(j-1,j+2):
+                    n=I*w+J
+                    if 0<=I<h and 0<=J<w and g[n]and n not in s:
+                        s|={n};q+=n,;c+=n,
+        for a in{g[u]for u in c}:d[a]+=1
+        o+=c,
+    k=d.index(max(d));t=min(o,key=lambda e:(sum(g[u]==k for u in e),-len(e)));o.remove(t)
+    t=[divmod(z,w)for z in t];ti=min(i for i,_ in t);tj=min(j for _,j in t)
+    t=[(i-ti,j-tj,r[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
     for e in o:
-        ys,xs=zip(*[(i,j)for i,j in e if g[i][j]==k])
-        Y=min(ys);X=min(xs);n=max(xs)+1-X
-        oc=next(v for i,j in e if(v:=g[i][j])!=k)
+        m=[divmod(z,w)for z in e if g[z]==k];ys,xs=zip(*m);Y=min(ys);X=min(xs);n=max(xs)+1-X
+        oc=next(g[z]for z in e if g[z]!=k)
         for i,j,v in t:
             for a in range(n*n):
                 ii=i*n+a//n+Y-y*n;jj=j*n+a%n+X-x*n
