@@ -1,5 +1,5 @@
 def p(g):
-    fg=(set(g[0])-{0}).pop()
+    fg=max(g[0])
     for t in range(30):
         best_y=max_size=0
         for o in range(4):
