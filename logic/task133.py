@@ -1,10 +1,10 @@
 from collections import Counter as C
 def p(g):
-    h=len(g);w=len(g[0]);b=C(sum(g,[])).most_common(1)[0][0]
+    h=len(g);w=len(g[0])
     v=set();o=[]
     for y in range(h):
         for x in range(w):
-            if g[y][x]==b or(y,x)in v:continue
+            if g[y][x]==0 or(y,x)in v:continue
             q=[(y,x)];v.add((y,x));c=[]
             while q:
                 i,j=q.pop();c.append((i,j,g[i][j]))
@@ -12,7 +12,7 @@ def p(g):
                     for dj in(-1,0,1):
                         if di|dj:
                             ni,nj=i+di,j+dj
-                            if 0<=ni<h and 0<=nj<w and g[ni][nj]!=b and(ni,nj)not in v:
+                            if 0<=ni<h and 0<=nj<w and g[ni][nj]and(ni,nj)not in v:
                                 v.add((ni,nj));q.append((ni,nj))
             o.append(c)
     c=C();[c.update({v:1 for _,_,v in x})for x in o]
