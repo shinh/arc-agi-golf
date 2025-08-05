@@ -8,7 +8,7 @@ def p(g):
  vis=[[0]*W for _ in g];wid={c:0 for c in pts}
  for y in range(H):
   for x in range(W):
-   if g[y][x]==bg or vis[y][x]:continue
+   if vis[y][x] or g[y][x]==bg:continue
    v=g[y][x];vis[y][x]=1;st=[(y,x)];mn=mx=x
    while st:
     cy,cx=st.pop();mn=min(mn,cx);mx=max(mx,cx)
@@ -29,15 +29,14 @@ def p(g):
   sy,sx,ey,ex=bboxc(s);return frozenset((v,(sy+ey-i,j))for v,(i,j) in s)
  def cm(s):
   sy,sx,ey,ex=bboxc(s);return frozenset((v,(sy+ey-i,sx+ex-j))for v,(i,j) in s)
- parts={frozenset((c,(y,x))for y,x in set(s))for c,s in pts.items()}
+ parts={frozenset((c,(y,x))for y,x in s)for c,s in pts.items()}
  mets=[];sc={}
  for P in parts:
   c=next(iter(P))[0]
-  s=[(i,j)for _,(i,j) in P]
-  sy,sx,ey,ex=bbox(s)
+  sy,sx,ey,ex=bbox([p for _,p in P])
   sc[c]=max(ey-sy+1,ex-sx+1)+wid[c]
   mets.append((-sc[c],P))
- x9=[p for _,p in sorted(mets,key=lambda t:t[0])]
+ x9=[p for _,p in sorted(mets)]
  if 2 in sc and 4 in sc and sc[2]==sc[4]==max(sc.values()):
   i2=next(i for i,p in enumerate(x9) if next(iter(p))[0]==2)
   i4=next(i for i,p in enumerate(x9) if next(iter(p))[0]==4)
