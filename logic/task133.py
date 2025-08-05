@@ -8,8 +8,7 @@ def p(G):
             for I in i-1,i,i+1:
                 for J in j-1,j,j+1:
                     if h>I>=0<=J<w and 0<g[n:=I*w+J]:g[n]=-g[n];q+=n,
-        for a in{-g[u]for u in q}:d[a]+=1
-        o+=q,
+        for a in{-g[u]for u in q}:d[a]+=1;o+=q,
     k=d.index(max(d));t=min(o,key=lambda e:(sum(-g[u]==k for u in e),-len(e)));o.remove(t)
     t=[divmod(z,w)for z in t];Y,X=map(min,zip(*t))
     t=[(i-Y,j-X,r[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
