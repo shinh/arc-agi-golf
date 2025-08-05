@@ -1,77 +1,64 @@
 def p(g):
  H=len(g);W=len(g[0])
- cnt=[0]*10
- for r in g:
-  for v in r:cnt[v]+=1
- bg=max(range(10),key=lambda i:cnt[i])
- patches={c:set() for c in range(10)}
- for y in range(H):
-  for x in range(W):
-   v=g[y][x]
-   if v!=bg:patches[v].add((y,x))
- patches={c:s for c,s in patches.items() if s}
+ pts=[[]for _ in range(10)]
+ for y,r in enumerate(g):
+  for x,v in enumerate(r):pts[v].append((y,x))
+ bg=max(range(10),key=lambda c:len(pts[c]))
+ pts={c:s for c,s in enumerate(pts) if c!=bg and s}
  vis=[[0]*W for _ in range(H)]
- comps={}
+ wid={c:0 for c in pts}
  for y in range(H):
   for x in range(W):
-   if vis[y][x]:continue
-   v=g[y][x];vis[y][x]=1
-   if v==bg:continue
-   q=[(y,x)];c=[]
-   while q:
-    cy,cx=q.pop();c.append((cy,cx))
+   if g[y][x]==bg or vis[y][x]:continue
+   v=g[y][x];vis[y][x]=1;st=[(y,x)];mn=mx=x
+   while st:
+    cy,cx=st.pop();mn=min(mn,cx);mx=max(mx,cx)
     for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
      ny,nx=cy+dy,cx+dx
      if 0<=ny<H and 0<=nx<W and not vis[ny][nx] and g[ny][nx]==v:
-      vis[ny][nx]=1;q.append((ny,nx))
-   comps.setdefault(v,[]).append(c)
+      vis[ny][nx]=1;st.append((ny,nx))
+   w=mx-mn+1
+   if w>wid[v]:wid[v]=w
  def bbox(s):
   ys=[y for y,x in s];xs=[x for y,x in s]
   return min(ys),min(xs),max(ys),max(xs)
- parts={frozenset((c,(y,x)) for y,x in s) for c,s in patches.items()}
- mets=[];score={}
- for P in parts:
-  c=next(iter(P))[0]
-  s=[(i,j) for _,(i,j) in P]
-  sy,sx,ey,ex=bbox(s)
-  shape=max(ey-sy+1,ex-sx+1)
-  mx=max(max(x for _,x in cc)-min(x for _,x in cc)+1 for cc in comps[c])
-  sc=shape+mx
-  mets.append((-sc,P));score[c]=sc
- x9=[p for _,p in sorted(mets,key=lambda t:t[0])]
- if 2 in score and 4 in score and score[2]==score[4]==max(score.values()):
-  i2=next(i for i,p in enumerate(x9) if next(iter(p))[0]==2)
-  i4=next(i for i,p in enumerate(x9) if next(iter(p))[0]==4)
-  if i2<i4:x9[i2],x9[i4]=x9[i4],x9[i2]
  def norm(s):
-  sy=min(i for _,(i,j) in s);sx=min(j for _,(i,j) in s)
-  return {(i-sy,j-sx) for _,(i,j) in s}
+  sy,sx=min(i for _,(i,j) in s),min(j for _,(i,j) in s)
+  return {(i-sy,j-sx)for _,(i,j) in s}
  def bboxc(s):
   ys=[i for _,(i,j) in s];xs=[j for _,(i,j) in s]
   return min(ys),min(xs),max(ys),max(xs)
  def vm(s):
-  sy,sx,ey,ex=bboxc(s)
-  return frozenset((v,(i,sx+ex-j)) for v,(i,j) in s)
+  sy,sx,ey,ex=bboxc(s);return frozenset((v,(i,sx+ex-j))for v,(i,j) in s)
  def hm(s):
-  sy,sx,ey,ex=bboxc(s)
-  return frozenset((v,(sy+ey-i,j)) for v,(i,j) in s)
+  sy,sx,ey,ex=bboxc(s);return frozenset((v,(sy+ey-i,j))for v,(i,j) in s)
  def cm(s):
-  sy,sx,ey,ex=bboxc(s)
-  return frozenset((v,(sy+ey-i,sx+ex-j)) for v,(i,j) in s)
- orient=[]
+  sy,sx,ey,ex=bboxc(s);return frozenset((v,(sy+ey-i,sx+ex-j))for v,(i,j) in s)
+ patches={c:set(s)for c,s in pts.items()}
+ parts={frozenset((c,(y,x))for y,x in s)for c,s in patches.items()}
+ mets=[];sc={}
+ for P in parts:
+  c=next(iter(P))[0]
+  s=[(i,j)for _,(i,j) in P]
+  sy,sx,ey,ex=bbox(s)
+  sc[c]=max(ey-sy+1,ex-sx+1)+wid[c]
+  mets.append((-sc[c],P))
+ x9=[p for _,p in sorted(mets,key=lambda t:t[0])]
+ if 2 in sc and 4 in sc and sc[2]==sc[4]==max(sc.values()):
+  i2=next(i for i,p in enumerate(x9) if next(iter(p))[0]==2)
+  i4=next(i for i,p in enumerate(x9) if next(iter(p))[0]==4)
+  if i2<i4:x9[i2],x9[i4]=x9[i4],x9[i2]
+ shp=[]
  for P in x9:
-  best=max({P,vm(P),cm(P),hm(P)},key=lambda s:((1,0) in norm(s))+((0,1) in norm(s)))
-  orient.append((next(iter(best))[0],norm(best)))
- counts=[len(p) for p in x9]
- n=len(x9)+[1,0][any(k==1 for k in counts)]
- size=2*n-1
+  b=max({P,vm(P),cm(P),hm(P)},key=lambda t:((1,0)in norm(t))+((0,1)in norm(t)))
+  shp.append((next(iter(b))[0],norm(b)))
+ cnt=[len(p)for p in x9];n=len(x9)+(0 if 1 in cnt else 1);L=2*n-1
  def paint(o,ps):
   for c,s in ps:
-   for y,x in s:
-    if 0<=y<size and 0<=x<size:o[y][x]=c
+   for y,x in s:o[y][x]=c
   return o
- shifted=[(c,{(y+i,x+i) for y,x in s}) for i,(c,s) in enumerate(orient)]
- o=paint([[bg]*size for _ in range(size)],shifted)
- for _ in range(3):
-  o=paint([list(r) for r in zip(*o[::-1])],shifted)
+ sft=[(c,{(y+i,x+i)for y,x in s})for i,(c,s) in enumerate(shp)]
+ o=paint([[bg]*L for _ in range(L)],sft)
+ for _ in range(3):o=paint([list(r)for r in zip(*o[::-1])],sft)
  return o
+
