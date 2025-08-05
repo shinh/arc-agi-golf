@@ -44,3 +44,27 @@ def p(g):
     for i,j in s:r[i][j]=8
     for i,j in o:r[i][j]=c
     return r
+
+# Failed attempt:
+# def p(g):
+#     H=len(g);W=len(g[0])
+#     for l in range(2,6):
+#         seen={}
+#         for y in range(H):
+#             for x in range(W):
+#                 if (x,y)in seen:continue
+#                 ok=1
+#                 for i in range(-l,l+1):
+#                     if x+i>=0 and x+i<W and g[y][x+i]==0:
+#                         ok=0
+#                     if y+i>=0 and y+i<H and g[y+i][x]==0:
+#                         ok=0
+#                 if ok:
+#                     seen[(x,y)]=1
+#                     for i in range(-l,l+1):
+#                         if x+i>=0 and x+i<W:
+#                             g[y][x+i]=8
+#                         if y+i>=0 and y+i<H:
+#                             g[y+i][x]=8
+#     show(g,"out")
+#     return g
