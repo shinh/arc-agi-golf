@@ -1,5 +1,4 @@
 def p(g):
- h=len(g);w=len(g[0])
  d=lambda a:[list(r)for r in zip(*a)]
  c=lambda a:[list(r)for r in zip(*[r[::-1]for r in a[::-1]])]
  H=lambda a:[r[:]for r in a[::-1]]
@@ -9,8 +8,8 @@ def p(g):
   a=[r[:]for r in g]
   for t in d,c,H,V:
    b=t(a)
-   for y in range(h):
-    for x in range(w):
+   for y in range(24):
+    for x in range(24):
      if b[y][x]!=k:a[y][x]=b[y][x]
   if a==H(a)==V(a)==d(a)==c(a):
    s=sum(r.count(k)for r in g)
