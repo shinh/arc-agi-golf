@@ -1,7 +1,7 @@
 def p(g):
  h=len(g);w=len(g[0])
- f=sum(g,[]);b=max(set(f),key=f.count)
- d={(i,j):v for i,r in enumerate(g) for j,v in enumerate(r)if v!=b};o=[]
+ f=sum(g,[])
+ d={(i,j):v for i,r in enumerate(g) for j,v in enumerate(r)if v};o=[]
  while d:
   q=[next(iter(d))];u=[]
   for x,y in q:
@@ -15,7 +15,7 @@ def p(g):
  r=[];a=None
  for u in o:
   spc=[(i,j)for v,i,j in u if v==sp];oth=[(v,i,j)for v,i,j in u if v!=sp]
-  col=[v for v,_,_ in oth];m=max(col+[b],key=col.count)
+  col=[v for v,_,_ in oth];m=max(col+[0],key=col.count)
   if a==None:r+=oth+[(m,i,j)for i,j in spc];a=max(spc);continue
   ac=min(spc,key=lambda p:(abs(p[0]-a[0])+abs(p[1]-a[1]),p[1],p[0]))
   di=a[0]-ac[0];dj=a[1]-ac[1]+1
@@ -24,7 +24,7 @@ def p(g):
   spc=[p for p in spc if p!=ac];a=max(spc)if spc else ac
  if not r:return g
  mi=min(j for _,_,j in r);ma=max(j for _,_,j in r);w=ma-mi+1
- out=[[b]*w for _ in g]
+ out=[[0]*w for _ in g]
  for v,i,j in r:
   j-=mi
   if 0<=i<h and 0<=j<w:out[i][j]=v
