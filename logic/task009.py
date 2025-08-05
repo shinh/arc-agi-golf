@@ -3,20 +3,17 @@ def p(g):
  R=[i for i in range(h) if len(set(g[i]))==1]
  C=[j for j in range(w) if len({g[i][j]for i in range(h)})==1]
  fr=g[R[0]][0] if R else (g[0][C[0]] if C else 0)
- cnt=[0]*10
  for i in range(h):
   if i in R:continue
   for j in range(w):
    if j in C:continue
-   cnt[g[i][j]]+=1
- bg=max(range(10),key=cnt.__getitem__)
  d={}
  for i in range(h):
   if i in R:continue
   for j in range(w):
    if j in C:continue
    c=g[i][j]
-   if c!=bg and c!=fr:d.setdefault(c,[]).append((i,j))
+   if c!=0 and c!=fr:d.setdefault(c,[]).append((i,j))
  for c,pts in d.items():
   for a in range(len(pts)):
    y1,x1=pts[a]
