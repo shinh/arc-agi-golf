@@ -1,15 +1,15 @@
 def p(g):
- h=len(g);w=len(g[0]);bg=max(range(10),key=lambda v:sum(r.count(v)for r in g))
+ h=len(g);w=len(g[0])
  G=[r[:]for r in g];objs=[]
  for y in range(h):
   for x in range(w):
    c=G[y][x]
-   if c!=bg:
-    q=[(y,x)];G[y][x]=bg;o={(y,x)}
+   if c:
+    q=[(y,x)];G[y][x]=0;o={(y,x)}
     for i,j in q:
      for a,b in((1,0),(-1,0),(0,1),(0,-1)):
       A=i+a;B=j+b
-      if 0<=A<h and 0<=B<w and G[A][B]==c:G[A][B]=bg;q+=[(A,B)];o.add((A,B))
+      if 0<=A<h and 0<=B<w and G[A][B]==c:G[A][B]=0;q+=[(A,B)];o.add((A,B))
     objs+=[(c,o)]
  L=None
  for c,o in objs:

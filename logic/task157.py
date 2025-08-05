@@ -1,10 +1,9 @@
 def p(g):
-    B=max(range(10),key=lambda c:sum(r.count(c)for r in g))
     d=lambda x:[list(r)for r in zip(*x)]
     c=lambda x:[list(r)for r in zip(*(r[::-1]for r in x[::-1]))]
     for f in (lambda x:x,d,c,lambda x:x[::-1]):
         G=f(g)
-        if len({*G[0]})==1 and G[0][0]!=B:break
+        if len({*G[0]})==1 and G[0][0]:break
     h=len(G);w=len(G[0]);o=[r[:] for r in G];S=[]
     for y in range(h):
         for x in range(w):
