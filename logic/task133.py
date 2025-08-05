@@ -13,11 +13,7 @@ def p(g):
                             q+=[(ni,nj)];s.add((ni,nj))
             for a in{g[i][j]for i,j in c}:d[a]+=1
             o+=[c]
-    k=d.index(max(d));t=o[0];m=sum(g[i][j]==k for i,j in t)
-    for e in o:
-        c=sum(g[i][j]==k for i,j in e)
-        if c<m or c==m and len(e)>len(t):t=e;m=c
-    o.remove(t)
+    k=d.index(max(d));t=min(o,key=lambda e:(sum(g[i][j]==k for i,j in e),-len(e)));o.remove(t)
     ti,tj=map(min,zip(*t))
     t=[(i-ti,j-tj,g[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
     r=[r[:]for r in g]
