@@ -1,5 +1,5 @@
 def p(g):
- h=18;w=13;C=[]
+ h=len(g);w=len(g[0]);C=[]
  for y in range(h):
   for x in range(w):
    if g[y][x]<1:

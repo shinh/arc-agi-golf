@@ -1,4 +1,5 @@
 def p(g):
+    h=len(g);w=len(g[0])
     o=[r[:] for r in g]
     R={};C={}
     for y,r in enumerate(g):

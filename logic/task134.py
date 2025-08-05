@@ -1,5 +1,5 @@
 def p(g):
-    h=20;w=24
+    h=len(g);w=len(g[0])
     cols=[c for c in {v for r in g for v in r} if c]
     def iso(c):
         for y,r in enumerate(g):

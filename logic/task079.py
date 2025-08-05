@@ -1,5 +1,5 @@
 def p(g):
-    h=w=14
+    h=len(g);w=len(g[0])
     seen=set();pcs=[];mh=mw=0
     for i in range(h):
         for j in range(w):

@@ -7,7 +7,7 @@ def p(g):
  s=sum(g,[]);c=min(set(s),key=s.count)
  a=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==c]
  y,x=zip(*a);b=[(i-min(y),j-min(x))for i,j in a]
- o=[r[:]for r in g];h=w=10
+ o=[r[:]for r in g];h=len(g);w=len(g[0])
  for Y in range(h):
   for X in range(w):
    if all(Y+i<h and X+j<w and g[Y+i][X+j]==0 for i,j in b):

@@ -1,5 +1,5 @@
 def p(g):
-    w=h=10;pts=[(y,x,g[y][x])for y in range(h)for x in range(w)if g[y][x]]
+    h=len(g);w=len(g[0]);pts=[(y,x,g[y][x])for y in range(h)for x in range(w)if g[y][x]]
     if not pts:return g
     ys=[y for y,_,_ in pts];xs=[x for _,x,_ in pts];b,d=min(ys),max(ys);a,c=min(xs),max(xs)
     cx=(a+c)/2;cy=(b+d)/2

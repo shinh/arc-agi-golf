@@ -1,5 +1,5 @@
 def p(g):
-    h=w=3;z=sum(c==0 for r in g for c in r)
+    h=len(g);w=len(g[0]);z=sum(c==0 for r in g for c in r)
     c=[c for r in g for c in r if c][0];k=sum(c==x for r in g for x in r)
     o=[[0]*w*z for _ in range(h*z)]
     for t in range(k):

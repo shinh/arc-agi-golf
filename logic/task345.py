@@ -1,5 +1,5 @@
 def p(g):
-    w=h=10;o=[g[-1][:]for _ in g]
+    h=len(g);w=len(g[0]);o=[g[-1][:]for _ in g]
     for y in range(h-1,-1,-1):
         for x,v in enumerate(g[y]):
             if v==5:

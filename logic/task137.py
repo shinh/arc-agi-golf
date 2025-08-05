@@ -1,5 +1,5 @@
 def p(g):
-    h=w=23
+    h=len(g);w=len(g[0])
     flat=[v for r in g for v in r]
     c=min(set(flat),key=flat.count)
     ys=[y for y,r in enumerate(g) for x,v in enumerate(r) if v==c]

@@ -1,5 +1,5 @@
 def p(g):
-    w=h=T=L=10;B=R=0
+    h=len(g);w=len(g[0]);T=h;B=0;L=w;R=0
     for y in range(h):
         for x in range(w):
             if g[y][x]:

@@ -1,5 +1,5 @@
 def p(g):
-    w=h=10;v=set();b=-1
+    h=len(g);w=len(g[0]);v=set();b=-1
     for y in range(h):
         for x in range(w):
             if g[y][x] and (y,x)not in v:
@@ -14,4 +14,3 @@ def p(g):
                 if (y1-y0+1)*(x1-x0+1)==a and c>b:b=c;r=y0,y1,x0,x1
     y0,y1,x0,x1=r
     return [row[x0:x1+1] for row in g[y0:y1+1]]
-

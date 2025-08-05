@@ -1,5 +1,5 @@
 def p(g):
-    h=w=16;best=()
+    h=len(g);w=len(g[0]);best=()
     for y0 in range(h):
         for y1 in range(y0+1,h+1):
             for x0 in range(w):

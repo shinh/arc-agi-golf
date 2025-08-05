@@ -1,5 +1,5 @@
 def p(g):
- h=w=11
+ h=len(g);w=len(g[0])
  F={(i,j)for i,r in enumerate(g) if len(set(r))==1 for j in range(w)}|{(i,j)for j in range(w) if len({g[i][j]for i in range(h)})==1 for i in range(h)}
  c=g[next(iter(F))[0]][next(iter(F))[1]]
  G=[[g[i][j] if (i,j)not in F else-1 for j in range(w)]for i in range(h)]

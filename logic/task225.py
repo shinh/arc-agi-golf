@@ -1,5 +1,5 @@
 def p(g):
-    w=h=r=c=6
+    h=len(g);w=len(g[0]);r=h;c=w
     for y in range(h):
         for x in range(w):
             if g[y][x]:r=min(r,y);c=min(c,x)

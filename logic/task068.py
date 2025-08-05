@@ -1,5 +1,5 @@
 def p(g):
-    h=w=10;a=sum(g,[])
+    h=len(g);w=len(g[0]);a=sum(g,[])
     v=[c for c in a if c and a.count(c)==1][0];y,x=divmod(a.index(v),w);o=create(h,w)
     for Y in-1,0,1:
         for X in-1,0,1:

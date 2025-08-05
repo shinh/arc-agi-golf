@@ -1,5 +1,5 @@
 def p(g):
- h=w=10;bg=0;v=set();c=[]
+ h=len(g);w=len(g[0]);bg=0;v=set();c=[]
  for i in range(h):
   for j in range(w):
    if g[i][j]!=bg and (i,j)not in v:

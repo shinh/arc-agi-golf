@@ -1,5 +1,5 @@
 def p(g):
-    h=w=16
+    h=len(g);w=len(g[0])
     d={}
     for y,r in enumerate(g):
         for x,v in enumerate(r):

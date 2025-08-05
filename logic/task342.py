@@ -1,5 +1,5 @@
 def p(g):
- h=w=10;o=create(h,w)
+ h=len(g);w=len(g[0]);o=create(h,w)
  for y in range(h-1):
   for x in range(w-1):
    if g[y][x]==g[y+1][x]==g[y][x+1]==g[y+1][x+1]==8:r,c=y,x

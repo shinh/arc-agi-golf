@@ -1,5 +1,5 @@
 def p(g):
-    h=w=4
+    h=len(g)//2;w=len(g[0])//2
     A=[r[:w]for r in g[:h]];B=[r[w:]for r in g[:h]]
     C=[r[w:]for r in g[h:]];D=[r[:w]for r in g[h:]]
     c=set(sum(A,[]))

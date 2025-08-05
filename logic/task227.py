@@ -1,2 +1,3 @@
 def p(g):
-    return[[2*(g[y][x]==g[y+4][x]==0)for x in range(4)]for y in range(4)]
+    h=len(g)//2;w=len(g[0])
+    return[[2*(g[y][x]==g[y+h][x]==0)for x in range(w)]for y in range(h)]

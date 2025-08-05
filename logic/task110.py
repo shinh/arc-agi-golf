@@ -1,5 +1,5 @@
 def p(g):
-    h=w=29
+    h=len(g);w=len(g[0])
     for q in range(1,h+1):
         for p in range(1,w+1):
             t=[[0]*p for _ in range(q)];ok=1

@@ -1,5 +1,5 @@
 def p(g):
- h=w=15
+ h=len(g);w=len(g[0])
  c=[(i,j)for i in range(h)for j in range(w)if g[i][j]==2]
  a=min(i for i,j in c);b=max(i for i,j in c);l=min(j for i,j in c);r=max(j for i,j in c)
  sub=[row[l:r+1] for row in g[a:b+1]]

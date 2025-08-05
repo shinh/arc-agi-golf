@@ -1,5 +1,5 @@
 def p(g):
- h=w=10
+ h=len(g);w=len(g[0])
  for k in range(min(h,w),0,-1):
   for i in range(h-k+1):
    for j in range(w-k+1):

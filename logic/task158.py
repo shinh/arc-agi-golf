@@ -1,5 +1,5 @@
 def p(g):
- h=20;w=19
+ h=len(g);w=len(g[0])
  B=g[-1][0]  # A lucky pivot
  V=set();C=[];m=0
  for i in range(h):

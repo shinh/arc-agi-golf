@@ -1,5 +1,5 @@
 def p(g):
-    h=w=10;j=next(i for i,v in enumerate(g[-1])if v);c=g[-1][j]
+    h=len(g);w=len(g[0]);j=next(i for i,v in enumerate(g[-1])if v);c=g[-1][j]
     o=[[0]*w for _ in g]
     for x in range(j,w,2):
         for y in range(h):o[y][x]=c

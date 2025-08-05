@@ -1,6 +1,5 @@
 def p(g):
-    h=16;w=12
-    v=set();o=[]
+    h=len(g);W=len(g[0]);v=set();o=[];d={}
     for y in range(h):
         for x in range(W):
             if g[y][x]<1 or(y,x)in v:continue

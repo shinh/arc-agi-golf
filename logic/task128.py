@@ -1,5 +1,5 @@
 def p(g):
-    h=w=15
+    h=len(g);w=len(g[0])
     z=[(y,x)for y in range(h)for x in range(w)if g[y][x]]
     if not z:return g
     if any(y==0 for y,_ in z):dy,dx=1,0
