@@ -1,23 +1,5 @@
 def p(g):
- h,w,f=len(g),len(g[0]),{}
- for r in g:
-  for v in r:f[v]=f.get(v,0)+1
- b,l=sorted(f,key=f.get)[-1:-3:-1]
- def cl(s):
-  xs,ys=zip(*s);mi=min(xs);mj=min(ys)
-  S={(x-mi,y-mj)for x,y in s};xs,ys=zip(*S)
-  h=max(xs)+1;w=max(ys)+1
-  if len(S)==3:
-   (i,j),=({(0,0),(0,1),(1,0),(1,1)}-S)
-   return[['LR','LL'],['UR','UL']][i][j]
-  if all((0,j)in S for j in range(w)):return'T'
-  if all((h-1,j)in S for j in range(w)):return'B'
-  if all((i,0)in S for i in range(h)):return'L'
-  return'R'
- M=dict(UL=(0,[0,1,3]),T=(1,[0,1,2,4]),UR=(2,[1,2,5]),
-    L=(3,[0,3,6,4]),R=(5,[2,5,8,4]),
-    LL=(6,[3,6,7]),B=(7,[6,7,8,4]),LR=(8,[5,7,8]))
- out=[[l]*9 for _ in range(9)]
+ a=sum(g,[]);b=max(a,key=a.count);l=max({v for v in a if v!=b},key=a.count);h=len(g);w=len(g[0]);o=[[l]*9 for _ in range(9)]
  for i in range(h):
   for j in range(w):
    c=g[i][j]
@@ -25,10 +7,14 @@ def p(g):
    q=[(i,j)];g[i][j]=b;s=[]
    while q:
     x,y=q.pop();s+=[(x,y)]
-    for nx,ny in((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
-     if 0<=nx<h and 0<=ny<w and g[nx][ny]==c:
-      g[nx][ny]=b;q.append((nx,ny))
-   k=M[cl(s)];r,cx=divmod(k[0],3);rr=r*3;cc=cx*3
-   for p in k[1]:dr,dc=divmod(p,3);out[rr+dr][cc+dc]=c
- return out
+    for X,Y in((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+     if 0<=X<h and 0<=Y<w and g[X][Y]==c:g[X][Y]=b;q+=[(X,Y)]
+   u,v=zip(*s);mi=min(u);mj=min(v);s=[(x-mi,y-mj)for x,y in s];u,v=zip(*s);n=len(s)
+   if n==3:a=8-6*(2-sum(u))-2*(2-sum(v));P=[a,a+1-2*(a%3>0),a+3-6*(a>2)]
+   else:
+    if max(u)<max(v):a=1 if sum(u)<3 else 7;P=[a-1,a,a+1,4]
+    else:a=3 if sum(v)<3 else 5;P=[a-3,a,a+3,4]
+   r,k=divmod(a,3);R=r*3;C=k*3
+   for t in P:d,e=divmod(t,3);o[R+d][C+e]=c
+ return o
 
