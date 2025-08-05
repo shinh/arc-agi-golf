@@ -1,12 +1,9 @@
 def p(g):
-    h, w = len(g), len(g[0])
-    cnt = {}
-    for r in g:
-        for v in r:
-            cnt[v] = cnt.get(v, 0) + 1
-    bg = max(cnt, key=cnt.get)
-    colors = set(cnt) - {bg}
-    objs = set()
+    h=len(g);w=len(g[0])
+    f=sum(g,[])
+    bg=max(f, key=f.count)
+    colors=set(f)-{bg}
+    objs=set()
     for c in colors:
         objs.add(frozenset((c, (i, j)) for i, r in enumerate(g) for j, v in enumerate(r) if v == c))
     def bord(obj):
