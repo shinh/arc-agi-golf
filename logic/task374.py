@@ -1,6 +1,5 @@
 def p(g):
     h=len(g);w=len(g[0])
-    f=sum(g,[])
     out=[r[:] for r in g];seen=[[0]*w for _ in g];objs=[]
     for i in range(h):
         for j in range(w):
