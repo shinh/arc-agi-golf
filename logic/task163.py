@@ -14,11 +14,7 @@ def p(g):
      ny=y+dy;nx=x+dx
      if 0<=ny<h and 0<=nx<w and G[ny][nx]>=0 and not V[ny][nx]:V[ny][nx]=1;q+=[(ny,nx)]
    O+=[o]
- d={}
- for r in g:
-  for v in r:
-   if v!=c:d[v]=d.get(v,0)+1
- b=max(d,key=d.get)
+ b=0
  o=[o for o in O if any(v==4 for v,_,_ in o)][0]
  mi=min(i for _,i,_ in o);mj=min(j for _,_,j in o)
  o=[(v,i-mi,j-mj)for v,i,j in o if v!=5]

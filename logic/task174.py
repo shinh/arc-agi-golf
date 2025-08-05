@@ -1,10 +1,9 @@
 def p(g):
     h=len(g);w=len(g[0])
-    bg=max(range(10),key=lambda v:sum(r.count(v)for r in g))
     seen=set()
     for i in range(h):
         for j in range(w):
-            if g[i][j]==bg or (i,j)in seen:continue
+            if g[i][j]==0 or(i,j)in seen:continue
             c=g[i][j];q=[(i,j)];obj=set()
             while q:
                 x,y=q.pop()
