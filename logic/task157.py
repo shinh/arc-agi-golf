@@ -1,10 +1,4 @@
 def p(g):
-    t=lambda x:[list(r)for r in zip(*x)]
-    r=lambda x:[list(r)for r in zip(*(q[::-1]for q in x[::-1]))]
-    s=g
-    for f in (lambda x:x,t,r,lambda x:x[::-1]):
-        g=f(s)
-        if len({*g[0]})==1 and g[0][0]:break
     h=len(g);w=len(g[0]);S=[]
     for y in range(h):
         for x in range(w):
@@ -33,5 +27,4 @@ def p(g):
                 F(i+1)
                 for dy,dx in T:g[y+dy][x+dx]=0
     F(0)
-    return f(R)
-
+    return R
