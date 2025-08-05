@@ -1,10 +1,10 @@
 def p(g):
     h,w=len(g),len(g[0]);g=[r[:]for r in g]
-    b=max({v for r in g for v in r},key=lambda v:sum(r.count(v)for r in g))
+    b=0
     s=set()
     for i in range(h):
         for j in range(w):
-            if g[i][j]!=b and(i,j)not in s:
+            if g[i][j] and(i,j)not in s:
                 c=g[i][j];q=[(i,j)];t={(i,j)};s.add((i,j));xs=[i];ys=[j]
                 while q:
                     x,y=q.pop()
