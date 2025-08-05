@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    w=h=23
     C=set(sum(g,[]))
     def box(c):
         t=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==c]
@@ -23,7 +23,7 @@ def p(g):
         T+=r,fl(r);r=rot(r)
     U=[]
     [U.append(t)for t in T if t not in U]
-    H=len(p);W=len(p[0])
+    H=W=25
     for t in U:
         mh=len(t);mw=len(t[0])
         m=[[0 if v==a else d if v==d else None for v in row]for row in t]

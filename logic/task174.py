@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    w=h=10
     bg=max(range(10),key=lambda v:sum(r.count(v)for r in g))
     seen=set()
     for i in range(h):

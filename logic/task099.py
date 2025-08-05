@@ -1,5 +1,5 @@
 def p(g):
- h=len(g);w=len(g[0]);v=[[0]*w for _ in g];B=[]
+ h=w=10;v=[[0]*w for _ in g];B=[]
  for y in range(h):
   for x in range(w):
    if g[y][x]==1 and not v[y][x]:

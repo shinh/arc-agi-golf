@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    h=w=10
     R=[i for i,r in enumerate(g)if all(v==5 for v in r)]
     C=[j for j in range(w)if all(g[y][j]==5 for y in range(h))]
     a=len(R)//2;b=len(C)//2

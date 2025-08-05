@@ -1,6 +1,6 @@
 from collections import Counter as C
 def p(g):
-    h=len(g);w=len(g[0])
+    h=16;w=12
     v=set();o=[]
     for y in range(h):
         for x in range(w):

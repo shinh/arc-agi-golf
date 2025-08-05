@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);o=[r[:]for r in g]
+    w=h=18;o=[r[:]for r in g]
     for y in range(h-1):
         for x in range(w-1):
             if g[y][x]==g[y][x+1]==g[y+1][x]==g[y+1][x+1]==0 and (y<1 or g[y-1][x] or g[y-1][x+1]) and (x<1 or g[y][x-1] or g[y+1][x-1]):

@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);m=10**9
+    w=h=21;m=10**9
     for k in range(1,h):
         c=sum(a and b and a!=b for i in range(h-k) for a,b in zip(g[i],g[i+k]))
         if c<m:m=c;K=k

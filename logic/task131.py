@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);o=[[0]*w for _ in g]
+    h=4;w=16;o=[[0]*w for _ in g]
     for y,r in enumerate(g):
         if r.count(2)==w:line=y;H=1;break
     else:

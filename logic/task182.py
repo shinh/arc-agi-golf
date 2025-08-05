@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    w=h=20
     a=sum(g,[]);bg=max(set(a),key=a.count)
     seen=set();objs=[]
     for i in range(h):

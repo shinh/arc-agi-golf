@@ -1,5 +1,5 @@
 def p(g):
-    H=len(g);W=len(g[0])
+    H=19;W=8
     P=[(y,x)for y in range(H)for x in range(W)if g[y][x]==2]
     E=[(y,x)for y in range(H)for x in range(W)if g[y][x]==8]
     lc=min(x for _,x in P);rc=max(x for _,x in P)

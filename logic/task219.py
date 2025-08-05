@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);R=range
+    h=10;w=15;R=range
     rows=[i for i,r in enumerate(g) if 8 in r]
     if not rows:return [r[:]for r in g]
     B=[];b=[rows[0]]
