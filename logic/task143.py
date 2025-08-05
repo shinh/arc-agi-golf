@@ -1,25 +1,14 @@
 def p(g):
- G=[r[:]for r in g];O=[]
+ G=[r[:]for r in g];O=[];L=m=0
  for y in range(10):
   for x in range(10):
-   c=G[y][x]
-   if c:
-    q=[(y,x)];G[y][x]=0;o={(y,x)}
+   if c:=G[y][x]:
+    G[y][x]=0;o=q=[(y,x)];u=w=y;v=z=x
     for i,j in q:
-     for a,b in((1,0),(-1,0),(0,1),(0,-1)):
-      A=i+a;B=j+b
-      if 0<=A<10 and 0<=B<10 and G[A][B]==c:G[A][B]=0;q+=[(A,B)];o|={(A,B)}
-    Y,X=zip(*o);sy=min(Y);sx=min(X);ey=max(Y);ex=max(X);O+=((c,o,sy,sx,ey,ex,{(y-sy,x-sx)for y,x in o}),)
- m=0
- for t in O:
-  c,o,sy,sx,ey,ex,_=t
-  if len(o)==ey-sy+ex-sx+1 and sy*sx*(9-ey)*(9-ex)==0 and len({g[i][j]for i in range(sy,ey+1)for j in range(sx,ex+1)}-{c})==2 and len(o)>m:L=t;m=len(o)
- c,o,sy,sx,ey,ex,sh=L
- for t in O:
-  if t[1]!=o and all(sy<=y<=ey and sx<=x<=ex for y,x in t[1]):S=t;break
- sh=S[6]
- for t in O:
-  if t[6]==sh and t[1]!=S[1]:
-   for y,x in t[1]:g[y][x]=c
-   break
+     for A,B in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
+      if 9>=A>=0<=B<=9 and G[A][B]==c:G[A][B]=0;q+=(A,B),;u=min(u,A);v=min(v,B);w=max(w,A);z=max(z,B)
+    t=(c,o,u,v,w,z,{(y-u,x-v)for y,x in o});O+=t,
+    if len(o)==w-u+z-v+1 and u*v*(9-w)*(9-z)==0 and len({d for i in range(u,w+1)for d in g[i][v:z+1]})==3 and len(o)>m:L=t;m=len(o)
+ c,o,u,v,w,z,_=L;sh=next(t[6] for t in O if t[1]!=o and u<=t[2]<=w>=t[4] and v<=t[3]<=z>=t[5])
+ for y,x in next(t for t in O if t[6]==sh and not(u<=t[2]<=w>=t[4] and v<=t[3]<=z>=t[5]))[1]:g[y][x]=c
  return g
