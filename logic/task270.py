@@ -6,7 +6,7 @@ def p(g):
   is_=[i for i,_ in a];js=[j for _,j in a]
   return(min(is_)+max(is_))//2,(min(js)+max(js))//2
  t=lambda b,p:(b[0]+(p[0]>b[0])-(p[0]<b[0]),b[1]+(p[1]>b[1])-(p[1]<b[1]))
- b=max(range(10),key=lambda v:sum(row.count(v)for row in g))
+ b=0
  o=[r[:] for r in g]
  for v in(3,7):
   for i,j in d.get(v,[]):o[i][j]=b

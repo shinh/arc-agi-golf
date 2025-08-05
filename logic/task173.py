@@ -1,14 +1,14 @@
 def p(g):
     h=len(g);w=len(g[0])
-    bg=max(range(10),key=lambda v:sum(r.count(v)for r in g))
+    bg=0
     seen=set();objs=[]
     for i in range(h):
         for j in range(w):
-            if g[i][j]!=bg and (i,j)not in seen:
+            if g[i][j] and (i,j)not in seen:
                 q=[(i,j)];o=[]
                 while q:
                     x,y=q.pop()
-                    if(x,y)in seen or g[x][y]==bg:continue
+                    if(x,y)in seen or g[x][y]==0:continue
                     seen.add((x,y));o.append((x,y,g[x][y]))
                     for a in(-1,0,1):
                         for b in(-1,0,1):

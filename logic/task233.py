@@ -2,11 +2,11 @@ def p(g):
  h=len(g);w=len(g[0]);c={}
  for r in g:
   for v in r:c[v]=c.get(v,0)+1
- bg=max(c,key=c.get);c.pop(bg);m=max(c,key=c.get)
+ bg=0;c.pop(bg,0);m=max(c,key=c.get)
  V=set();C=[]
  for i in range(h):
   for j in range(w):
-   if g[i][j]!=bg and (i,j)not in V:
+   if g[i][j] and(i,j)not in V:
     q=[(i,j)];V.add((i,j));t=b=i;l=r=j;n=0
     while q:
      x,y=q.pop();n+=1
@@ -16,7 +16,7 @@ def p(g):
      if y>r:r=y
      for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
       nx,ny=x+dx,y+dy
-      if 0<=nx<h and 0<=ny<w and g[nx][ny]!=bg and (nx,ny)not in V:
+      if 0<=nx<h and 0<=ny<w and g[nx][ny] and (nx,ny)not in V:
        V.add((nx,ny));q.append((nx,ny))
     C.append((n,t,b,l,r))
  C.sort();n,t,b,l,r=C.pop()

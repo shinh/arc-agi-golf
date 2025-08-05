@@ -1,36 +1,30 @@
-from collections import Counter as C
 def p(g):
     h=16;w=12
     v=set();o=[]
     for y in range(h):
-        for x in range(w):
-            if g[y][x]==0 or(y,x)in v:continue
-            q=[(y,x)];v.add((y,x));c=[]
+        for x in range(W):
+            if g[y][x]<1 or(y,x)in v:continue
+            q=[(y,x)];v.add((y,x));c=[];s=set()
             while q:
-                i,j=q.pop();c.append((i,j,g[i][j]))
-                for di in(-1,0,1):
-                    for dj in(-1,0,1):
-                        if di|dj:
-                            ni,nj=i+di,j+dj
-                            if 0<=ni<h and 0<=nj<w and g[ni][nj]and(ni,nj)not in v:
-                                v.add((ni,nj));q.append((ni,nj))
-            o.append(c)
-    c=C();[c.update({v:1 for _,_,v in x})for x in o]
-    k=max(c,key=c.get)
-    s=[sum(v==k for _,_,v in x)for x in o]
-    t=max([x for x,r in zip(o,s)if r==min(s)],key=len)
-    o=[x for x in o if x is not t]
-    ti=min(i for i,_,_ in t);tj=min(j for _,j,_ in t)
-    t=[(i-ti,j-tj,v)for i,j,v in t]
-    ci=min(i for i,j,v in t if v==k);cj=min(j for i,j,v in t if v==k)
-    r=[row[:]for row in g]
-    for x in o:
-        xs=[(i,j)for i,j,v in x if v==k]
-        mi=min(i for i,j in xs);mj=min(j for i,j in xs);w1=max(j for i,j in xs)-mj+1
-        oc=next(v for _,_,v in x if v!=k)
+                i,j=q.pop();c+=[(i,j)];s.add(g[i][j])
+                for dy in(-1,0,1):
+                    for dx in(-1,0,1):
+                        ni=i+dy;nj=j+dx
+                        if dy|dx and 0<=ni<h and 0<=nj<W and g[ni][nj]and(ni,nj)not in v:
+                            q+=[(ni,nj)];v.add((ni,nj))
+            for a in s:d[a]=1+d.get(a,0)
+            o+=[c]
+    k=max(d,key=d.get);s=[sum(g[i][j]==k for i,j in x)for x in o]
+    t=max([x for x,r in zip(o,s)if r==min(s)],key=len);o=[x for x in o if x!=t]
+    ti=min(i for i,_ in t);tj=min(j for _,j in t)
+    t=[(i-ti,j-tj,g[i][j]==k)for i,j in t];y,x=min((i,j)for i,j,v in t if v)
+    r=[x[:]for x in g]
+    for e in o:
+        xs=[(i,j)for i,j in e if g[i][j]==k]
+        Y=min(i for i,j in xs);X=min(j for i,j in xs);n=max(j for i,j in xs)-X+1
+        oc=next(g[i][j] for i,j in e if g[i][j]!=k)
         for i,j,v in t:
-            for di in range(w1):
-                for dj in range(w1):
-                    ii=i*w1+di+mi-ci*w1;jj=j*w1+dj+mj-cj*w1
-                    if 0<=ii<h and 0<=jj<w:r[ii][jj]=v if v==k else oc
+            for a in range(n*n):
+                ii=i*n+a//n+Y-y*n;jj=j*n+a%n+X-x*n
+                if 0<=ii<h and 0<=jj<W:r[ii][jj]=k if v else oc
     return r

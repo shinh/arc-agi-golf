@@ -1,10 +1,5 @@
 def p(g):
- h=len(g);w=len(g[0])
- idx=[(0,j)for j in range(w)]+[(h-1,j)for j in range(w)]+[(i,0)for i in range(1,h-1)]+[(i,w-1)for i in range(1,h-1)]
- d={}
- for i,j in idx:
-  v=g[i][j];d[v]=d.get(v,0)+1
- c=max(d,key=d.get)
+ h=len(g);w=len(g[0]);c=0
  v=[[0]*w for _ in g];C=[]
  def bfs(sy,sx):
   q=[(sy,sx)];v[sy][sx]=1;cells=[(sy,sx)];b=sy in(0,h-1)or sx in(0,w-1)

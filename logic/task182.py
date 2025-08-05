@@ -1,10 +1,10 @@
 def p(g):
     w=h=20
-    a=sum(g,[]);bg=max(set(a),key=a.count)
+    bg=0
     seen=set();objs=[]
     for i in range(h):
         for j in range(w):
-            if g[i][j]==bg or (i,j) in seen:continue
+            if g[i][j]==0 or(i,j) in seen:continue
             c=g[i][j];q=[(i,j)];seen.add((i,j));cells=[]
             while q:
                 y,x=q.pop();cells+=[(y,x)]
@@ -21,7 +21,7 @@ def p(g):
             frames+=[(t,b,l,r)]
     t,b,l,r=max(frames,key=lambda z:(z[1]-z[0])*(z[3]-z[2]))
     t+=1;b-=1;l+=1;r-=1
-    pat=[(y,x) for y in range(t,b+1) for x in range(l,r+1) if g[y][x]!=bg]
+    pat=[(y,x) for y in range(t,b+1) for x in range(l,r+1) if g[y][x]]
     col=g[pat[0][0]][pat[0][1]]
     mi=min(y for y,x in pat);mj=min(x for y,x in pat)
     shp={(y-mi,x-mj) for y,x in pat}

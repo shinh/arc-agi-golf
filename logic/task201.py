@@ -10,18 +10,18 @@ def p(g):
  r0,r1=min(x for x,_ in pts),max(x for x,_ in pts)
  c0,c1=min(y for _,y in pts),max(y for _,y in pts)
  sub=[row[c0:c1+1]for row in g[r0:r1+1]]
- flat=sum(g,[]);bg=max(set(flat),key=flat.count)
+ bg=0
  cov=[row[:]for row in g]
  for i in range(r0,r1+1):
   for j in range(c0,c1+1):cov[i][j]=bg
  T=lambda M:list(map(list,zip(*M)))
  dmir=any(len(set(r))==1 for r in sub)
  if dmir:sub=T(sub);cov=T(cov)
- cells=[(v,i,j)for i,row in enumerate(cov)for j,v in enumerate(row)if v!=bg]
+ cells=[(v,i,j)for i,row in enumerate(cov)for j,v in enumerate(row)if v]
  if cells:
   mi=min(i for v,i,j in cells);mj=min(j for v,i,j in cells)
   cells=[(v,i-mi,j-mj)for v,i,j in cells]
- pal={v for row in sub for v in row}-{c,bg}
+ pal={v for row in sub for v in row if v}-{c}
  if len(pal)>1:
   a,b=sorted(pal)[0],sorted(pal)[-1]
   lm=lambda m,t:min(j for i,r in enumerate(m) for j,v in enumerate(r)if v==t)

@@ -1,5 +1,5 @@
 def p(g):
-    f=sum(g,[]);a=min(f,key=f.count);b=max(f,key=f.count)
+    f=sum(g,[]);a=min(f,key=f.count);b=0
     P=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==a]
     if not P:return g
     I,J=zip(*P);t,B=min(I),max(I);l,R=min(J),max(J);H=B-t+1;W=R-l+1
