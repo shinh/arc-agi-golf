@@ -1,9 +1,8 @@
 def p(g):
- s=sum(g,[]);bg=max(set(s),key=s.count)
  c=[]
  for r in g:
   for v in r:
-   if v!=bg and v not in c:c.append(v)
+   if v and v not in c:c.append(v)
  a,b=c[0],c[-1]
  h=len(g);w=len(g[0])
  for i in range(1,h-1):
