@@ -24,7 +24,7 @@ def p(g):
  for i,R in enumerate(B):pad[i+1][1:-1]=R
  for o in objs:
   cs=[p for _,p in o];xs,ys=zip(*cs);mi=min(xs);mj=min(ys);ma=max(xs);mb=max(ys)
-  pat=[(bc,(i,j))if v==oc else(v,(i,j))for v,(i,j) in o]
+  pat=[[ (v,(i,j)),(bc,(i,j)) ][v==oc]for v,(i,j) in o]
   for i in range(mi-1,ma+2):pat+=[(bc,(i,mj-1)),(bc,(i,mb+1))]
   for j in range(mj-1,mb+2):pat+=[(bc,(mi-1,j)),(bc,(ma+1,j))]
   pi=min(i for _,(i,j) in pat);pj=min(j for _,(i,j) in pat)

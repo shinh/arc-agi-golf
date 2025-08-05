@@ -12,4 +12,4 @@ def p(g):
      if h*w>m and all(g[y+i][x+j]==a for i in range(h) for j in range(w) if i in(0,h-1) or j in(0,w-1)):
       m=h*w;R=y,x,h,w
  y,x,h,w=R
- return[[b if v==a else v for v in r[x:x+w]]for r in g[y:y+h]]
+ return[[[v,b][v==a]for v in r[x:x+w]]for r in g[y:y+h]]

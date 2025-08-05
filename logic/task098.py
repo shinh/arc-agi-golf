@@ -13,5 +13,5 @@ def p(g):
                             v[ny][nx]=1;q.append((ny,nx))
                 for yy in range(Y0,Y1+1):
                     for xx in range(X0,X1+1):
-                        h[yy][xx]=c if yy in(Y0,Y1) or xx in(X0,X1) else 0
+                        h[yy][xx]=[0,c][yy in(Y0,Y1) or xx in(X0,X1)]
     return h

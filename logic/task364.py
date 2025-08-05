@@ -23,6 +23,6 @@ def p(g):
                         ny,nx=y+dy,x+dx
                         if (ny,nx)in C and (ny,nx)!=(py,px):
                             t+=(dy!=ay or dx!=ax);py,px,y,x=y,x,ny,nx;ay,ax=dy,dx;break
-                c=1 if t<2 else 6
+                c=[6,1][t<2]
             for y1,x1 in C:g[y1][x1]=c
     return g

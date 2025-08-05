@@ -1,7 +1,7 @@
 def p(g):
  c=g[0][0]
  h=len(g);w=len(g[0])
- out=[[4 if v==c else v for v in r]for r in g]
+ out=[[[v,4][v==c]for v in r]for r in g]
  seen=set()
  for i in range(h):
   for j in range(w):
