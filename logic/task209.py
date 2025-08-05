@@ -1,22 +1,17 @@
 def p(g):
     h=len(g);w=len(g[0])
     R=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==4]
-    if len(R)!=4:return g
+    if len(R)-4:return g
     a=min(i for i,_ in R);b=max(i for i,_ in R);c=min(j for _,j in R);d=max(j for _,j in R)
     di={};I=[]
     for i in range(a+1,b):
         for j in range(c+1,d):
-            v=g[i][j]
-            if v:
-                di[v]=di.get(v,0)+1;I.append((i,j))
+            if(v:=g[i][j]):di[v]=di.get(v,0)+1;I.append((i,j))
     do={};O=[]
     for i in range(h):
         for j in range(w):
-            if not(a<=i<=b and c<=j<=d):
-                v=g[i][j]
-                if v:
-                    do[v]=do.get(v,0)+1;O.append((i,j))
-    if not I or not O:return [r[c:d+1]for r in g[a:b+1]]
+            if not(a<=i<=b and c<=j<=d)and(v:=g[i][j]):do[v]=do.get(v,0)+1;O.append((i,j))
+    if not(I and O):return [r[c:d+1]for r in g[a:b+1]]
     mA=min(i for i,_ in O);nA=max(i for i,_ in O);oA=min(j for _,j in O);pA=max(j for _,j in O)
     E=min(i for i,_ in I);K=min(j for _,j in I)
     cols=list(di);r=[di[c]//do.get(c,1)for c in cols];mc=max(set(r),key=r.count)
