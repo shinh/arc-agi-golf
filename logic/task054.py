@@ -25,14 +25,14 @@ def p(g):
     if x>Mx:Mx=x
  pat=[[B]*(Mx-mx+1)for _ in range(My-my+1)]
  for y,x in P:pat[y-my][x-mx]=g[y][x]
- cy,cx=(len(pat)-1)//2,(len(pat[0])-1)//2;cen=pat[cy][cx];ph,pw=len(pat),len(pat[0])
- def a(dy,dx):
-  y,x=cy+dy,cx+dx
-  if 0<=y<ph and 0<=x<pw and pat[y][x]!=B:
-   c=pat[y][x];y+=dy;x+=dx
-   return c,0<=y<ph and 0<=x<pw and pat[y][x]==c
-  return B,0
- u,nu=a(-1,0);d,nd=a(1,0);l,nl=a(0,-1);r,nr=a(0,1)
+ cy=len(pat)//2;cx=len(pat[0])//2;cen=pat[cy][cx];C=[]
+ for _ in range(4):
+  y,x=len(pat)//2-1,len(pat[0])//2
+  if y>=0 and pat[y][x]!=B:
+   c=pat[y][x];y-=1;C+=[c,y>=0 and pat[y][x]==c]
+  else:C+=[B,0]
+  pat=[list(r)for r in zip(*pat[::-1])]
+ cy=len(pat)//2;cx=len(pat[0])//2
  for y0,y1,x0,x1,c in R:
   for y in range(y0,y1+1):
    for x in range(x0,x1+1):
@@ -43,13 +43,13 @@ def p(g):
        for dx,val in enumerate(row):
         tx=x-cx+dx
         if x0<=tx<=x1:h[ty][tx]=c if val==B else val
-     if nu:
-      for Y1 in range(y0,y):h[Y1][x]=u
-     if nd:
-      for Y1 in range(y+1,y1+1):h[Y1][x]=d
-     if nl:
-      for X1 in range(x0,x):h[y][X1]=l
-     if nr:
-      for X1 in range(x+1,x1+1):h[y][X1]=r
+     for _ in range(4):
+      col,fl=C[0],C[1]
+      if fl:
+       for Y1 in range(y0,y):h[Y1][x]=col
+      h=[list(r)for r in zip(*h[::-1])]
+      y,x=x,Y-1-y
+      y0,y1,x0,x1=x0,x1,Y-1-y1,Y-1-y0
+      C=C[2:]+C[:2]
      h[y][x]=cen
  return h
