@@ -1,41 +1,55 @@
 def p(g):
- h=len(g);w=len(g[0]);H=h*3;W=w*3
- B=[[0]*W for _ in[0]*H]
+ h=len(g);w=len(g[0]);P=(-1,0,1);V=set();C=[]
  for y in range(h):
-  for x in range(w):B[h+y][w+x]=g[y][x]
- P=(-1,0,1);V=set();O=[]
- for y in range(H):
-  for x in range(W):
-   if B[y][x]and(y,x)not in V:
-    q=[(y,x)];V.add((y,x));S=set();C={}
+  for x in range(w):
+   if g[y][x]and(y,x)not in V:
+    q=[(y,x)];V.add((y,x));S=[];col=set()
     for Y,X in q:
-     S.add((Y,X));v=B[Y][X];C[v]=C.get(v,0)+1
+     S+=[(Y,X)];col|={g[Y][X]}
      for a in P:
       for b in P:
        if a|b:
         y2=Y+a;x2=X+b
-        if 0<=y2<H and 0<=x2<W and B[y2][x2]and(y2,x2)not in V:V.add((y2,x2));q+=[(y2,x2)]
-    O+=[(S,C)]
- t=max(O,key=lambda o:len(o[1]));O.remove(t)
- d={}
- for _,c in O:
-  for k,v in c.items():d[k]=d.get(k,0)+v
- m=max(d,key=d.get);S,_=t
- mi=min(y for y,_ in S);mj=min(x for _,x in S)
- T=[(y-mi,x-mj,B[y][x])for y,x in S]
- A=[(y,x)for y,x,v in T if v==m];Z=[(y,x)for y,x,v in T if v!=m]
- th=max(y for y,_,_ in T)+1;tw=max(x for _,x,_ in T)+1;C=[]
- for k in range(1,6):
-  for y in range(H-th*k+1):
-   for x in range(W-tw*k+1):
-    S={(y+i*k+dy,x+j*k+dx)for i,j in A for dy in range(k)for dx in range(k)}
-    if {B[Y][X]for Y,X in S}=={m}and not any(B[y+i*k+dy][x+j*k+dx]for i,j in Z for dy in range(k)for dx in range(k)):
-     U=set()
-     for s,_ in O:
-      if s&S:U|=s
-     if len(U)==len(S):C+=[(y,x,k)]
- for y,x,k in C:
-  for i,j,v in T:
+        if 0<=y2<h and 0<=x2<w and g[y2][x2]and(y2,x2)not in V:V.add((y2,x2));q+=[(y2,x2)]
+    C+=[(S,col)]
+ T=[s for s,c in C if 1 in c and 2 in c][0]
+ A=[p for p in T if g[p[0]][p[1]]==2];B=[p for p in T if g[p[0]][p[1]]==1]
+ my=min(y for y,_ in A);mx=min(x for _,x in A)
+ A=[(y-my,x-mx)for y,x in A];B=[(y-my,x-mx)for y,x in B];U=A+B
+ mnx=min(x for _,x in U);mxx=max(x for _,x in U)
+ mny=min(y for y,_ in U);mxy=max(y for y,_ in U)
+ P=[]
+ for k in range(1,min(h,w)+1):
+  for y in range(h):
+   for x in range(w):
+    ok=1
+    for a,b in A:
+     for dy in range(k):
+      for dx in range(k):
+       Y=y+a*k+dy;X=x+b*k+dx
+       if not(0<=Y<h and 0<=X<w and g[Y][X]==2):ok=0;break
+      if not ok:break
+     if not ok:break
+    if ok:
+     for a,b in B:
+      for dy in range(k):
+       for dx in range(k):
+        Y=y+a*k+dy;X=x+b*k+dx
+        if 0<=Y<h and 0<=X<w and g[Y][X]:ok=0;break
+       if not ok:break
+      if not ok:break
+    if ok:
+     S={(y+a*k+dy,x+b*k+dx)for a,b in A for dy in range(k)for dx in range(k)}
+     for Y in range(y+mny*k,y+(mxy+1)*k):
+      for X in range(x+mnx*k,x+(mxx+1)*k):
+       if 0<=Y<h and 0<=X<w and g[Y][X]==2 and (Y,X)not in S:ok=0;break
+      if not ok:break
+     if ok:P+=[(y,x,k)]
+ for y,x,k in P:
+  for a,b in B:
    for dy in range(k):
-    for dx in range(k):B[y+i*k+dy][x+j*k+dx]=v
- return[r[w:2*w]for r in B[h:2*h]]
+    for dx in range(k):
+     Y=y+a*k+dy;X=x+b*k+dx
+     if 0<=Y<h and 0<=X<w and g[Y][X]!=2:g[Y][X]=1
+ return g
+
