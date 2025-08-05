@@ -1,7 +1,7 @@
 def p(g):
     h=len(g);w=len(g[0]);R=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==4]
     if len(R)-4:return g
-    x,y=zip(*R);a=min(x);b=max(x);c=min(y);d=max(y)
+    (a,c),(b,d)=min(R),max(R)
     di=[0]*10;I=[(i,j,v)for i in range(a+1,b)for j in range(c+1,d)if(v:=g[i][j])and(di.__setitem__(v,di[v]+1)or 1)]
     do=[0]*10;O=[(i,j,v)for i in range(h)for j in range(w)if(i<a or i>b or j<c or j>d)and(v:=g[i][j])and(do.__setitem__(v,do[v]+1)or 1)]
     if not(I and O):return[r[c:d+1]for r in g[a:b+1]]
