@@ -1,33 +1,21 @@
 def p(g):
- h=len(g);w=len(g[0])
- v=[[0]*w for _ in g];objs=[];allc=[]
+ h=len(g);w=len(g[0]);o=[r[:]for r in g];t=[];f=[];a=h;b=0;c=w;d=0;u=sum({j for i in g for j in i})
  for y in range(h):
   for x in range(w):
-   if g[y][x] and not v[y][x]:
-    c=g[y][x];s=[(y,x)];v[y][x]=1;r=[]
-    while s:
-     i,j=s.pop();r.append((i,j))
-     for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-      ny,nx=i+dy,j+dx
-      if 0<=ny<h and 0<=nx<w and not v[ny][nx] and g[ny][nx]==c:
-       v[ny][nx]=1;s.append((ny,nx))
-    objs.append((c,r));allc+=r
- o=[r[:] for r in g];pal=sorted({c for c,_ in objs})
- for c,r in objs:
-  oc=min(x for x in pal if x!=c)
-  ys=[i for i,_ in r];xs=[j for _,j in r]
-  a,b,c1,d1=min(ys)-1,max(ys)+1,min(xs)-1,max(xs)+1
-  for j in range(c1,d1+1):
-   if 0<=a<h:o[a][j]=oc
-   if 0<=b<h:o[b][j]=oc
-  for i in range(a,b+1):
-   if 0<=c1<w:o[i][c1]=oc
-   if 0<=d1<w:o[i][d1]=oc
- if allc:
-  ys=[i for i,_ in allc];xs=[j for _,j in allc]
-  a,b,c1,d1=min(ys),max(ys),min(xs),max(xs)
-  B={(a,j) for j in range(c1,d1+1)}|{(b,j) for j in range(c1,d1+1)}|{(i,c1) for i in range(a,b+1)}|{(i,d1) for i in range(a,b+1)}
-  S=set(allc)
-  for i,j in B-S:
-   if min(abs(i-y)+abs(j-x) for y,x in S)%2<1:o[i][j]=5
+   k=g[y][x]
+   if k:
+    g[y][x]=0;q=[(y,x)];y0=y1=y;x0=x1=x
+    while q:
+     i,j=q.pop();f+=[(i,j)];a=min(a,i);b=max(b,i);c=min(c,j);d=max(d,j);y0=min(y0,i);y1=max(y1,i);x0=min(x0,j);x1=max(x1,j)
+     for ny,nx in(i+1,j),(i-1,j),(i,j+1),(i,j-1):
+      if 0<=ny<h and 0<=nx<w and g[ny][nx]==k:
+       g[ny][nx]=0;q+=[(ny,nx)]
+    t+=[(u-k,y0,y1,x0,x1)]
+ for k,y0,y1,x0,x1 in t:
+  y0=max(0,y0-1);y1=min(h-1,y1+1);x0=max(0,x0-1);x1=min(w-1,x1+1)
+  for j in range(x0,x1+1):o[y0][j]=o[y1][j]=k
+  for i in range(y0,y1+1):o[i][x0]=o[i][x1]=k
+ for i in range(a,b+1):
+  for j in range(c,d+1):
+   if (i in(a,b)or j in(c,d))and o[i][j]<1 and min(abs(i-y)+abs(j-x)for y,x in f)%2<1:o[i][j]=5
  return o
