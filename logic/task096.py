@@ -63,7 +63,7 @@ def p(g):
   best=max({P,vm(P),cm(P),hm(P)},key=lambda s:((1,0) in norm(s))+((0,1) in norm(s)))
   orient.append((next(iter(best))[0],norm(best)))
  counts=[len(p) for p in x9]
- n=len(x9)+(0 if any(k==1 for k in counts) else 1)
+ n=len(x9)+[1,0][any(k==1 for k in counts)]
  size=2*n-1
  def paint(o,ps):
   for c,s in ps:

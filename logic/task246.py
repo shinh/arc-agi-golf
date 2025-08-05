@@ -4,11 +4,11 @@ def p(g):
             if v==2:a=(y,x)
             if v==3:b=(y,x)
     y,x=a;Y,X=b
-    s=1 if X>x else -1
+    s=[-1,1][X>x]
     while x!=X:
         x+=s
         if (y,x)!=b:g[y][x]=8
-    s=1 if Y>y else -1
+    s=[-1,1][Y>y]
     while y!=Y:
         y+=s
         if (y,x)!=b:g[y][x]=8
