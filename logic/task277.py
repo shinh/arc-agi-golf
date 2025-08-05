@@ -1,8 +1,8 @@
 def p(g):
- h=w=10;bg=0;v=set();c=[]
+ h=w=10;v=set();c=[]
  for i in range(h):
   for j in range(w):
-   if g[i][j]!=bg and (i,j)not in v:
+   if g[i][j]and (i,j)not in v:
     q=[(i,j)];v.add((i,j));o=[]
     while q:
      x,y=q.pop();o.append((x,y))
@@ -10,7 +10,7 @@ def p(g):
       for dy in(-1,0,1):
        if dx or dy:
         nx,ny=x+dx,y+dy
-        if 0<=nx<h and 0<=ny<w and g[nx][ny]!=bg and (nx,ny)not in v:
+        if 0<=nx<h and 0<=ny<w and g[nx][ny] and (nx,ny)not in v:
          v.add((nx,ny));q.append((nx,ny))
     c.append(o)
  sh=[];cnt={}

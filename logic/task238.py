@@ -1,6 +1,5 @@
 def p(g):
     h=len(g);w=len(g[0])
-    bg=0
     v=[[0]*w for _ in g];R=0,0,0,0,0
     for y in range(h):
         for x in range(w):

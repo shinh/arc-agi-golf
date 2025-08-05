@@ -3,7 +3,7 @@ def p(g):
  sr=next(i for i in range(1,h)if len(set(g[i]))==1)+1
  sc=next(j for j in range(1,w)if len({g[k][j]for k in range(h)})==1)+1
  B=[r[::sc]for r in g[::sr]];H=len(B);W=len(B[0])
- bg=0;D=(1,0,-1,0,1);S=set();objs=[]
+ D=(1,0,-1,0,1);S=set();objs=[]
  for i in range(H):
   for j in range(W):
    if(i,j)in S or B[i][j]==0:continue

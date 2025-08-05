@@ -2,7 +2,7 @@ def p(g):
  h=len(g);w=len(g[0]);c={}
  for r in g:
   for v in r:c[v]=c.get(v,0)+1
- bg=0;c.pop(bg,0);m=max(c,key=c.get)
+ c.pop(0,0);m=max(c,key=c.get)
  V=set();C=[]
  for i in range(h):
   for j in range(w):

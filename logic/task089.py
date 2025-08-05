@@ -1,6 +1,5 @@
 def p(g):
     h=w=13
-    bg=0
     seen=[[0]*w for _ in range(h)];objs=[]
     dirs=[(1,0),(-1,0),(0,1),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
     for i in range(h):

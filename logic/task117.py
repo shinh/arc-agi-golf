@@ -2,7 +2,6 @@ def p(g):
     h=len(g);w=len(g[0]);cnt={}
     for r in g:
         for c in r:cnt[c]=cnt.get(c,0)+1
-    bg=0
     for v in cnt:
         if v and cnt[v]==5:
             pts=[(y,x)for y,row in enumerate(g) for x,c in enumerate(row) if c==v]

@@ -1,6 +1,5 @@
 def p(g):
     w=h=20
-    bg=0
     seen=set();objs=[]
     for i in range(h):
         for j in range(w):
