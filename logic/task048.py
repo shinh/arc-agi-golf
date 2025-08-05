@@ -5,20 +5,18 @@ def p(g):
             if(y,x)in v:continue
             c=g[y][x];q=[(y,x)];v.add((y,x))
             for i,j in q:
-                for di,dj in((1,0),(-1,0),(0,1),(0,-1)):
-                    Y,X=i+di,j+dj
+                for Y,X in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
                     if 0<=Y<h and 0<=X<w and g[Y][X]==c and(Y,X)not in v:v.add((Y,X));q.append((Y,X))
-            d.setdefault(c,[]).append(set(q))
-    def n(o):
-        a=min(y for y,_ in o);b=min(x for _,x in o)
-        return{(y-a,x-b)for y,x in o}
+            d[c]=d.get(c,[])+[q]
+    def n(o):a=min(y for y,_ in o);b=min(x for _,x in o);return{(y-a,x-b)for y,x in o}
     for c,L in d.items():
-        if c and sum(len(o)for o in L)==8 and len(L)==2 and len({frozenset(n(o))for o in L})==1:
-            a,b=L
-            for cc,L2 in d.items():
-                if cc not in(0,c):
+        if c and len(L)==2 and sum(map(len,L))==8 and n(L[0])==n(L[1]):
+            a,b=L;A=set(a);B=set(b)
+            for k,L2 in d.items():
+                if k not in(0,c):
                     for o in L2:
-                        if any(abs(y-y1)+abs(x-x1)==1 for y,x in o for y1,x1 in a)and any(abs(y-y2)+abs(x-x2)==1 for y,x in o for y2,x2 in b):
-                            return[[cc]]
+                        O={(y+1,x)for y,x in o}|{(y-1,x)for y,x in o}|{(y,x+1)for y,x in o}|{(y,x-1)for y,x in o}
+                        if O&A and O&B:return[[k]]
             return[[0]]
     return[[0]]
+
