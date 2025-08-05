@@ -1,10 +1,10 @@
 def p(g):
-    h,w=len(g),len(g[0]);f=sum(g,[]);b=max(f,key=f.count)
+    h,w=len(g),len(g[0])
     o=[r[:]for r in g]
     idx=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==9]
     for i,j in idx:
         for k in range(i+1,h):
-            if o[k][j]==b:o[k][j]=1
+            if o[k][j]==0:o[k][j]=1
     s,setq=set,set
     seen=s();comps=[]
     for i,j in idx:
@@ -25,5 +25,5 @@ def p(g):
         j0=min(y for _,y in c);j1=max(y for _,y in c);n=(j1-j0+1)//2
         for i in range(max(0,i0-n),min(h,i1+n+1)):
             for j in range(max(0,j0-n),min(w,j1+n+1)):
-                if (i,j)not in c and g[i][j]==b:o[i][j]=3
+                if (i,j)not in c and g[i][j]==0:o[i][j]=3
     return o
