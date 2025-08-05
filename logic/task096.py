@@ -5,8 +5,7 @@ def p(g):
   for x,v in enumerate(r):pts[v].append((y,x))
  bg=max(range(10),key=lambda c:len(pts[c]))
  pts={c:s for c,s in enumerate(pts) if s and c!=bg}
- vis=[[0]*W for _ in g]
- wid={c:0 for c in pts}
+ vis=[[0]*W for _ in g];wid={c:0 for c in pts}
  for y in range(H):
   for x in range(W):
    if vis[y][x] or g[y][x]==bg:continue
@@ -21,12 +20,9 @@ def p(g):
  def bbox(s):
   ys=[y for y,x in s];xs=[x for y,x in s]
   return min(ys),min(xs),max(ys),max(xs)
+ bboxc=lambda s:bbox([p for _,p in s])
  def norm(s):
-  sy,sx=min(i for _,(i,j) in s),min(j for _,(i,j) in s)
-  return {(i-sy,j-sx)for _,(i,j) in s}
- def bboxc(s):
-  ys=[i for _,(i,j) in s];xs=[j for _,(i,j) in s]
-  return min(ys),min(xs),max(ys),max(xs)
+  sy,sx=bboxc(s)[:2];return {(i-sy,j-sx)for _,(i,j) in s}
  def vm(s):
   sy,sx,ey,ex=bboxc(s);return frozenset((v,(i,sx+ex-j))for v,(i,j) in s)
  def hm(s):
@@ -49,7 +45,7 @@ def p(g):
  for P in x9:
   b=max({P,vm(P),cm(P),hm(P)},key=lambda t:((1,0)in norm(t))+((0,1)in norm(t)))
   shp.append((next(iter(b))[0],norm(b)))
- cnt=[len(p)for p in x9];n=len(x9)+(0 if 1 in cnt else 1);L=2*n-1
+ L=2*(len(x9)+(1 not in [len(p)for p in x9]))-1
  def paint(o,ps):
   for c,s in ps:
    for y,x in s:o[y][x]=c
@@ -58,4 +54,3 @@ def p(g):
  o=paint([[bg]*L for _ in range(L)],sft)
  for _ in range(3):o=paint([list(r)for r in zip(*o[::-1])],sft)
  return o
-
