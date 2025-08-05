@@ -1,9 +1,6 @@
 def p(g):
  h=len(g);w=len(g[0])
- cnt=[0]*10
- for r in g:
-  for v in r:cnt[v]+=1
- bg=max(range(10),key=cnt.__getitem__);v=set();b=[]
+ bg=max(g[0]);v=set();b=[]
  d=[(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
  for y in range(h):
   for x in range(w):
