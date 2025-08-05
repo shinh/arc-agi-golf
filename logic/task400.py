@@ -1,8 +1,10 @@
 def p(g):
+ H=lambda a:[r[:]for r in a[::-1]]
+ V=lambda a:[r[::-1]for r in a]
  m=9**9
  for k in {x for r in g for x in r}:
   a=[r[:]for r in g]
-  for t in d,c,H,V:
+  for t in H,V:
    b=t(a)
    for y in range(24):
     for x in range(24):
