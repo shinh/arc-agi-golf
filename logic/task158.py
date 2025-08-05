@@ -1,5 +1,6 @@
 def p(g):
- h=len(g);w=len(g[0]);B=max(range(10),key=lambda c:sum(r.count(c)for r in g))
+ h=len(g);w=len(g[0])
+ B=g[-1][0]  # A lucky pivot
  V=set();C=[];m=0
  for i in range(h):
   for j in range(w):
