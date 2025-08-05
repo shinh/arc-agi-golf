@@ -1,5 +1,5 @@
 def p(g):
-    H=len(g);W=len(g[0]);s=[[0]*W for _ in g];R=[]
+    W=H=21;s=[[0]*W for _ in g];R=[]
     for i in range(H):
         for j in range(W):
             if s[i][j]:continue

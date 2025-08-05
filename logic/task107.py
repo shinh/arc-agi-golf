@@ -1,6 +1,6 @@
 def p(g):
-    h=len(g);w=len(g[0]);cs={v for r in g for v in r};k=len(cs)-1
-    G=[[g[i//k][j//k] for j in range(w*k)] for i in range(h*k)]
+    h=w=5;cs={v for r in g for v in r};k=len(cs)-1
+    G=[[g[i//k][j//k] for j in range(5*k)] for i in range(5*k)]
     best=bg=None;area=1e9;box=None
     for c in cs:
         pts=[(i,j) for i in range(h) for j in range(w) if g[i][j]==c]
@@ -15,7 +15,7 @@ def p(g):
                 area=a;best=c;bg=cols.pop();box=(mi,ma,mj,mx)
     mi,ma,mj,mx=box
     mi*=k;ma=(ma+1)*k-1;mj*=k;mx=(mx+1)*k-1
-    H=len(G);W=len(G[0])
+    H=W=5*k
     def draw(i,j,di,dj):
         i+=di;j+=dj
         while 0<=i<H and 0<=j<W:

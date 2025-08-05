@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);P={}
+    h=w=12;P={}
     for i,r in enumerate(g):
         for j,v in enumerate(r):P.setdefault(v,[]).append((i,j))
     for k,v in P.items():

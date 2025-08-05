@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0])
+    w=h=10
     for y in range(h):
         for x in range(w):
             if g[y][x]==5 and (y<1 or g[y-1][x]!=5) and (x<1 or g[y][x-1]!=5):
