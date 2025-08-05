@@ -10,11 +10,10 @@ def p(g):
      if n>(nx:=x+u)>=0<=(ny:=y+v)<n and g[nx][ny]==c:g[nx][ny]=-1;t+=(nx,ny),
    if r1-r0>1 and c1-c0>1 and len(C)==2*(r1-r0+c1-c0)and all(p//n in(r0,r1)or p%n in(c0,c1)for p in C):
     D[c]+=1;B[c]=B[c]or(r0,c0,r1,c1)
- c=min(range(10),key=lambda k:(D[k] or 99,k));r0,c0,r1,c1=B[c];h=r1-r0+1;w=c1-c0+1;iH=h-2;iW=w-2
+ c=min(range(10),key=lambda k:(D[k] or 99,k));r0,c0,r1,c1=B[c];h=r1-r0+1;w=c1-c0+1
  R=[(x,y)for x in range(h)for y in range(w) if x*y*(x-h+1)*(y-w+1)==0]
- for i in range(n-iH+1):
-  for j in range(n-iW+1):
-   if all(g[i+x][j+y]==0 for x in range(iH)for y in range(iW) if x*y*(x-iH+1)*(y-iW+1)==0):
-    for x,y in R:
-     if n>(a:=i+x-1)>=0<=(b:=j+y-1)<n:o[a][b]=c
+ for i in range(1,n-h+2):
+  for j in range(1,n-w+2):
+   if all(g[i+x][j+y]==0 for x in range(h-2)for y in range(w-2) if x*y*(x-h+3)*(y-w+3)==0):
+    for x,y in R:o[i+x-1][j+y-1]=c
  return o
