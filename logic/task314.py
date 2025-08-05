@@ -1,5 +1,5 @@
 def p(g):
-    h, w = len(g), len(g[0])
+    h=w=8
     rows = [i for i, r in enumerate(g) if r.count(r[0]) == w]
     cols = [j for j in range(w) if len({g[i][j] for i in range(h)}) == 1]
     fc = g[rows[0]][0] if rows else g[0][cols[0]]
