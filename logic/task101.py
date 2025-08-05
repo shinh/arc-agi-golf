@@ -1,62 +1,41 @@
 def p(g):
-    h=len(g);w=len(g[0]);H=3*h;W=3*w
-    b=0
-    B=[[0]*W for _ in range(H)]
-    for i in range(h):
-        for j in range(w):B[h+i][w+j]=g[i][j]
-    D=(-1,0,1);vis=set();objs=[]
-    for i in range(H):
-        for j in range(W):
-            if B[i][j] and(i,j)not in vis:
-                q=[(i,j)];vis.add((i,j));s=set();col={}
-                while q:
-                    y,x=q.pop();s.add((y,x));v=B[y][x];col[v]=col.get(v,0)+1
-                    for dy in D:
-                        for dx in D:
-                            if dy or dx:
-                                Y,X=y+dy,x+dx
-                                if 0<=Y<H and 0<=X<W and B[Y][X] and(Y,X)not in vis:
-                                    vis.add((Y,X));q.append((Y,X))
-                objs.append((s,col))
-    tm=max(objs,key=lambda o:len(o[1]))
-    objs.remove(tm)
-    cnt={}
-    for _,c in objs:
-        for k,v in c.items():cnt[k]=cnt.get(k,0)+v
-    m=max(cnt,key=cnt.get)
-    s,c=tm
-    mi=min(i for i,_ in s);mj=min(j for _,j in s)
-    T=[(i-mi,j-mj,B[i][j]) for i,j in s]
-    A=[(i,j)for i,j,v in T if v==m];Z=[(i,j)for i,j,v in T if v!=m]
-    th=max(i for i,_,_ in T)+1;tw=max(j for _,j,_ in T)+1
-    C=[]
-    for k in range(1,6):
-        for y in range(H-th*k+1):
-            for x in range(W-tw*k+1):
-                ok=1;S=set()
-                for i,j in A:
-                    for dy in range(k):
-                        for dx in range(k):
-                            Y=y+i*k+dy;X=x+j*k+dx
-                            if B[Y][X]!=m:ok=0;break
-                            S.add((Y,X))
-                        if not ok:break
-                    if not ok:break
-                if not ok:continue
-                for i,j in Z:
-                    for dy in range(k):
-                        for dx in range(k):
-                            if B[y+i*k+dy][x+j*k+dx]:ok=0;break
-                        if not ok:break
-                    if not ok:break
-                if not ok:continue
-                U=set()
-                for s2,_ in objs:
-                    if s2&S:U|=s2
-                if len(U)==len(S):C.append((y,x,k))
-    for y,x,k in C:
-        for i,j,v in T:
-            for dy in range(k):
-                for dx in range(k):
-                    B[y+i*k+dy][x+j*k+dx]=v
-    return [r[w:2*w]for r in B[h:2*h]]
+ h=len(g);w=len(g[0]);H=h*3;W=w*3
+ B=[[0]*W for _ in[0]*H]
+ for y in range(h):
+  for x in range(w):B[h+y][w+x]=g[y][x]
+ P=(-1,0,1);V=set();O=[]
+ for y in range(H):
+  for x in range(W):
+   if B[y][x]and(y,x)not in V:
+    q=[(y,x)];V.add((y,x));S=set();C={}
+    for Y,X in q:
+     S.add((Y,X));v=B[Y][X];C[v]=C.get(v,0)+1
+     for a in P:
+      for b in P:
+       if a|b:
+        y2=Y+a;x2=X+b
+        if 0<=y2<H and 0<=x2<W and B[y2][x2]and(y2,x2)not in V:V.add((y2,x2));q+=[(y2,x2)]
+    O+=[(S,C)]
+ t=max(O,key=lambda o:len(o[1]));O.remove(t)
+ d={}
+ for _,c in O:
+  for k,v in c.items():d[k]=d.get(k,0)+v
+ m=max(d,key=d.get);S,_=t
+ mi=min(y for y,_ in S);mj=min(x for _,x in S)
+ T=[(y-mi,x-mj,B[y][x])for y,x in S]
+ A=[(y,x)for y,x,v in T if v==m];Z=[(y,x)for y,x,v in T if v!=m]
+ th=max(y for y,_,_ in T)+1;tw=max(x for _,x,_ in T)+1;C=[]
+ for k in range(1,6):
+  for y in range(H-th*k+1):
+   for x in range(W-tw*k+1):
+    S={(y+i*k+dy,x+j*k+dx)for i,j in A for dy in range(k)for dx in range(k)}
+    if {B[Y][X]for Y,X in S}=={m}and not any(B[y+i*k+dy][x+j*k+dx]for i,j in Z for dy in range(k)for dx in range(k)):
+     U=set()
+     for s,_ in O:
+      if s&S:U|=s
+     if len(U)==len(S):C+=[(y,x,k)]
+ for y,x,k in C:
+  for i,j,v in T:
+   for dy in range(k):
+    for dx in range(k):B[y+i*k+dy][x+j*k+dx]=v
+ return[r[w:2*w]for r in B[h:2*h]]
