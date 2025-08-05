@@ -1,13 +1,12 @@
 def p(g):
  h=10
  o=[[5]*h for _ in g]
- c=next(v for r in g for v in r if v)
- s={(y,x)for y in range(h)for x in range(h)if g[y][x]==c}
+ c=max(map(max,g))
+ s={(y,x)for y in range(h)for x in range(h)if g[y][x]}
  O=[]
  while s:
   y,x=s.pop();q=[(y,x)];r={(y,x)};o[y][x]=c
-  while q:
-   y,x=q.pop()
+  for y,x in q:
    for Y,X in((y+1,x),(y-1,x),(y,x+1),(y,x-1)):
     if(Y,X)in s:s-={(Y,X)};q+=[(Y,X)];r|={(Y,X)};o[Y][X]=c
   O+=r,
