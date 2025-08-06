@@ -29,6 +29,7 @@ def p(g):
     S={(i-1,j-1)for i in range(H+3-u)for j in range(W+3-V)if all(P[i+a][j+b]==p[a][b]for a in range(u)for b in range(V))}
     if S:
      i,j=next(iter(S));di,dj=i-r+1,j-c+1
+
      for v,(x,y) in o:
       x+=di;y+=dj
       if 0<=x<H and 0<=y<W:B[x][y]=v
