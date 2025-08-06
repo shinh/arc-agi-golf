@@ -17,23 +17,23 @@ def p(g):
      if 0<=ny<H and 0<=nx<W and not vis[ny][nx] and g[ny][nx]==v:
       vis[ny][nx]=1;st.append((ny,nx))
    wid[v]=max(wid[v],mx-mn+1)
- def bbox(s):
-  ys=[y for y,x in s];xs=[x for y,x in s]
-  return min(ys),min(xs),max(ys),max(xs)
- bboxc=lambda s:bbox([p for _,p in s])
+ def bb(s):
+  ys=[y for _,(y,_) in s];xs=[x for _,(_,x) in s];return min(ys),min(xs),max(ys),max(xs)
  def norm(s):
-  sy,sx=bboxc(s)[:2];return {(i-sy,j-sx)for _,(i,j) in s}
+  sy,sx=bb(s)[:2];return {(i-sy,j-sx)for _,(i,j) in s}
+
  def vm(s):
-  sy,sx,ey,ex=bboxc(s);return frozenset((v,(i,sx+ex-j))for v,(i,j) in s)
+  sy,sx,ey,ex=bb(s);return frozenset((v,(i,sx+ex-j))for v,(i,j) in s)
  def hm(s):
-  sy,sx,ey,ex=bboxc(s);return frozenset((v,(sy+ey-i,j))for v,(i,j) in s)
+  sy,sx,ey,ex=bb(s);return frozenset((v,(sy+ey-i,j))for v,(i,j) in s)
  def cm(s):
-  sy,sx,ey,ex=bboxc(s);return frozenset((v,(sy+ey-i,sx+ex-j))for v,(i,j) in s)
- parts={frozenset((c,(y,x))for y,x in s)for c,s in pts.items()}
+  sy,sx,ey,ex=bb(s);return frozenset((v,(sy+ey-i,sx+ex-j))for v,(i,j) in s)
+ parts={frozenset((c,(y,x))for y,x in set(s))for c,s in pts.items()}
  mets=[];sc={}
  for P in parts:
   c=next(iter(P))[0]
-  sy,sx,ey,ex=bbox([p for _,p in P])
+  sy,sx,ey,ex=bb(P)
+
   sc[c]=max(ey-sy+1,ex-sx+1)+wid[c]
   mets.append((-sc[c],P))
  x9=[p for _,p in sorted(mets)]
