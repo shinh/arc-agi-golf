@@ -13,7 +13,7 @@ def p(g):
                             v[ni][nj]=1;q+=ni,nj
                 if n==(b-a+1)*(e-c+1) and n>s:s=n;A=a;B=b;C=c;E=e
     P=[r[C-1:E+2]for r in g[A-1:B+2]]
-    H=len(P);W=len(P[0])
+    H=B-A+3;W=E-C+3
     E=[(g[y][x],y,x)for y in range(h)for x in range(w)if g[y][x] and not(A-1<=y<=B+1 and C-1<=x<=E+1)]
     C=[(k,y,x)for y,r in enumerate(P)for x,k in enumerate(r)if k]
     if E:
@@ -21,10 +21,10 @@ def p(g):
         for k,y,x in E:
             y-=I-1;x-=J-1
             if 0<=y<H and 0<=x<W:
-                P[y][x]=k;m=99;c=-1
-                for k,i,j in C:
+                m=99;c=k
+                for l,i,j in C:
                     d=abs(y-i)+abs(x-j)
-                    if d<m:m=d;c=k
-                    elif d==m and k!=c:c=-1
-                if c+1:P[y][x]=c
+                    if d<m:m=d;c=l
+                    elif d==m and l!=c:c=k
+                P[y][x]=c
     return P
