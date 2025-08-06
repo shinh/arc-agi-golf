@@ -1,19 +1,20 @@
-R=range;N=(1,0),(-1,0),(0,1),(0,-1)
+R=range
 def p(g):
     h=len(g);w=len(g[0])
     for y in R(h):
         for x in R(w):
             if g[y][x]<1:continue
-            q=[(y,x)];g[y][x]*=-1;s=[(y,x)];m=[0]*4;p=[0]*4
+            q=[(y,x)];g[y][x]*=-1;s=[(y,x)];m=[0]*4
             while q:
                 i,j=q.pop();d=-g[i][j];m[d]+=1
-                if d>1 and not p[d]:p[d]=i,j
-                for Y,X in N:
+                for Y,X in(1,0),(-1,0),(0,1),(0,-1):
                     Y+=i;X+=j
                     if h>Y>=0<=X<w and g[Y][X]>0:
                         g[Y][X]*=-1;q+=[(Y,X)];s+=[(Y,X)]
-            L=2+(m[2]>m[3]);M=5-L;a,b=p[L]
-            for Y,X in N:
+            L=2+(m[2]>m[3]);M=5-L
+            for a,b in s:
+                if -g[a][b]==L:break
+            for Y,X in(-1,0),(1,0),(0,-1),(0,1):
                 if (a+Y,b+X)not in s:break
             n=0;i,j=a-Y,b-X
             while(i,j)in s:n+=1;i-=Y;j-=X
