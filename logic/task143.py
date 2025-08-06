@@ -1,30 +1,14 @@
 def p(g):
- h=w=10
- G=[r[:]for r in g];objs=[]
- for y in range(h):
-  for x in range(w):
-   c=G[y][x]
-   if c:
-    q=[(y,x)];G[y][x]=0;o={(y,x)}
+ G=[*map(list,g)];O=[];L=();R=range
+ for y in R(10):
+  for x in R(10):
+   if c:=G[y][x]:
+    G[y][x]=0;o=q=[(y,x)];u=w=y;v=z=x
     for i,j in q:
-     for a,b in((1,0),(-1,0),(0,1),(0,-1)):
-      A=i+a;B=j+b
-      if 0<=A<h and 0<=B<w and G[A][B]==c:G[A][B]=0;q+=[(A,B)];o.add((A,B))
-    objs+=[(c,o)]
- L=None
- for c,o in objs:
-  ys=[y for y,_ in o];xs=[x for _,x in o]
-  sy=min(ys);sx=min(xs);ey=max(ys);ex=max(xs)
-  if len(o)==ey-sy+ex-sx+1 and(sy==0 or sx==0 or ey==h-1 or ex==w-1):
-   d={g[i][j]for i in range(sy,ey+1)for j in range(sx,ex+1)if(i,j)not in o}
-   if len(d)==2 and(L is None or len(o)>len(L[1])):L=(c,o,sy,sx,ey,ex)
- c,o,sy,sx,ey,ex=L
- for c1,o1 in objs:
-  if o1!=o and all(sy<=y<=ey and sx<=x<=ex for y,x in o1):S=o1;break
- ny=min(y for y,_ in S);nx=min(x for _,x in S)
- sh={(y-ny,x-nx)for y,x in S}
- for c1,o1 in objs:
-  if o1!=S and {(y-min(y for y,_ in o1),x-min(x for _,x in o1))for y,x in o1}==sh:
-   for y,x in o1:g[y][x]=c
-   break
+     for A,B in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
+      if -1<A<10>B>-1 and G[A][B]==c:G[A][B]=0;q+=(A,B),;u=min(u,A);v=min(v,B);w=max(w,A);z=max(z,B)
+    q=o,u,v,w,z,{(y-u,x-v)for y,x in o};O+=q,
+    if not L and len(o)==w-u+z-v+1 and u*v*(9-w)*(9-z)<1 and len({d for i in R(u,w+1)for d in g[i][v:z+1]})>2:L=q;C=c
+ o,u,v,w,z,_=L;B=lambda t:u<=t[1]<=w>=t[3] and v<=t[2]<=z>=t[4];sh=next(t[5] for t in O if t!=L and B(t))
+ for y,x in next(t for t in O if t[5]==sh and not B(t))[0]:g[y][x]=C
  return g
