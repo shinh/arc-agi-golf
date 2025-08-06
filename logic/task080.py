@@ -6,9 +6,8 @@ def p(g):
  for y in R(h):
   for x in R(w):
    if B[y][x]:
-    q=[(y,x)];l=B[y][x],;i=0
-    while i<len(q):
-     y,x=q[i];i+=1
+    q=[(y,x)];l=B[y][x],
+    for y,x in q:
      for k in R(4):
       Y,X=y+d[k],x+d[k+1]
       if 0<=Y<h and 0<=X<w and B[Y][X]and(Y,X)not in q:q+=[(Y,X)];l+=B[Y][X],
@@ -16,12 +15,11 @@ def p(g):
   else:continue
   break
  c=min(l,key=l.count)
- mn,mx=map(min,zip(*q))
- ay,ax=min((y-mn,x-mx)for y,x in q if B[y][x]==c)
- P=[(B[y][x],y-mn-ay,x-mx-ax)for y,x in q]
+ ay,ax=min((y,x)for y,x in q if B[y][x]==c)
+ P=[(B[y][x],y-ay,x-ax)for y,x in q]
  for y in R(h):
   for x in R(w):
-   if B[y][x]==c and(y<1 or B[y-1][x]!=c)and(x<1 or B[y][x-1]!=c):
+   if B[y][x]==c and(y<1 or B[y-1][x]-c)and(x<1 or B[y][x-1]-c):
     for k,dy,dx in P:
      Y,X=y+dy,x+dx
      if 0<=Y<h and 0<=X<w:B[Y][X]=k
