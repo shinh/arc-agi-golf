@@ -1,12 +1,14 @@
-zlib圧縮がかかっているので、繰り返しの除去などは逆効果になることに気をつけてください。細かい文法ハックではなく、根本的にロジックを良くすることを重視してください
+Since zlib compression is applied, be aware that removing repetitions can have the opposite effect. Focus on fundamentally improving the logic rather than on small syntax hacks.
+
 ```
-python3 submit.py <task_id> | tail -n 1
+$ python3 submit.py <task_id> | tail -n 1
 ```
-で出てくるのが圧縮後のlarger is betterなスコアで、このスコアを増えたかどうかが知りたいので、変更前後の数字を報告に入れてください
+
+is the post-compression score (larger is better). I want to know whether this score has increased, so please include the number before and after the change in your report.
 
 Common techniques:
 
-* 4方向をチェックする必要があるタスクは、4回似たコードを書くのでなく、range(4)でループを回して中で `g=[list(r)for r in zip(*g[::-1])]` でrot90する
-* `max(...,key=)` で最頻色を得るのは、タスクによって単に0やg[0][0]やmax(g[0])で置き変えられます
-* コメントは自動で消すので書いてください
-* 有用そうなものがあればここに追加してください
+* For tasks that need to check in four directions, instead of writing similar code four times, loop over range(4) and inside do g=[list(r)for r in zip(*g[::-1])] to rotate 90 degrees.
+* Using max(..., key=) to get the most frequent color can sometimes be replaced with simply 0, g[0][0], or max(g[0]) depending on the task.
+* Comments will be automatically removed, so please write them.
+* Add anything else here if it seems useful.
