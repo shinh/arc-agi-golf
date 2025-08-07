@@ -2,8 +2,7 @@ def p(g):
  h=len(g);w=len(g[0]);f=sum(g,[])
  B=max(f,key=f.count)
  O={frozenset((c,(i,j))for i,r in enumerate(g)for j,v in enumerate(r)if v==c)for c in set(f)-{B}}
- b=lambda s:any(i in(0,h-1)or j in(0,w-1)for _,(i,j)in s)
- E=next(s for s in O if b(s))
+ E=next(s for s in O if any(i in(0,h-1)or j in(0,w-1)for _,(i,j)in s))
  (c1,S1),(c2,S2)=[(next(iter(s))[0],[p for _,p in s])for s in O-{E}]
  E=[p for _,p in E]
  def m(S,c):
