@@ -1,3 +1,1 @@
-def p(g):
-    m=max(map(max,g))
-    return [[(x+y)%m+1 for x in range(16)]for y in range(16)]
+p=lambda g,r=range(16):[[(x+y)%max(map(max,g))+1 for x in r]for y in r]

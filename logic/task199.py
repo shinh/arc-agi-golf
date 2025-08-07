@@ -1,9 +1,11 @@
-def p(g):
- h=len(g);w=len(g[0])
- for r,row in enumerate(g):
-  for c,v in enumerate(row):
+def p(g,R=range,r=0):
+ for row in g:
+  r+=1
+  c=1
+  for v in row:
+   c=1-c
    if v:
-    for j in range(h-1,0,-1):g[j]=g[j-1][:]
-    pat=[4*(i%2==c%2) for i in range(w)]
-    for i in range(r+1):g[i]=pat[:]
+    for j in R(len(g)-1,0,-1):g[j]=g[j-1]
+    pat=[4*(i%2==c) for i in R(len(g[0]))]
+    for i in R(r):g[i]=pat
     return g

@@ -1,4 +1,4 @@
 def p(g):
- r=g[0];m=len(r)
- for i in range(2,len(g)):g[i]=[r[(i-2)%m]]*m
+ m=len(g[0])
+ for i in range(2,len(g)):g[i]=[g[0][(i-2)%m]]*m
  return g
