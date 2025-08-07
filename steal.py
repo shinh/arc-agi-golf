@@ -19,6 +19,11 @@ def check_score(task_id, code_dir):
 
 def steal(py, new_dir):
     task_id = int(os.path.basename(py)[4:7])
+
+    if "numpy" in open(py).read():
+        print(f"Task {task_id:03d}: {py} uses numpy, skipping", flush=True)
+        return
+
     new_score = check_score(task_id, new_dir)
     if new_score is None:
         print(f"Task {task_id:03d}: {py} is broken", flush=True)
