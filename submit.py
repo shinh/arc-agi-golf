@@ -155,13 +155,13 @@ def check_task(task_id, filename, verbose):
     return ok, result, code
 
 
-def submit(task_id, verbose, skip_verify=False):
+def submit(task_id, verbose, skip_verify=False, code_dir="logic"):
     if skip_verify:
         return
 
     # print("Submitting task", task_id)
 
-    ok, result, code = check_task(task_id, f"logic/task{task_id:03d}.py", verbose)
+    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose)
 
     # dsl_filename = f"dsl/task{task_id:03d}.py"
     # if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
@@ -213,14 +213,15 @@ def main():
     parser.add_argument("task_id")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--skip_verify", action="store_true")
+    parser.add_argument("--code_dir", default="logic")
     args = parser.parse_args()
 
     if args.task_id == "all":
         for task_id in range(1, 401):
-            submit(task_id, args.verbose, args.skip_verify)
+            submit(task_id, args.verbose, args.skip_verify, code_dir=args.code_dir)
         report()
     else:
-        if not submit(int(args.task_id), True):
+        if not submit(int(args.task_id), True, code_dir=args.code_dir):
             print("FAIL!!")
             sys.exit(1)
 
