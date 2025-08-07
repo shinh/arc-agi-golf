@@ -1,14 +1,11 @@
 def p(g):
-    w=h=10;o=[g[-1][:]for _ in g]
-    for y in range(h-1,-1,-1):
-        for x,v in enumerate(g[y]):
-            if v==5:
-                if o[y][x]==2:
-                    o[y][x]=5
-                    if x+1<w:
-                        o[y][x+1]=2
-                        if y+1<h:o[y+1][x+1]=2
-                        for r in range(y):
-                            if o[r][x]==2:o[r][x]=0;o[r][x+1]=2
-                else:o[y][x]=5
-    return o
+ h,w=len(g),len(g[0])
+ for c in range(w):
+  if g[-1][c]==2:
+   j=0
+   for i in range(h):
+    if g[-(i+1)][c+j]==5:
+     j+=1
+     g[-(i)][c+j]=2
+    g[-(i+1)][c+j]=2
+ return g

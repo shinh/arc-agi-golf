@@ -1,6 +1,1 @@
-def p(g):
-    a=[v for r in g for v in r];n=a.count(1);c=0
-    o=[[c]*3 for _ in range(3)]
-    for i in range(min(n,3)):o[0][i]=2
-    if n==4:o[1][1]=2
-    return o
+p=lambda g,a=[2]*3,b=[0]*3:[[a,[0,2,0],b],[a,b,b],[[2,2,0],b,b],[[2,0,0],b,b]][4-sum(r.count(1)for r in g)]

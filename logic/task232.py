@@ -1,8 +1,12 @@
 def p(g):
- o=[r[:]for r in g]
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
-   if v:
-    for i in range(x+1,len(r)):o[y][i]=5 if(i-x)%2 else v
-    break
- return o
+ E=enumerate
+ for r,R in E(g):
+  i,X,S=0,[],False
+  for c,C in E(R):
+   if C>0:
+    X=[C,5]*20
+    S=True
+   if S:
+    g[r][c]=X[i]
+    i+=1
+ return g

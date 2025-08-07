@@ -1,9 +1,13 @@
 def p(g):
-    h=len(g);w=len(g[0]);o=create(h,w);d={2:1,3:6,8:4}
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c in d:
-                for Y in range(max(0,y-1),min(h,y+2)):
-                    for X in range(max(0,x-1),min(w,x+2)):o[Y][X]=d[c]
-                o[y][x]=c
-    return o
+ d={8:4,2:1,3:6}
+ E=enumerate
+ X=[[C for i,C in E(R)] for R in g]
+ for r,R in E(g):
+  for c,C in E(R):
+   if C>0:
+    for i in range(-1,2):
+     for j in range(-1,2):
+      try:
+       if [i,j]!=[0,0]:X[r+i][c+j]=d[C]
+      except:pass
+ return X

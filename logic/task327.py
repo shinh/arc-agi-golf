@@ -1,14 +1,13 @@
 def p(g):
- o=create(6,6)
- for y in range(6):
-  for x in range(6):
-   d=y-x
-   if d>0:
-    for c in range(min(x,2),-1,-1):
-     r=c+d
-     if r<3 and g[r][c]:o[y][x]=g[r][c];break
-   else:
-    for r in range(min(y,2),-1,-1):
-     c=r-d
-     if c<3 and g[r][c]:o[y][x]=g[r][c];break
- return o
+ P=[]
+ E=enumerate
+ X=[[0,0,0,0,0,0] for _ in range(6)]
+ for r,R in E(g):
+  for c,C in E(R):
+   if g[r][c]>0:
+    P.append([r,c])
+  for p_ in P:
+   for i in range(10):
+    try:X[p_[0]+i][p_[1]+i]=g[p_[0]][p_[1]]
+    except:pass
+ return X

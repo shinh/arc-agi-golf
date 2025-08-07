@@ -1,15 +1,14 @@
 def p(g):
-    w=h=10;v=set()
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]==0 and (y,x)not in v:
-                s=[(y,x)];v.add((y,x));c=[]
-                while s:
-                    y1,x1=s.pop();c.append((y1,x1))
-                    for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                        ny,nx=y1+dy,x1+dx
-                        if 0<=ny<h and 0<=nx<w and g[ny][nx]==0 and (ny,nx)not in v:
-                            v.add((ny,nx));s.append((ny,nx))
-                k=3 if len(c)==1 else 2 if len(c)==2 else 1
-                for y1,x1 in c:g[y1][x1]=k
-    return g
+ R=range
+ v=set()
+ r=[x[:]for x in g]
+ def d(i,j):
+  if(i,j)in v or not(0<=i<10 and 0<=j<10)or g[i][j]:return[]
+  v.add((i,j))
+  return[(i,j)]+sum([d(i+a,j+b)for a,b in[(-1,0),(1,0),(0,-1),(0,1)]],[])
+ for i in R(10):
+  for j in R(10):
+   if g[i][j]==0 and(i,j)not in v:
+    s=d(i,j)
+    for a,b in s:r[a][b]=abs(len(s)-4)
+ return r

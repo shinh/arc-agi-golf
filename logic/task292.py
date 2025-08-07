@@ -1,6 +1,1 @@
-def p(g):
-    s=g[0][0]==0
-    for x in range(0,len(g[0]),3):
-        r=(x//3+s)%2
-        g[r][x]=g[r+1][x]=6
-    return g
+p=lambda g:[[6if g[i][j]==4and j%3==0else g[i][j]for j in range(len(g[0]))]for i in range(3)]

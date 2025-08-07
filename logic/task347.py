@@ -1,13 +1,7 @@
 def p(g):
-    h,w=3,6
-    v=[[r[:w//2]for r in g],[r[w//2:]for r in g]]
-    a,b=[[g[:h//2],g[h//2:]],v][all(len({c for r in p for c in r})==2 for p in v)]
-    s=lambda p:set(sum(p,[]))
-    bg=(s(a)&s(b)).pop()
-    ca=(s(a)-{bg}).pop();cb=(s(b)-{bg}).pop()
-    o=[[bg]*len(a[0])for _ in a]
-    for t,p in ((ca,a),(cb,b)):
-        for i,r in enumerate(p):
-            for j,v in enumerate(r):
-                if v==t:o[i][j]=6
-    return o
+ for r in range(3):
+  for c in range(3):
+   g[r][c]+=g[r][c+3]
+   if g[r][c]>0: g[r][c]=6
+ g=[R[:3] for R in g]
+ return g

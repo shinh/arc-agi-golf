@@ -1,14 +1,1 @@
-def p(g):
-    x0=y0=99;x1=y1=0
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c==8:
-                if x<x0:x0=x
-                if x>x1:x1=x
-                if y<y0:y0=y
-                if y>y1:y1=y
-    for y in range(y0,y1+1):
-        r=g[y]
-        for x in range(x0,x1+1):
-            if not r[x]:r[x]=2
-    return g
+p=lambda g:[[2if(t:=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==8])and min(i for i,j in t)<=i<=max(i for i,j in t)and min(j for i,j in t)<=j<=max(j for i,j in t)and g[i][j]==0else g[i][j]for j in range(len(g[0]))]for i in range(len(g))]

@@ -1,7 +1,3 @@
 def p(g):
-    h=len(g);w=len(g[0])
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]==2 and all(not(0<=y+dy<h and 0<=x+dx<w and g[y+dy][x+dx]==2) for dy,dx in ((1,0),(-1,0),(0,1),(0,-1))):
-                g[y][x]=1
-    return g
+ h,w=len(g),len(g[0])
+ return[[1if g[i][j]and all(g[i+a][j+b]==0for a,b in[(-1,0),(1,0),(0,-1),(0,1)]if 0<=i+a<h and 0<=j+b<w)else g[i][j]for j in range(w)]for i in range(h)]

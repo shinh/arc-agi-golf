@@ -1,16 +1,17 @@
 def p(g):
-    def r(x):return [list(y)for y in zip(*x[::-1])]
-    n=0
-    while True:
-        c=[(i,j)for i,rw in enumerate(g)for j,v in enumerate(rw)if v==2]
-        if{c[0][0]}=={i for i,_ in c} and min(j for _,j in c)==0:break
-        g=r(g);n+=1
-    h=len(g);w=len(g[0]);r0=c[0][0];L=len(c)
-    for i in range(r0):
-        for j in range(L+r0-i):g[i][j]=3
-    for k in range(1,L):
-        y=r0+k
-        if y<h:
-            for j in range(L-k):g[y][j]=1
-    for _ in range(-n%4):g=r(g)
-    return g
+ R=range
+ r=[x[:]for x in g]
+ n=len(g)
+ for i in R(n):
+  x=sum(1for j in R(len(g[0]))if g[i][j]==2)
+  if x:
+   c=x-1
+   for k in R(i+1,n):
+    if c<1:break
+    for j in R(c):r[k][j]=1
+    c-=1
+   c=x+1
+   for k in R(i-1,-1,-1):
+    for j in R(c):r[k][j]=3
+    c+=1
+ return r

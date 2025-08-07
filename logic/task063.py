@@ -1,8 +1,12 @@
 def p(g):
-    h=len(g);w=len(g[0]);a=[r[:] for r in g]
-    for r,s in zip(g,a):
-        if s[0] and s[-1] and sum(s[1:-1])==0:r[1:-1]=[3]*(w-2)
-    for x in range(w):
-        if a[0][x] and a[-1][x] and sum(a[y][x] for y in range(1,h-1))==0:
-            for y in range(1,h-1):g[y][x]=3
-    return g
+ q=range
+ n=len(g)
+ r=[o[:]for o in g]
+ for j in range(n):
+  if g[1][j]==0 and g[n-2][j]==0 and sum(g[i][j]for i in q(1,n-1))==0:
+   for i in q(1,n-1):r[i][j]=3
+ for i in range(n):
+  if g[i][1]==0 and g[i][n-2]==0 and sum(g[i][j]for j in q(1,n-1))==0:
+   for j in q(1,n-1):
+    if r[i][j]==0:r[i][j]=3
+ return r

@@ -1,11 +1,14 @@
 def p(g):
-    o=create(10,10)
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c==1:
-                o[y][x]=1
-                if y:o[y-1][x]=2
-                if x:o[y][x-1]=7
-                if x<9:o[y][x+1]=6
-                if y<9:o[y+1][x]=8
-    return o
+ P=[]
+ E=enumerate
+ for r,R in E(g):
+  for c,C in E(R):
+   if g[r][c]==1:
+    P.append([r,c])
+ for p_ in P:
+  p1,p2=p_
+  if p1>0:g[p1-1][p2]=2
+  if p1<9:g[p1+1][p2]=8
+  if p2>0:g[p1][p2-1]=7
+  if p2<9:g[p1][p2+1]=6
+ return g

@@ -1,10 +1,11 @@
 def p(g):
-    o=create(3,3)
-    for by in range(3):
-        for bx in range(3):
-            c=0
-            for y in range(by*4,by*4+3):
-                for x in range(bx*4,bx*4+3):
-                    if g[y][x]==6:c+=1
-            o[by][bx]=1 if c==2 else 0
-    return o
+ q=range
+ r=[[0]*3for _ in q(3)]
+ for i in q(3):
+  for j in q(3):
+   c=0
+   for x in q(3):
+    for y in q(3):
+     if g[i*4+x][j*4+y]==6:c+=1
+   r[i][j]=1if c>=2else 0
+ return r

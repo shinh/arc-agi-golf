@@ -1,13 +1,13 @@
 def p(g):
-    for y in range(0,11,4):
-        for x in range(0,11,4):
-            m=[[g[y+i][x+j]for j in range(3)]for i in range(3)]
-            if 8 not in sum(m,[]):
-                o=[r[:]for r in g]
-                for i,Y in enumerate(range(0,11,4)):
-                    for j,X in enumerate(range(0,11,4)):
-                        v=m[i][j]
-                        for dy in range(3):
-                            for dx in range(3):
-                                o[Y+dy][X+dx]=v
-                return o
+ R=range
+ for a in R(3):
+  for b in R(3):
+   if sum(g[a*4+r][b*4+c]==0for r in R(3)for c in R(3))==5:
+    s=[[5if i%4==3or j%4==3else 0for j in R(11)]for i in R(11)]
+    for r in R(3):
+     for c in R(3):
+      v=g[a*4+r][b*4+c]
+      if v:
+       for x in R(3):
+        for y in R(3):s[r*4+x][c*4+y]=v
+    return s

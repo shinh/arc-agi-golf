@@ -1,23 +1,19 @@
 def p(g):
-    h=w=15
-    z=[(y,x)for y in range(h)for x in range(w)if g[y][x]]
-    if not z:return g
-    if any(y==0 for y,_ in z):dy,dx=1,0
-    elif any(y==h-1 for y,_ in z):dy,dx=-1,0
-    elif any(x==0 for _,x in z):dy,dx=0,1
-    else:dy,dx=0,-1
-    r=[[0]*w for _ in range(h)];v=set()
-    for s in z:
-        if s in v:continue
-        c=g[s[0]][s[1]];q=[s];v.add(s);pts=[];ys=[s[0]];xs=[s[1]]
-        while q:
-            y,x=q.pop();pts.append((y,x))
-            for a,b in((1,0),(-1,0),(0,1),(0,-1)):
-                u,vv=y+a,x+b
-                if 0<=u<h and 0<=vv<w and g[u][vv]==c and (u,vv)not in v:
-                    v.add((u,vv));q.append((u,vv));ys.append(u);xs.append(vv)
-        sh=(max(ys)-min(ys)+1)*dy;sw=(max(xs)-min(xs)+1)*dx
-        for y,x in pts:
-            u,vv=y+sh,x+sw
-            if 0<=u<h and 0<=vv<w:r[u][vv]=c
-    return r
+ r=[[0]*len(g[0])for _ in g]
+ v=set()
+ for i in range(len(g)):
+  for j in range(len(g[0])):
+   if g[i][j]and(i,j)not in v:
+    c,q=[(i,j)],[(i,j)]
+    v.add((i,j))
+    x=g[i][j]
+    while q:
+     a,b=q.pop()
+     for d,e in[(0,1),(1,0),(0,-1),(-1,0)]:
+      if 0<=a+d<len(g)and 0<=b+e<len(g[0])and g[a+d][b+e]==x and(a+d,b+e)not in v:
+       v.add((a+d,b+e))
+       c.append((a+d,b+e))
+       q.append((a+d,b+e))
+    h=max(a for a,b in c)-min(a for a,b in c)+1
+    for a,b in c:r[a-h][b]=x
+ return r

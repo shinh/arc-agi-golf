@@ -1,2 +1,1 @@
-def p(g):
-    return[[2*(g[y][x]==g[y+4][x]==0)for x in range(4)]for y in range(4)]
+p=lambda g:[[2*(g[i][j]==0==g[i+4][j])for j in range(4)]for i in range(4)]

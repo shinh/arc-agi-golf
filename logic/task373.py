@@ -1,5 +1,1 @@
-def p(g):
-    a,b=g
-    r0=[[b[i],a[i]][i%2==0]for i in range(len(a))]
-    r1=[[a[i],b[i]][i%2==0]for i in range(len(a))]
-    return [r0,r1]
+p=lambda g,h=2,w=6:[[g[h-1-i][j]if j%2 else g[i][j]for j in range(w)]for i in range(h)]

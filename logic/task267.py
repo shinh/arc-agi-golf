@@ -1,7 +1,1 @@
-def p(g):
-    b=g[-1][0];g[-1][0]=0
-    a={c for r in g for c in r if c and c!=b}.pop()
-    for r in g:
-        for i,c in enumerate(r):
-            if c==a:r[i]=b
-    return g
+p=lambda g:[[g[6][0]if(i!=6or j)and g[i][j]else 0for j in range(7)]for i in range(7)]

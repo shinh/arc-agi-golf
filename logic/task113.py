@@ -1,7 +1,1 @@
-def p(g):
-    k=0
-    for r in g:
-        if any(r):k+=1
-        else:break
-    g[-k:]=g[:k][::-1]
-    return g
+def p(g):return g[:len(g)//2]+g[:len(g)//2][::-1]

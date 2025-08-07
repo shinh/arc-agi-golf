@@ -1,5 +1,1 @@
-def p(g):
- for r in g:
-  for i,v in enumerate(r):
-   if v in (5,8):r[i]=13-v
- return g
+def p(g):return [[5 if x==8 else 8 if x==5 else x for x in r] for r in g]

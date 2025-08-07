@@ -1,6 +1,2 @@
-def p(g):
-    h=len(g);w=len(g[0]);o=create(h,w)
-    for y in range(h-1):
-        for x in range(w):
-            if g[y][x]==8:o[y+1][x]=2
-    return o
+p=lambda g:[[2if i>0and g[i-1][j]==8else 0for j in range(len(g))]for i in range(len(g))]
+

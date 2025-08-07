@@ -1,13 +1,9 @@
 def p(g):
-    for x in range(10):
-        c=[r[x] for r in g];n=c.count(2)
-        if n:
-            c=[v for v in c if v-2]
-            i=0
-            for v in c:
-                if v:i+=1
-                else:break
-            c[i:i]=[2]*n
-            c+=10*[0]
-            for y in range(10):g[y][x]=c[y]
-    return g
+ q=range
+ h,w=len(g),len(g[0])
+ res=[[0]*w for _ in q(h)]
+ for j in q(w):
+  nz=[g[i][j]for i in q(h)if g[i][j]!=0]
+  for k,v in enumerate(nz):
+   res[k][j]=v
+ return res

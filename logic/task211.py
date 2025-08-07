@@ -1,4 +1,5 @@
 def p(g):
-    b=[r[::-1]+r for r in g]
-    r=[v[::-1] for v in b[::-1]]
-    return r+b+r
+ g = [R[::-1] + R for R in g]
+ fg = [g[2],g[1],g[0]]
+ g = fg+g+fg
+ return g

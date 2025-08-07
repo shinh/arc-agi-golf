@@ -1,11 +1,8 @@
 def p(g):
-    for y in range(9):
-        for x in range(9):
-            if g[y][x]==8:A=y,x
-            elif g[y][x]==7:B=y,x
-    o=create(9,9);y,x=A;Y,X=B
-    for i in range(9):
-        o[y][i]=o[i][x]=8
-        o[Y][i]=o[i][X]=7
-    o[y][X]=o[Y][x]=2
-    return o
+ q=range
+ r=[[0]*9for _ in q(9)]
+ p=[(i,j,g[i][j])for i in q(9)for j in q(9)if g[i][j]]
+ for i,j,v in p:
+  for k in range(9):r[i][k]=r[k][j]=v
+ r[p[0][0]][p[1][1]]=r[p[1][0]][p[0][1]]=2
+ return r

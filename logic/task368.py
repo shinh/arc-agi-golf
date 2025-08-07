@@ -1,21 +1,17 @@
 def p(g):
-    w=h=10
-    for y in range(h):
-        for x in range(w):
-            if g[y][x] and g[y][x]!=5:break
-        else:continue
-        break
-    v={(y,x)};s=[(y,x)];Y=[y];X=[x]
-    while s:
-        y,x=s.pop()
-        for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-            ny,nx=y+dy,x+dx
-            if 0<=ny<h and 0<=nx<w and g[ny][nx] not in (0,5) and (ny,nx)not in v:
-                v.add((ny,nx));s.append((ny,nx));Y.append(ny);X.append(nx)
-    y0,y1=min(Y),max(Y);x0,x1=min(X),max(X)
-    p=[r[x0:x1+1] for r in g[y0:y1+1]];ph=y1-y0+1;pw=x1-x0+1
-    for y in range(h-ph+1):
-        for x in range(w-pw+1):
-            if all(g[y+dy][x+dx]==5 for dy in range(ph) for dx in range(pw)):
-                for dy in range(ph):g[y+dy][x:x+pw]=p[dy][:]
-    return g
+ R=range
+ b=[]
+ for i in R(10):
+  for j in R(10):
+   if g[i][j]and(i<1or not g[i-1][j])and(j<1or not g[i][j-1]):
+    h=w=1
+    while i+h<10and g[i+h][j]:h+=1
+    while j+w<10and g[i][j+w]:w+=1
+    b.append((i,j,[[g[i+r][j+s]for s in R(w)]for r in R(h)]))
+ t=next(k for _,_,k in b if any(k[r][s]!=5 for r in R(len(k))for s in R(len(k[0]))))
+ r=[x[:]for x in g]
+ for x,y,k in b:
+  if all(k[r][s]==5 for r in R(len(k))for s in R(len(k[0]))):
+   for u in R(len(k)):
+    for v in R(len(k[0])):r[x+u][y+v]=t[u][v]
+ return r

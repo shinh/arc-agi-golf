@@ -1,6 +1,3 @@
 def p(g):
- r=[]
- for row in g:
-  for v in row:
-   if v:r.append(v)
- return [r]
+ g=[i for s in g for i in s]
+ return [[i for i in g if i>0]]
