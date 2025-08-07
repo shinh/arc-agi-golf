@@ -1,5 +1,1 @@
-import numpy as np
-def p(g):
- X=[x for R in g for x in R]
- i=len(set(X))-1
- return np.kron(g,np.ones((i, i))).astype(int).tolist()
+p=lambda g:(n:=len(set(sum(g,[]))-{0}),[[x for x in r for _ in range(n)]for r in g for _ in range(n)])[1]

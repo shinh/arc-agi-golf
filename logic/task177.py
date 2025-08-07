@@ -1,2 +1,1 @@
-def p(g):
-    t=[(y,x)for y,r in enumerate(g)for x,v in enumerate(r)if v];y,x=zip(*t);a,b=min(y),max(y)+1;c,d=min(x),max(x)+1;return [r[c:d][::-1]for r in g[a:b]]
+def p(g):a=[i for i,r in enumerate(g)if any(r)];b=[j for j in range(len(g[0]))if any(r[j]for r in g)];return[r[b[0]:b[-1]+1][::-1]for r in g[a[0]:a[-1]+1]]

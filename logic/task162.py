@@ -1,8 +1,7 @@
-def p(g):
-    for y in range(18):
-        for x in range(18):
-            if all(g[y+i][x+j]==0 for i in range(3)for j in range(3)):
-                for i in range(3):
-                    for j in range(3):
-                        g[y+i][x+j]=1
-    return g
+def p(g,R=range(18)):
+ for i in R:
+  a,b,c=g[i:i+3]
+  for j in R:
+   k=j+3
+   if sum(a[j:k]+b[j:k]+c[j:k])==0:a[j:k]=b[j:k]=c[j:k]=[1]*3
+ return g
