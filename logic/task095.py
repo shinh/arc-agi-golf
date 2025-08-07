@@ -1,11 +1,9 @@
 def p(g):
-    h=[r[:]for r in g]
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c==5:
-                for dy in(-1,0,1):
-                    for dx in(-1,0,1):
-                        ny=y+dy;nx=x+dx
-                        if 0<=ny<9 and 0<=nx<9:h[ny][nx]=1
-                h[y][x]=5
-    return h
+ E=enumerate
+ for r,R in E(g):
+  for c,C in E(R):
+   if C==5:
+    for i in range(r-1,r+2):
+     for j in range(c-1,c+2):
+      if[i,j]!=[r,c]:g[i][j]=1
+ return g

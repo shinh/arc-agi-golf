@@ -1,2 +1,1 @@
-def p(g):
-    return [r+r for r in g]
+p=lambda Y:[b*2 for b in Y]

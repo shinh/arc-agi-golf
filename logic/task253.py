@@ -1,14 +1,9 @@
 def p(g):
-    o=create(4,4);d={}
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v:d.setdefault(v,[]).append((y,x))
-    for k,pts in d.items():
-        ys=[y for y,_ in pts];xs=[x for _,x in pts]
-        s={(y-min(ys),x-min(xs)) for y,x in pts}
-        if s=={(0,0),(0,1),(1,0)}:b=(0,0)
-        elif s=={(0,0),(0,1),(1,1)}:b=(0,2)
-        elif s=={(0,0),(1,0),(1,1)}:b=(2,0)
-        else:b=(2,2)
-        for dy,dx in s:o[b[0]+dy][b[1]+dx]=k
-    return o
+ n=len(g)-1;A=[0]*16
+ for i in range(n):
+  for j in range(n):
+   if(c:=g[i][j])and g[i+1][j]==c and g[i][j+1]==c:A[0]=A[4]=A[1]=c
+   if c and g[i+1][j]==c and g[i+1][j+1]==c:A[8]=A[12]=A[13]=c
+   if c and g[i][j+1]==c and g[i+1][j+1]==c:A[2]=A[3]=A[7]=c
+   if(d:=g[i+1][j+1])and g[i+1][j]==d and g[i][j+1]==d:A[11]=A[14]=A[15]=d
+ return[A[i:i+4]for i in(0,4,8,12)]

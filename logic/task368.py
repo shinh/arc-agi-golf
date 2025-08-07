@@ -1,17 +1,15 @@
-def p(g):
- R=range
- b=[]
- for i in R(10):
-  for j in R(10):
-   if g[i][j]and(i<1or not g[i-1][j])and(j<1or not g[i][j-1]):
-    h=w=1
-    while i+h<10and g[i+h][j]:h+=1
-    while j+w<10and g[i][j+w]:w+=1
-    b.append((i,j,[[g[i+r][j+s]for s in R(w)]for r in R(h)]))
- t=next(k for _,_,k in b if any(k[r][s]!=5 for r in R(len(k))for s in R(len(k[0]))))
- r=[x[:]for x in g]
- for x,y,k in b:
-  if all(k[r][s]==5 for r in R(len(k))for s in R(len(k[0]))):
-   for u in R(len(k)):
-    for v in R(len(k[0])):r[x+u][y+v]=t[u][v]
- return r
+def p(g,R=range):
+	C=len(g);I=1;F,G=0,0;H=[0,5];J,K=0,0
+	for A in R(C):
+		for B in R(C):
+			if g[A][B]not in H and I:
+				I=0;J,K=A,B;D=A;E=B
+				while D<C and g[D][B]not in H:D+=1
+				while E<C and g[A][E]not in H:E+=1
+				F=D-A;G=E-B
+	for A in R(C-F+1):
+		for B in R(C-G+1):
+			if g[A][B]==5:
+				for L in R(F):
+					for M in R(G):g[A+L][B+M]=g[J+L][K+M]
+	return g

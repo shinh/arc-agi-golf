@@ -1,1 +1,1 @@
-def p(g):return [list(r)for r in zip(*g)]
+p=lambda g:[list(r)for r in zip(*g)]

@@ -1,9 +1,1 @@
-def p(g):
-    o=create(9,9)
-    for y in range(9):
-        for x in range(9):
-            if g[y][x]==5:
-                for dy,dx,c in ((-1,0,1),(1,0,1),(0,-1,1),(0,1,1),(-1,-1,5),(-1,1,5),(1,-1,5),(1,1,5)):
-                    ny=y+dy;nx=x+dx
-                    if 0<=ny<9 and 0<=nx<9:o[ny][nx]=c
-    return o
+p=lambda g,R=range(1,8):(G:=[[0]*9for _ in g],[G[i+a].__setitem__(j+b,(1,5)[a*b])for i in R for j in R if g[i][j]for a in(-1,0,1)for b in(-1,0,1)if a|b])[0]

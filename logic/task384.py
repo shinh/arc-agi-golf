@@ -1,9 +1,1 @@
-def p(g):
- P=[(y,x)for y in range(9)for x in range(9)if g[y][x]==4]
- a=min(y for y,x in P);b=max(y for y,x in P)+1;c=min(x for y,x in P);d=max(x for y,x in P)+1
- o=[]
- for r in g[a:b]:
-  t=[]
-  for v in r[c:d]:t+=v,v
-  o+=t,t
- return o
+def p(g):a=[max(r)>0 for r in g].index(1);b=len(g)-1-[max(r)>0for r in g][::-1].index(1);p=[j for j,c in enumerate(zip(*g))if max(c)>0];c=p[0];d=p[-1];return[[x for x in r[c:d+1]for _ in[0]*2]for r in g[a:b+1]for _ in[0]*2]

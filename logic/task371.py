@@ -1,6 +1,4 @@
-def p(g):
-    a=[(y,x) for y,r in enumerate(g) for x,v in enumerate(r) if v==1]
-    (y1,x1),(y2,x2)=a
-    y=(y1+y2)//2;x=(x1+x2)//2
-    g[y][x-1]=g[y][x]=g[y][x+1]=g[y-1][x]=g[y+1][x]=3
-    return g
+def p(g,E=enumerate):
+ a,b=zip(*((i,j)for i,r in E(g)for j,v in E(r)if v))
+ for u,v in((0,0),(-1,0),(1,0),(0,-1),(0,1)):g[sum(a)//2+u][sum(b)//2+v]=3
+ return g

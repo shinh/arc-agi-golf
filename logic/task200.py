@@ -1,8 +1,9 @@
-def p(g):
-    h=w=10;j=next(i for i,v in enumerate(g[-1])if v);c=g[-1][j]
-    o=[[0]*w for _ in g]
-    for x in range(j,w,2):
-        for y in range(h):o[y][x]=c
-    for x in range(j+1,w,4):o[0][x]=5
-    for x in range(j+3,w,4):o[-1][x]=5
-    return o
+def p(m,Y=range):
+ s,n=next((j,v)for j,v in enumerate(m[-1])if v)
+ o=[[0]*10 for _ in Y(10)]
+ for i in Y(10):
+  for j in Y(s,10):
+   d=j-s
+   if d%2==0:o[i][j]=n
+   elif(i==0 and d%4==1)or(i==9 and d%4==3):o[i][j]=5
+ return o

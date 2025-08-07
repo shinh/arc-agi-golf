@@ -1,13 +1,5 @@
-def p(g):
- a=b=c=d=0
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
-   if v==8:a,b=y,x
-   if v==2:c,d=y,x
- if c!=a:
-  s=[-1,1][c>a]
-  for y in range(a+s,c,s):g[y][b]=4
- if d!=b:
-  s=[-1,1][d>b]
-  for x in range(b,d,s):g[c][x]=4
- return g
+def p(g,R=range):
+	F=lambda v:next((B,A.index(v))for(B,A)in enumerate(g)if v in A);C,A=F(8);B,D=F(2)
+	for E in R(C+1,B+1)if C<B else R(B,C):g[E][A]=4
+	for E in R(A,D)if A<D else R(D+1,A):g[B][E]=4
+	return g

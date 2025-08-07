@@ -1,1 +1,1 @@
-p=lambda g:[[g[6][0]if(i!=6or j)and g[i][j]else 0for j in range(7)]for i in range(7)]
+def p(g):t=g[6][0];a=[[r and t for r in X]for X in g];a[6][0]=0;return a

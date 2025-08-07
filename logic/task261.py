@@ -1,2 +1,1 @@
-p=lambda g:[[2if i>0and g[i-1][j]==8else 0for j in range(len(g))]for i in range(len(g))]
-
+def p(g):g=[g[-1]]+g[:len(g)-1];g=[[2 if C==8 else C for C in R]for R in g];return g

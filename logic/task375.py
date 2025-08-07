@@ -1,4 +1,3 @@
 def p(g):
- n=len(g)
- for i in range(n):g[i][i]=g[i][~i]=0
+ for i in range(len(g)):g[i][i]=g[-i-1][i]=0
  return g

@@ -1,9 +1,1 @@
-def p(g):
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
-   if v==3:sY,sX=y,x
-   if v==4:tY,tX=y,x
- g[sY][sX]=0
- g[sY+(tY>sY)-(tY<sY)][sX+(tX>sX)-(tX<sX)]=3
- return g
-
+def p(g,D=divmod):n=len(g[0]);i=sum(g,[]).index;a,b=D(i(3),n);c,d=D(i(4),n);e=a+(a<c-1)-(a>c+1);f=b+(b<d-1)-(b>d+1);g[a][b]=0;g[e][f]=3;return g

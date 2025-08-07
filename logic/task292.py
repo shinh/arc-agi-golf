@@ -1,1 +1,3 @@
-p=lambda g:[[6if g[i][j]==4and j%3==0else g[i][j]for j in range(len(g[0]))]for i in range(3)]
+def p(g):
+ for r in g:r[::3]=[6 if v==4 else v for v in r[::3]]
+ return g
