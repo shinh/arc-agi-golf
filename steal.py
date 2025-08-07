@@ -19,14 +19,14 @@ def check_score(task_id, code_dir):
 
 def steal(py, new_dir):
     task_id = int(os.path.basename(py)[4:7])
-    base_score = check_score(task_id, "logic")
-    if base_score is None:
-        raise RuntimeError(f"Baseline is broken for task {task_id}")
-
     new_score = check_score(task_id, new_dir)
     if new_score is None:
         print(f"Task {task_id:03d}: {py} is broken", flush=True)
         return
+
+    base_score = check_score(task_id, "logic")
+    if base_score is None:
+        raise RuntimeError(f"Baseline is broken for task {task_id}")
 
     print(f"Task {task_id:03d}: {base_score} => {new_score}", flush=True)
 
