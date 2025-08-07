@@ -1,0 +1,4 @@
+The grid contains a background color and three other colors. Two of them form small interior figures while the third touches the border.
+The border figure is an enlarged (about double-sized) version of exactly one of the interior figures when colors are ignored.
+Trim each interior figure to its minimal rectangle. Identify which trimmed figure, when doubled in size, matches the border figure's pattern.
+Output that matching interior figure's rectangle using the background color elsewhere.
