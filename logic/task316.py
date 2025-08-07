@@ -1,9 +1,7 @@
-def p(g):
-    a=sorted((x,c)for r in g for x,c in enumerate(r)if c)
-    b=[]
-    for i in range(0,len(a),3):
-        c=[v for _,v in a[i:i+3]]
-        if i//3%2:b+=c[::-1]
-        else:b+=c
-    b+=[0]*9
-    return [b[i:i+3]for i in range(0,9,3)]
+def p(m,R=range):
+ n=3;v=[]
+ for c in R(len(m[0])):
+  for r in R(len(m)):
+   if m[r][c]:v.append(m[r][c]);break
+ v+=[0]*(n*n-len(v))
+ return[v[i*n:(i+1)*n]if i%2==0 else v[i*n:(i+1)*n][::-1]for i in R(n)]

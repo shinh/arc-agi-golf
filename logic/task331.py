@@ -1,14 +1,12 @@
-def p(g):
+def p(g,E=enumerate):
  P=[]
- E=enumerate
  for r,R in E(g):
   for c,C in E(R):
-   if g[r][c]==1:
-    P.append([r,c])
- for p_ in P:
-  p1,p2=p_
-  if p1>0:g[p1-1][p2]=2
-  if p1<9:g[p1+1][p2]=8
-  if p2>0:g[p1][p2-1]=7
-  if p2<9:g[p1][p2+1]=6
+   if g[r][c]==1:P+=[[r,c]]
+ for v in P:
+  a,i=v
+  if a>0:g[a-1][i]=2
+  if a<9:g[a+1][i]=8
+  if i>0:g[a][i-1]=7
+  if i<9:g[a][i+1]=6
  return g

@@ -1,13 +1,1 @@
-def p(g):
- P=[]
- E=enumerate
- X=[[0,0,0,0,0,0] for _ in range(6)]
- for r,R in E(g):
-  for c,C in E(R):
-   if g[r][c]>0:
-    P.append([r,c])
-  for p_ in P:
-   for i in range(10):
-    try:X[p_[0]+i][p_[1]+i]=g[p_[0]][p_[1]]
-    except:pass
- return X
+def p(g,e=enumerate):X=[[0]*6 for _ in[0]*6];[X[r+i].__setitem__(c+i,v)for r,R in e(g)for c,v in e(R)if v for i in range(6-max(r,c))];return X

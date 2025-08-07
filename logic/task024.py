@@ -1,9 +1,1 @@
-def p(g):
-    h=len(g);w=len(g[0]);o=create(h,w)
-    for i,v in enumerate(zip(*g)):
-        if 2 in v:
-            for r in o:r[i]=2
-    for y in range(h):
-        for v in(1,3):
-            if v in g[y]:o[y]=[v]*w
-    return o
+def p(g,E=enumerate):Z={c for R in g for c,v in E(R)if v==2};return[[1 if 1 in R else 3 if 3 in R else 2 if v<1and c in Z else v for c,v in E(R)]for R in g]

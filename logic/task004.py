@@ -1,11 +1,6 @@
-def p(g):
- s={}
- E=enumerate
- for r,R in E(g):
-  for c,C in E(R):
-   if C:s.setdefault(C,[]).append((r,c))
+def p(g,E=enumerate):
  o=[[0]*len(g[0])for _ in g]
- for C,P in s.items():
-  Y,b=max(r for r,_ in P),max(c for _,c in P)
-  for r,c in P:o[r][c if r==Y or c==b else c+1]=C
+ for v in set(sum(g,[]))-{0}:
+  P=[(i,j)for i,r in E(g)for j,x in E(r)if x==v];b,m=max(i for i,_ in P),max(j for _,j in P)
+  for i,j in P:o[i][j+(i<b and j<m)]=v
  return o

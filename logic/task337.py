@@ -1,1 +1,1 @@
-p=lambda g:[[5 if x==8 else 8 if x==5 else x for x in r]for r in g]
+p=lambda g:[[x^(13*(x in(5,8)))for x in r]for r in g]

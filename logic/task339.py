@@ -1,3 +1,1 @@
-def p(g):
- g=[i for s in g for i in s]
- return [[i for i in g if i>0]]
+p=lambda g:[[x for x in sum(g,[])if x>0]]

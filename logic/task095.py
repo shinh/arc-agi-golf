@@ -1,5 +1,4 @@
-def p(g):
- E=enumerate
+def p(g,E=enumerate):
  for r,R in E(g):
   for c,C in E(R):
    if C==5:

@@ -1,5 +1,6 @@
-def p(g):
-    for r in g:
-        for c in set(r):
-            if c:i=r.index(c);j=len(r)-r[::-1].index(c);r[i:j]=[c]*(j-i)
-    return g
+def p(g,z=0):
+ for r in g:
+  for i,x in enumerate(r):
+   if x:z=(not z)*x
+   else:r[i]=z
+ return g

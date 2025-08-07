@@ -1,3 +1,1 @@
-def p(g):
- r=g+g[-2::-1]
- return r+r[1:]
+p=lambda g:(g+g[-2:0:-1])*2+g[:1]

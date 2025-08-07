@@ -1,1 +1,1 @@
-def p(g):return[[2if g[i][j]+g[i][j+4]>=2else 0for j in range(3)]for i in range(3)]
+p=lambda g:[[a and b and 2 for a,b in zip(r[:3],r[4:7])]for r in g[:3]]

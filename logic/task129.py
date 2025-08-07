@@ -1,6 +1,1 @@
-def p(g):
-    d={}
-    for r in g:
-        for v in r:d[v]=d.get(v,0)+1
-    m=max(d,key=d.get)
-    return [[m]*3 for _ in g]
+p=lambda g:(f:=sum(g,[]),[[max(f,key=f.count)]*len(r)for r in g])[1]

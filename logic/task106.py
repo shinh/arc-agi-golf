@@ -1,4 +1,1 @@
-def p(g):
-    r=lambda g:[list(z)for z in zip(*g[::-1])]
-    a=r(g);b=r(a)
-    return [i+j for i,j in zip(g,a)]+[i+j for i,j in zip(r(b),b)]
+def p(g):r=lambda x:[*map(list,zip(*x[::-1]))];return[x+y for x,y in zip(g,r(g))]+[x+y for x,y in zip(r(r(r(g))),r(r(g)))]
