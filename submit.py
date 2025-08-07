@@ -7,6 +7,8 @@ import sys
 import zlib
 import zopfli.zlib
 
+from concurrent.futures import ProcessPoolExecutor
+
 import code_golf_utils
 import python_minifier
 
@@ -217,8 +219,12 @@ def main():
     args = parser.parse_args()
 
     if args.task_id == "all":
+        executor = ProcessPoolExecutor()
+        futures = []
         for task_id in range(1, 401):
-            submit(task_id, args.verbose, args.skip_verify, code_dir=args.code_dir)
+            futures.append(executor.submit(submit, task_id, args.verbose, args.skip_verify, code_dir=args.code_dir))
+        for future in futures:
+            future.result()
         report()
     else:
         if not submit(int(args.task_id), True, code_dir=args.code_dir):
