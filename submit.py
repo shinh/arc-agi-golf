@@ -68,9 +68,43 @@ def inline_create(code):
     return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
 
+def use_base85(z):
+    c = base64.b85encode(z)
+    return 'base64.b85decode("' + c.decode() + '")'
+
+
+def use_decompress_and_base85(z, algo):
+    code = f"import base64,{algo}\n"
+    code += f"exec({algo}.decompress(" + use_base85(z) + "))"
+    return code
+
+
+def use_decompress_and_bytes(z, algo):
+    code = b"#coding:l1\n"
+    code += f"import {algo}\n".encode()
+    z = z.replace(b"\\", b"\\\\")
+    # TODO: Use \0 when the next char is not 0-9.
+    z = z.replace(b"\0", b"\\x00")
+    z = z.replace(b"\n", b"\\n")
+    z = z.replace(b"\r", b"\\r")
+    z = z.replace(b"'", b"\\'")
+    b = b"bytes('" + z + b"','l1')"
+    code += f"exec({algo}.decompress(".encode() + b + b"))"
+    return code
+
+
+def use_decompress_and_bytes_or_base85(z, algo):
+    b1 = use_decompress_and_bytes(z, algo)
+    b2 = use_decompress_and_base85(z, algo)
+    if len(b1) < len(b2):
+        return b1, "bytes"
+    else:
+        return b2, "base85"
+
+
 def compress(code, algo="zlib"):
+    method = algo
     if algo == "zlib":
-        main = "import base64,zlib\n"
         z1 = zlib.compress(code.encode(),9)
         #z2 = zopfli.zlib.compress(code.encode())
         z2 = zopfli.zlib.compress(
@@ -81,22 +115,23 @@ def compress(code, algo="zlib"):
             blocksplittingmax=100
         )
         if len(z2) < len(z1):
-            algo = "zopfli"
+            method = "zopfli"
             z1 = z2
-        compressed = base64.b85encode(z1)
-        main += 'exec(zlib.decompress(base64.b85decode("' + compressed.decode() + '")))'
+
+        main, enc_method = use_decompress_and_bytes_or_base85(z1, "zlib")
     elif algo == "lzma":
-        main = "import base64,lzma\n"
         filters = [{
-            "id": lzma.FILTER_LZMA1,   # ふつうは LZMA1 で十分
-            "preset": 9 | lzma.PRESET_EXTREME,  # 圧縮効率優先。遅くてもいいなら EXTREME を足す
+            "id": lzma.FILTER_LZMA1,
+            "preset": 9 | lzma.PRESET_EXTREME,
         }]
         #compressed = base64.b85encode(lzma.compress(code.encode(),format=lzma.FORMAT_RAW,filters=filters))
-        compressed = base64.b85encode(lzma.compress(code.encode(),format=2))
-        main += 'exec(lzma.decompress(base64.b85decode("' + compressed.decode() + '")))'
+        z = lzma.compress(code.encode(),format=2)
 
+        main, enc_method = use_decompress_and_bytes_or_base85(z, "lzma")
+
+    method += "+" + enc_method
     if len(main) < len(code):
-        print(f"Use {algo} compressed code! {len(code)} => {len(main)}")
+        print(f"Use {method} compressed code! {len(code)} => {len(main)}")
         return main
 
     return code
