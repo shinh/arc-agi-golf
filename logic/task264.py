@@ -6,7 +6,7 @@ def p(g):
    v=0
    for d in range(9):
     c=g[y+d//3][x+d%3]
-    a.append(c)
+    a+=c,
     v+=(d+2)*(c!=5)
    if all(a):
     p={
