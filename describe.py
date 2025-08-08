@@ -59,6 +59,7 @@ def collect_info(task_id):
 
 
 def save(task_id, out_dir, skip_savefig):
+    task_id = "%03d" % int(task_id)
     comment = ""
     if os.path.exists(os.path.join(out_dir, f"{task_id}.txt")):
         with open(os.path.join(out_dir, f"{task_id}.txt")) as f:
