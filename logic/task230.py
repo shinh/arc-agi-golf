@@ -1,5 +1,5 @@
 def p(g):
- o=[r[:]for r in g]
+ o=[r for r in g]
  h=len(g);w=len(g[0])
  for y in range(h-1):
   for x in range(w-1):

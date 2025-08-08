@@ -19,7 +19,7 @@ def p(g):
     L=0
     for col,c in objs(N8):
         if all(x-y==c[0][0]-c[0][1] for x,y in c):L=col
-    out=[r[:] for r in g]
+    out=[r for r in g]
     for col,c in objs(N4):
         if col==L and len(c)==1:continue
         rs=[i for i,_ in c];cs=[j for _,j in c]

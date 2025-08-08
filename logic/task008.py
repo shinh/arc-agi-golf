@@ -8,7 +8,7 @@ def p(g):
     elif x1>X2:dx=X2-x1+1
     elif y2<Y1:dy=Y1-y2-1
     else:dy=Y2-y1+1
-    o=[r[:]for r in g]
+    o=[r for r in g]
     for y,x in a:o[y][x]=0
     for y,x in a:o[y+dy][x+dx]=2
     return o

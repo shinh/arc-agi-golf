@@ -3,7 +3,7 @@ def p(g):
     P=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==a]
     if not P:return g
     I,J=zip(*P);t,B=min(I),max(I);l,R=min(J),max(J);H=B-t+1;W=R-l+1
-    G=[r[:]for r in g]
+    G=[r for r in g]
     for i in range(t,B+1):
         for j in range(l,R+1):
             if(i in(t,B)or j in(l,R))and G[i][j]==b:G[i][j]=2

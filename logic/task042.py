@@ -1,6 +1,6 @@
 def p(g):
     H=W=10;R=range
-    v=set();o=[r[:]for r in g]
+    v=set();o=[r for r in g]
     for y in R(H):
         for x in R(W):
             if g[y][x]==3 and (y,x)not in v:

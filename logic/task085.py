@@ -1,5 +1,5 @@
 def p(g):
-    o=[r[:] for r in g]
+    o=[r for r in g]
     for y in range(1,len(g)-1):
         a,b,c=g[y-1],g[y],g[y+1]
         if a==b==c and any(b):

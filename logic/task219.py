@@ -1,7 +1,7 @@
 def p(g):
     h=15;w=10;R=range
     rows=[i for i,r in enumerate(g) if 8 in r]
-    if not rows:return [r[:]for r in g]
+    if not rows:return [r for r in g]
     B=[];b=[rows[0]]
     for i in rows[1:]:
         if i==b[-1]+1:b.append(i)
@@ -23,7 +23,7 @@ def p(g):
                 if k>sc or (k==sc and dy>bd) or (k==sc and dy==bd and dx>bx):
                     sc=k;best=D;bd=dy;bx=dx
         add|=best
-    r=[row[:]for row in g]
+    r=[row for row in g]
     for i,j in add:
         if 0<=i<h and 0<=j<w:r[i][j]=1
     return r

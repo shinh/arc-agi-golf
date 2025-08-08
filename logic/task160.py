@@ -1,5 +1,5 @@
 def p(g):
-    o=[r[:]for r in g]
+    o=[r for r in g]
     for y in range(8):
         for x in range(8):
             if [g[y+i][x:x+3]for i in range(3)]==[[1,1,1],[1,0,1],[1,1,1]]:

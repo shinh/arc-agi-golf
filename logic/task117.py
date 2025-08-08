@@ -10,7 +10,7 @@ def p(g):
                 i=min(ys);j=min(xs)
                 if {(i,j),(i+2,j),(i,j+2),(i+2,j+2),(i+1,j+1)}<=set(pts):
                     s=i+i+2;t=j+j+2
-                    r=[r[:]for r in g]
+                    r=[r for r in g]
                     for y,row in enumerate(g):
                         for x,c in enumerate(row):
                             if c:

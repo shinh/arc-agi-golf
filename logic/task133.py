@@ -1,5 +1,5 @@
 def p(G):
-    r=[r[:]for r in G];h=len(r);w=len(r[0]);g=sum(r,[]);d=[0]*10;o=[]
+    r=[r for r in G];h=len(r);w=len(r[0]);g=sum(r,[]);d=[0]*10;o=[]
     for z,v in enumerate(g):
         if v<1:continue
         q=[z];g[z]=-v

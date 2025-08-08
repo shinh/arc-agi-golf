@@ -7,7 +7,7 @@ def p(g):
   return(min(is_)+max(is_))//2,(min(js)+max(js))//2
  t=lambda b,p:(b[0]+(p[0]>b[0])-(p[0]<b[0]),b[1]+(p[1]>b[1])-(p[1]<b[1]))
  b=0
- o=[r[:] for r in g]
+ o=[r for r in g]
  for v in(3,7):
   for i,j in d.get(v,[]):o[i][j]=b
  if 1 in d:

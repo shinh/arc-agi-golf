@@ -1,5 +1,5 @@
 def p(g):
-    g=[r[:]for r in g]
+    g=[r for r in g]
     b=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==2]
     j0=min(j for _,j in b);j1=max(j for _,j in b);c=(j0+j1)//2
     t=any(j==c for _,j in b)

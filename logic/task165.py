@@ -9,7 +9,7 @@ def p(g):
    if pts:
     mi=min(i for i,_ in pts);mj=min(j for _,j in pts)
     if {(i-mi,j-mj)for i,j in pts}==S:
-     G=A([r[:]for r in g]);pc=c;un=B;break
+     G=A([r for r in g]);pc=c;un=B;break
   else:continue
   break
  pal={v for row in G for v in row};pal.discard(pc)

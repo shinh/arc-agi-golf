@@ -1,5 +1,5 @@
 def p(g):
- R=range;m=min;M=max;E=enumerate;g=[r[:]for r in g];h=len(g);w=len(g[0])
+ R=range;m=min;M=max;E=enumerate;g=[r for r in g];h=len(g);w=len(g[0])
  f=lambda x,y:0<=x<h and 0<=y<w and not g[x][y]and not g[x].__setitem__(y,1)and[f(x+1,y),f(x-1,y),f(x,y+1),f(x,y-1)]
  for i in R(h):f(i,0);f(i,w-1)
  for j in R(w):f(0,j);f(h-1,j)

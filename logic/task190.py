@@ -1,6 +1,6 @@
 def p(g):
  n=10
- o=[r[:]for r in g]
+ o=[r for r in g]
  c=next(v for r in g for v in r if v)
  for y in range(9):
   for x in range(9):

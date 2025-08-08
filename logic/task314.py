@@ -11,7 +11,7 @@ def p(g):
     if not cnt:
         return g
     bg = max(cnt, key=cnt.get)
-    out = [r[:] for r in g]
+    out = [r for r in g]
     for c in cnt:
         if c == bg:
             continue

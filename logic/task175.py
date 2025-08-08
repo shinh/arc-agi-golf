@@ -1,5 +1,5 @@
 def p(g):
- n=21;h=[r[:]for r in g]
+ n=21;h=[r for r in g]
  for i in range(21):
   for j in range(21):
    if h[i][j]:g[j][i]=h[i][j]

@@ -1,7 +1,7 @@
 def p(g):
  q=range
  l=len
- r=[o[:]for o in g]
+ r=[o for o in g]
  v=set()
  for i in q(l(g)):
   for j in q(l(g[0])):

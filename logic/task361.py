@@ -4,7 +4,7 @@ def p(g):
   for i in range(h-k+1):
    for j in range(w-k+1):
     if all(g[i+y][j+x] for y in range(k) for x in range(k)):
-     c=i+(k-1)/2;d=j+(k-1)/2;o=[r[:] for r in g]
+     c=i+(k-1)/2;d=j+(k-1)/2;o=[r for r in g]
      for y,r in enumerate(g):
       for x,v in enumerate(r):
        if v and (y<i or y>=i+k or x<j or x>=j+k):

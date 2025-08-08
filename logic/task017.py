@@ -25,4 +25,4 @@ def p(g):
             if ok:
                 for i in range(w):a[i]=b[i%l]
                 break
-    return [t[i%k][:]for i in range(h)]
+    return [t[i%k] for i in range(h)]

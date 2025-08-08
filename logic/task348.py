@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);o=[r[:]for r in g];c=b=0
+    h=len(g);w=len(g[0]);o=[r for r in g];c=b=0
     for y,r in enumerate(g):
         for x,v in enumerate(r):
             if v==7:c=x;b=y

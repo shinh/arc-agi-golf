@@ -14,7 +14,7 @@ def p(g):
  o=min([q for q in L if q!=t],key=lambda q:abs(q[0]-t[0])+abs(q[1]-t[1]))
  di=(len({i for i,_ in L})>1)*abs(o[0]-t[0])
  dj=(len({j for _,j in L})>1)*abs(o[1]-t[1])
- R=[r[:]for r in g]
+ R=[r for r in g]
  for i,j in P:R[i][j]=0
  for i,j in {(i+di,j+dj)for i,j in P}:
   if 0<=i<h and 0<=j<w:R[i][j]=p

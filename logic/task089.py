@@ -13,7 +13,7 @@ def p(g):
     t=len(s)
     if 3 in s and t>l3:o3=o;l3=t
     if 2 in s and t>l2:o2=o;l2=t
- out=[r[:]for r in g]
+ out=[r for r in g]
  def app(k,o,orig=()):
   ay=min(y for y,x,c in o if c==k);ax=min(x for y,x,c in o if c==k)
   p=[(c,y-ay,x-ax)for y,x,c in o]

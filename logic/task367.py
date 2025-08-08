@@ -3,7 +3,7 @@ def p(g):
     f=sum(g,[]);c={}
     for v in f:c[v]=c.get(v,0)+1
     lt=min(c,key=c.get)
-    out=[r[:] for r in g];seen=[[0]*w for _ in g]
+    out=[r for r in g];seen=[[0]*w for _ in g]
     for i in range(h):
         for j in range(w):
             if g[i][j] or seen[i][j]:continue

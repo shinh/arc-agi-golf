@@ -8,7 +8,7 @@ def p(g):
             ys=[y for y,_ in s];xs=[x for _,x in s]
             if max(ys)-min(ys)==max(xs)-min(xs)==1:
                 S=min(ys)+max(ys);T=min(xs)+max(xs);break
-    r=[r[:]for r in g]
+    r=[r for r in g]
     for y,row in enumerate(g):
         for x,c in enumerate(row):
             if c:

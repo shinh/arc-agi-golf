@@ -1,5 +1,5 @@
 def p(g):
-    n=w=16;o=[r[:] for r in g]
+    n=w=16;o=[r for r in g]
     for i in range(n//2):
         j=n-1-i;r1=g[i];r2=g[j]
         if r1==r1[::-1]:o[i]=o[j]=r1
