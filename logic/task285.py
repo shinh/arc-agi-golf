@@ -1,6 +1,6 @@
 
 def p(g):
-    h=len(g);w=len(g[0]);r=[s[:] for s in g];S=set();D=(-1,0,1)
+    h=len(g);w=len(g[0]);r=[s for s in g];S=set();D=(-1,0,1)
     for i in range(h):
         for j in range(w):
             if g[i][j]==0 or (i,j) in S:continue

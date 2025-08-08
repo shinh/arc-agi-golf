@@ -25,7 +25,7 @@ def p(g):
         for dy,dx in ((1,1),(1,-1),(-1,1),(-1,-1)):
             ny,nx=y,x
             while 0<=ny<h and 0<=nx<w:S.add((ny,nx));ny+=dy;nx+=dx
-    o=[r[:] for r in g]
+    o=[r for r in g]
     for y,x in S:
         v=g[y][x]
         if v==ca:o[y][x]=a

@@ -1,5 +1,5 @@
 def p(g):
-    h=w=10;g=[r[:]for r in g]
+    h=w=10;g=[r for r in g]
     b=0
     s=set()
     for i in range(10):

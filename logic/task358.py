@@ -1,5 +1,5 @@
 def p(g):
-    h=len(g);w=len(g[0]);I=[r[:] for r in g]
+    h=len(g);w=len(g[0]);I=[r for r in g]
     for y,r in enumerate(I):
         xs=[x for x,v in enumerate(r) if v]
         if len(xs)>1:

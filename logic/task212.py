@@ -1,5 +1,5 @@
 def p(g):
-    r=[i for i,v in enumerate(g)if v.count(5)==10][0];o=[r[:]for r in g]
+    r=[i for i,v in enumerate(g)if v.count(5)==10][0];o=[r for r in g]
     for y,row in enumerate(g):
         for x,v in enumerate(row):
             if v==1:

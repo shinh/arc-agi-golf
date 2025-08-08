@@ -1,5 +1,5 @@
 def p(g,Y=range):
- Q=[r[:]for r in g]
+ Q=[r for r in g]
  for c in Y(1,10):
   b=[(i,j)for i in Y(len(g))for j in Y(len(g[0]))if g[i][j]==c]
   for i in Y(len(b)):

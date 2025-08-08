@@ -1,5 +1,5 @@
 def p(g):
- r=[x[:]for x in g]
+ r=[x for x in g]
  n,m=len(g),len(g[0])
  i,j,d=n-1,0,1
  while i>=0:

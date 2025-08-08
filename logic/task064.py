@@ -9,7 +9,7 @@ def p(g):
             a=min(ys);b=max(ys);c=min(xs);d=max(xs);n=len(v)
             if (b-a+1)*(d-c+1)==n>m:m=n;rc=k;R=(a,b,c,d)
     rare=min((len(v),k)for k,v in enumerate(t)if k!=rc and v)[1]
-    o=[r[:]for r in g];a,b,c,d=R
+    o=[r for r in g];a,b,c,d=R
     for y,x in t[rare]:
         if c<=x<=d:
             for i in(range(y,a)if y<a else range(b+1,y+1)):o[i][x]=rare

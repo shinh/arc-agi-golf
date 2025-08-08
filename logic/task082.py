@@ -4,4 +4,4 @@ def p(g):
         if v:
             if i:s[i-1]=v
             if i<m-1:s[i+1]=v
-    return [(r,s)[i%2][:] for i in range(len(g))]
+    return[(r,s)[i%2]for i in range(len(g))]

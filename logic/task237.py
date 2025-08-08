@@ -1,6 +1,6 @@
 def p(g):
     h=len(g);w=len(g[0])
-    o=[r[:]for r in g]
+    o=[r for r in g]
     for y,r in enumerate(g):
         for x,c in enumerate(r):
             if c:

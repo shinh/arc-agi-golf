@@ -2,7 +2,7 @@ def p(g):
  R=range
  h,w=len(g),len(g[0])
  v=set()
- s=[x[:]for x in g]
+ s=[x for x in g]
  def d(i,j):
   if(i,j)in v or not(0<=i<h and 0<=j<w)or g[i][j]!=1:return[]
   v.add((i,j))

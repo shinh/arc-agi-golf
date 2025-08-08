@@ -1,5 +1,5 @@
 def p(g):
-    v=set();o=[r[:]for r in g]
+    v=set();o=[r for r in g]
     for y in range(9):
         for x in range(9):
             if g[y][x]==0 or (y,x) in v:continue

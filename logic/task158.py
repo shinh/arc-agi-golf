@@ -14,7 +14,7 @@ def p(g):
    if len({g[i][j]for i,j in q})<2:continue
    y=min(i for i,_ in q);x=min(j for _,j in q);P=[(g[i][j],i-y,j-x)for i,j in q]
    L=[q[0]for q in P];m=max(L,key=L.count)
-   h0=max(i for _,i,_ in P)+1;w0=max(j for _,_,j in P)+1;R=[r[:]for r in g]
+   h0=max(i for _,i,_ in P)+1;w0=max(j for _,_,j in P)+1;R=[r for r in g]
    for s in 1,2,3,4:
     U=[(c,i*s+di,j*s+dj)for c,i,j in P for di in range(s)for dj in range(s)];H=h0*s;W=w0*s
     for t in range(5):

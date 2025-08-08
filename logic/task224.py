@@ -1,5 +1,5 @@
 def p(g):
-    o=[r[:] for r in g]
+    o=[r for r in g]
     P=[(y,x) for y,r in enumerate(g) for x,c in enumerate(r) if c==5]
     ys=[y for y,x in P];xs=[x for y,x in P]
     t=min(ys)+1;b=max(ys);l=min(xs)+1;r=max(xs)

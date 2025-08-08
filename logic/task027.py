@@ -13,7 +13,7 @@ def p(g):
             if t==R(t):
                 k=len(a&b)
                 if k>m:m=k;sh=b
-    o=[r[:]for r in g]
+    o=[r for r in g]
     for y,x in sh-a:o[y][x]=2
     return o
 

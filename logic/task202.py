@@ -1,7 +1,7 @@
 def p(g):
  t=any(len({*r})>2 for r in g)
  if t:g=[list(r)for r in zip(*g)]
- h=len(g);w=len(g[0]);o=[r[:]for r in g];v=set()
+ h=len(g);w=len(g[0]);o=[r for r in g];v=set()
  for i in range(h):
   for j in range(w):
    if g[i][j]and(i,j)not in v:

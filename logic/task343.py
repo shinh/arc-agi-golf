@@ -3,7 +3,7 @@ def p(g):
  for r in g:
   i=n
   while i and not r[i-1]:i-=1
-  if not i:o.append(r[:]);continue
+  if not i:o.append(r);continue
   for p in range(1,i+1):
    if all(r[k]==r[k%p]for k in range(i)):break
   a=r[:p]

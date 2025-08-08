@@ -15,7 +15,7 @@ def p(g):
                                 u,v=x+a,y+b
                                 if 0<=u<h and 0<=v<w:q.append((u,v))
                 objs.append(o)
-    out=[r[:]for r in g]
+    out=[r for r in g]
     for o in objs:
         cs={c for _,_,c in o}
         if len(cs)!=2:continue

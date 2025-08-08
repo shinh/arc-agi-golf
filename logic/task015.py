@@ -1,5 +1,5 @@
 def p(g):
- t=[r[:]for r in g]
+ t=[r for r in g]
  for y in range(9):
   for x in range(9):
    v=t[y][x]

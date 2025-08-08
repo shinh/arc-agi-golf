@@ -1,5 +1,5 @@
 def p(g):
-    h=w=15;o=[r[:]for r in g];v=set()
+    h=w=15;o=[r for r in g];v=set()
     for y in range(h):
         for x in range(w):
             if g[y][x]==6 and (y,x)not in v:
