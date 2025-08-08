@@ -1,1 +1,1 @@
-def p(g):return[[[7,1][(g==g[::-1])*all(r==r[::-1]for r in g)]]]
+def p(g):return[[7-6*(g==g[::-1]==[r[::-1]for r in g])]]
