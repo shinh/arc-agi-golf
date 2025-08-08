@@ -51,6 +51,8 @@ def collect_info(task_id):
         if len(set(io_ratio_hs)) == 1 and len(set(io_ratio_ws)) == 1:
             info.append(f"static output/input ratio {io_ratio_ws[0]}x{io_ratio_hs[0]}")
 
+    info.append(f"{len(data)} test cases")
+
     info.append("colors: " + str(list(set(input_cols))) + " => " + str(list(set(output_cols))))
 
     return info, data
