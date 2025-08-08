@@ -161,7 +161,12 @@ def check_task(task_id, filename, verbose):
     rename_locals = False
     #print(code, flush=True)
 
-    code = python_minifier.minify(code, rename_locals=rename_locals)
+    code = python_minifier.minify(
+        code,
+        rename_locals=rename_locals,
+        # TODO: Consider enabling this for non-LZ tasks.
+        hoist_literals=False,
+    )
     write_code(code, f"stages/task{task_id:03d}.py")
 
     zlib_code = compress(code,"zlib")
