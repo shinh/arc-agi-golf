@@ -16,6 +16,7 @@ from dataclasses import dataclass
 import heapq
 import builtins
 import keyword
+import random
 import string
 from collections import Counter
 from typing import Dict, Iterable, List, Tuple, Union
@@ -527,9 +528,6 @@ def _alias_generator(alphabet: str = string.ascii_lowercase):
         callers may provide a custom ordering to bias the output.
     """
 
-    # TODO: Why...?
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
-
     index = 0
     base = len(alphabet)
     while True:
@@ -547,7 +545,20 @@ def _alias_generator(alphabet: str = string.ascii_lowercase):
         yield name
 
 
-def _build_identifier_mapping(positions, excludes: List[str] = []) -> Dict[str, str]:
+def _shake_alphabet(alphabet, seed):
+    rng = random.Random(seed)
+    new_alphabet = ""
+    while alphabet:
+        if rng.random() > 0.2 or len(alphabet) == 1:
+            new_alphabet += alphabet[0]
+            alphabet = alphabet[1:]
+        else:
+            new_alphabet += alphabet[1]
+            alphabet = alphabet[0] + alphabet[2:]
+    return new_alphabet
+
+
+def _build_identifier_mapping(positions, excludes: List[str] = [], seed: int = 0) -> Dict[str, str]:
     """Create a mapping from original identifier to a short alias."""
 
     # Count occurrences for each identifier while skipping attribute names.
@@ -580,6 +591,9 @@ def _build_identifier_mapping(positions, excludes: List[str] = []) -> Dict[str, 
         string.ascii_lowercase, key=lambda c: (-letter_counts[c], c)
     )
     alphabet = "".join(ordered_letters)
+
+    if seed:
+        alphabet = _shake_alphabet(alphabet, seed)
 
     mapping: Dict[str, str] = {}
     gen = _alias_generator(alphabet=alphabet)
@@ -745,7 +759,7 @@ def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     return bytes(out)
 
 
-def map_identifiers(source: str, excludes: List[str]) -> str:
+def map_identifiers(source: str, excludes: List[str], seed: int = 0) -> str:
     """Return *source* with identifiers replaced by short aliases.
 
     The function analyses Python source code and rewrites identifiers using
@@ -779,7 +793,7 @@ def map_identifiers(source: str, excludes: List[str]) -> str:
 
     # Build a mapping for all identifiers except those explicitly excluded or
     # reserved by the checks above.
-    mapping = _build_identifier_mapping(positions, excludes + list(reserved))
+    mapping = _build_identifier_mapping(positions, excludes + list(reserved), seed=seed)
 
     # Finally apply the mapping to the original source code.
     mapped_source = _apply_identifier_mapping(source, positions, mapping)

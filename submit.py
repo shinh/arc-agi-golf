@@ -146,9 +146,10 @@ def compress(code, algo="zlib"):
     return main, method
 
 
-def compress_code_impl(code, algo):
-    code = myzlib.map_identifiers(code, ["p"])
+def compress_code_impl(code, algo, seed):
+    code = myzlib.map_identifiers(code, ["p"], seed=seed)
     rename_locals = False
+    #rename_locals = True
     #print(code, flush=True)
 
     code = python_minifier.minify(
@@ -165,14 +166,20 @@ def compress_code_impl(code, algo):
     else:
         compressed_code, info = compress(code, algo)
 
+    info += f"+seed{seed}"
+
     return len(compressed_code), compressed_code, code, info
 
 
 def compress_code(code):
     results = []
     for algo in ["asis", "zlib", "lzma"]:
-        r = compress_code_impl(code, algo)
-        results.append(r)
+        for seed in range(30):
+            if seed and algo == "asis":
+                continue
+            r = compress_code_impl(code, algo, seed)
+            # print(r[-1], r[0])
+            results.append(r)
     results.sort(key=lambda a:a[0])
 
     size, compress_code, code, info = results[0]
