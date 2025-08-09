@@ -167,6 +167,7 @@ def check_task(task_id, filename, verbose):
         # TODO: Consider enabling this for non-LZ tasks.
         hoist_literals=False,
     )
+    code = code.replace("\t", " ")
     write_code(code, f"stages/task{task_id:03d}.py")
 
     zlib_code = compress(code,"zlib")
