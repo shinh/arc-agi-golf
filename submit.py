@@ -142,11 +142,41 @@ def compress(code, algo="zlib"):
         main, enc_method = use_decompress_and_bytes_or_base85(z, "lzma")
 
     method += "+" + enc_method
-    if len(main) < len(code):
-        print(f"Use {method} compressed code! {len(code)} => {len(main)}")
-        return main
 
-    return code
+    return main, method
+
+
+def compress_code_impl(code, algo):
+    code = myzlib.map_identifiers(code, ["p"])
+    rename_locals = False
+    #print(code, flush=True)
+
+    code = python_minifier.minify(
+        code,
+        rename_locals=rename_locals,
+        # TODO: Consider enabling this for non-LZ tasks.
+        hoist_literals=False,
+    )
+    code = code.replace("\t", " ")
+
+    info = algo
+    if algo == "asis":
+        compressed_code = code
+    else:
+        compressed_code, info = compress(code, algo)
+
+    return len(compressed_code), compressed_code, code, info
+
+
+def compress_code(code):
+    results = []
+    for algo in ["asis", "zlib", "lzma"]:
+        r = compress_code_impl(code, algo)
+        results.append(r)
+    results.sort(key=lambda a:a[0])
+
+    size, compress_code, code, info = results[0]
+    return compress_code, code, info
 
 
 def check_task(task_id, filename, verbose):
@@ -169,29 +199,12 @@ def check_task(task_id, filename, verbose):
     #code = reindent(code)
     #code = squeeze(code)
 
-    code = myzlib.map_identifiers(code, ["p"])
-    rename_locals = False
-    #print(code, flush=True)
+    code, orig_code, info = compress_code(code)
 
-    code = python_minifier.minify(
-        code,
-        rename_locals=rename_locals,
-        # TODO: Consider enabling this for non-LZ tasks.
-        hoist_literals=False,
-    )
-    code = code.replace("\t", " ")
-    write_code(code, f"stages/task{task_id:03d}.py")
+    if len(code) < len(orig_code):
+        print(f"Use {info} compressed code! {len(orig_code)} => {len(code)}")
 
-    zlib_code = compress(code,"zlib")
-    lzma_code = compress(code,"lzma")
-    if len(zlib_code) < len(code):
-        if len(lzma_code) < len(zlib_code):
-            code = lzma_code
-        else:
-            code = zlib_code
-    elif len(lzma_code) < len(code):
-        code = lzma_code
-
+    write_code(orig_code, f"stages/task{task_id:03d}.py")
     task_path = f"{basedir}/task{task_id:03d}.py"
     write_code(code, task_path)
 
