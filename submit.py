@@ -176,10 +176,12 @@ def compress_code(code):
     for algo in ["asis", "zlib", "lzma"]:
         for seed in range(30):
             if seed and algo == "asis":
-                continue
+                break
             r = compress_code_impl(code, algo, seed)
             # print(r[-1], r[0])
             results.append(r)
+            #if isinstance(r[1], bytes) and b"\\" not in r[1]:
+            #    break
     results.sort(key=lambda a:a[0])
 
     size, compress_code, code, info = results[0]
@@ -207,9 +209,6 @@ def check_task(task_id, filename, verbose):
     #code = squeeze(code)
 
     code, orig_code, info = compress_code(code)
-
-    if len(code) < len(orig_code):
-        print(f"Use {info} compressed code! {len(orig_code)} => {len(code)}")
 
     write_code(orig_code, f"stages/task{task_id:03d}.py")
     task_path = f"{basedir}/task{task_id:03d}.py"
