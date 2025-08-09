@@ -1,17 +1,27 @@
 def p(g):
- for o in range(10):
-  t=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==o]
-  if len(t)==4 and len({i for i,_ in t})==len({j for _,j in t})==2:break
- r,s=zip(*t);a=min(r);b=max(r);c=min(s);d=max(s)
- s=[r[c:d+1]for r in g[a:b+1]]
- z=[(v,i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v and not(a<=i<=b and c<=j<=d)]
- if any(len({*r})<2 for r in s):s=[*map(list,zip(*s))];z=[(v,j,i)for v,i,j in z];m=1
- else:m=0
- if z:x=min(i for v,i,j in z);y=min(j for v,i,j in z);z=[(v,i-x,j-y)for v,i,j in z]
- P=sorted(set(sum(s,[]))-{0,o})
- if P[1:]:
-  p,q=P[0],P[-1];L=lambda m,t:min(r.index(t)for r in m if t in r)
-  G=lambda t:min(j for v,i,j in z if v==t)
-  if (L(s,q)>L(s,p))!=(G(q)>G(p)):w=max(j for _,_,j in z);z=[(v,i,w-j)for v,i,j in z]
- for v,i,j in z:i+=1;j+=1;len(s)>i and len(s[0])>j and s[i].__setitem__(j,v)
- return [*map(list,zip(*s))] if m else s
+    sx=sy=99
+    ex=ey=-1
+    for y in range(len(g)):
+        for x in range(len(g[0])):
+            if g[y][x]==4:
+                sx=min(sx,x)
+                sy=min(sy,y)
+                ex=max(ex,x)
+                ey=max(ey,y)
+    o=[[g[sy+y][sx+x]for x in range(ex-sx+1)]for y in range(ey-sy+1)]
+
+    sx2=sy2=99
+    ex2=ey2=-1
+    for y in range(len(g)):
+        for x in range(len(g[0])):
+            if g[y][x]and(x<sx or y<sy or ex<x or ey<y):
+                sx2=min(sx2,x)
+                sy2=min(sy2,y)
+                ex2=max(ex2,x)
+                ey2=max(ey2,y)
+
+    no_mirror=any(g[y+sy2][sx2]==o[y+1][0]for y in range(ey2-sy2+1))
+    for y in range(sy2,ey2+1):
+        for x in range(sx2,ex2+1):
+            o[y-sy2+1][[sx2-x-2,x-sx2+1][no_mirror]]=g[y][x]
+    return o
