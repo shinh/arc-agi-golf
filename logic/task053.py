@@ -1,2 +1,2 @@
-def p(g):
-    return [[0]*3]+g[:-1]
+# optimal is 21
+p=lambda g:[g.pop()]+g
