@@ -82,13 +82,25 @@ def use_decompress_and_base85(z, algo):
 def use_decompress_and_bytes(z, algo):
     code = b"#coding:l1\n"
     code += f"import {algo}\n".encode()
-    z = z.replace(b"\\", b"\\\\")
-    # TODO: Use \0 when the next char is not 0-9.
-    z = z.replace(b"\0", b"\\x00")
-    z = z.replace(b"\n", b"\\n")
-    z = z.replace(b"\r", b"\\r")
-    z = z.replace(b"'", b"\\'")
-    b = b"bytes('" + z + b"','l1')"
+    r = bytearray()
+    i = 0
+    while i < len(z):
+        c = z[i]
+        if c == 92:
+            r += b"\\\\"
+        elif c == 0:
+            n = z[i + 1:i + 2]
+            r += b"\\x00" if n and 48 <= n[0] <= 57 else b"\\0"
+        elif c == 10:
+            r += b"\\n"
+        elif c == 13:
+            r += b"\\r"
+        elif c == 39:
+            r += b"\\'"
+        else:
+            r.append(c)
+        i += 1
+    b = b"bytes('" + bytes(r) + b"','l1')"
     code += f"exec({algo}.decompress(".encode() + b + b"))"
     return code
 
