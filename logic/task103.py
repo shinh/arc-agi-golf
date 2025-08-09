@@ -1,1 +1,2 @@
-def p(g):return[[7-6*(g==g[::-1]==[r[::-1]for r in g])]]
+# optimal
+p=lambda g:[[g==g[::-1]or 7]]
