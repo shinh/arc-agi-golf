@@ -184,11 +184,8 @@ def check_task(task_id, filename, verbose):
     zlib_code = compress(code,"zlib")
     lzma_code = compress(code,"lzma")
     if len(zlib_code) < len(code):
-        if len(lzma_code) < len(zlib_code):
-            code = lzma_code
-        else:
-            code = zlib_code
-    elif len(lzma_code) < len(code):
+        code = zlib_code
+    if len(lzma_code) < len(code):
         code = lzma_code
 
     task_path = f"{basedir}/task{task_id:03d}.py"
