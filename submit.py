@@ -166,7 +166,7 @@ def check_task(task_id, filename, verbose):
 
     logic = open(filename).read()
     code = inline_create(logic)
-    code = reindent(code)
+    #code = reindent(code)
     #code = squeeze(code)
 
     code = myzlib.map_identifiers(code, ["p"])
