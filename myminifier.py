@@ -40,7 +40,14 @@ def squeeze(s):
     return'\n'.join(R)
 
 
+def remove_spaces(code):
+    # TODO: Consider not replacing code in string literals.
+    code, _ = re.subn(r"(\S) +([\[({,:+\-*/%])", r"\1\2", code)
+    return code
+
+
 def minify(code):
     code = reindent(code)
     code = squeeze(code)
+    code = remove_spaces(code)
     return code
