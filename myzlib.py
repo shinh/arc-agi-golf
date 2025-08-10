@@ -19,7 +19,7 @@ import keyword
 import random
 import string
 import warnings
-from collections import Counter
+from collections import Counter, namedtuple
 from typing import Dict, Iterable, List, Tuple, Union
 
 # ---------------------------------------------------------------------------
@@ -432,7 +432,10 @@ class _BitWriter:
             self.nbits = 0
 
 
-def get_identifier_positions(source_code):
+Positions = namedtuple("Positions", ["name", "lineno", "col_offset", "end_lineno", "end_col_offset", "kind"])
+
+
+def get_identifier_positions(source_code: str) -> List[Positions]:
     """Return positions of all identifiers found in *source_code*.
 
     Each element of the returned list is a tuple
@@ -468,7 +471,7 @@ def get_identifier_positions(source_code):
                 col_offset = col_offset if col_offset is not None else node.col_offset
                 end_lineno = lineno
                 end_col_offset = col_offset + len(name)
-                positions.append((name, lineno, col_offset, end_lineno, end_col_offset, kind))
+                positions.append(Positions(name, lineno, col_offset, end_lineno, end_col_offset, kind))
 
         def visit_Name(self, node):
             self.record(node, node.id, "name")
@@ -511,6 +514,19 @@ def get_identifier_positions(source_code):
             self.generic_visit(node)
 
     IdentifierVisitor().visit(tree)
+    return positions
+
+
+def exclude_reserved_names(positions: List[Positions]) -> List[Positions]:
+    # Remove attribute names from the list of positions.
+    positions = [p for p in positions if p.kind != "attr"]
+
+    # Reserved names (keywords, builtins, and dunder names) must not change.
+    reserved = set(keyword.kwlist) | set(dir(builtins))
+    positions = [p for p in positions if p.name not in reserved]
+
+    positions = [p for p in positions if not p.name.startswith("__")]
+
     return positions
 
 
@@ -567,8 +583,6 @@ def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], 
     # Count occurrences for each identifier while skipping attribute names.
     counts: Counter[str] = Counter()
     for name, _, _, _, _, kind in positions:
-        if kind == "attr":
-            continue
         counts[name] += 1
 
     # Reserved names (keywords, builtins, and dunder names) must not change.
@@ -667,6 +681,7 @@ def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     if is_python:
         source = data.decode("utf-8") if isinstance(data, bytes) else data
         positions = get_identifier_positions(source)
+        positions = exclude_reserved_names(source)
         mapping = _build_identifier_mapping(source, positions)
         source = _apply_identifier_mapping(source, positions, mapping)
         data_bytes = source.encode("utf-8")
@@ -773,6 +788,7 @@ def map_identifiers(source: str, excludes: List[str], seed: int = 0) -> str:
     # location for every ``ast.Name`` (and a few other constructs) so that the
     # mapping can be applied efficiently later on.
     positions = get_identifier_positions(source)
+    positions = exclude_reserved_names(positions)
 
     # Certain names must never be rewritten because doing so would produce
     # invalid Python code.  Examples are names introduced by import statements
@@ -845,6 +861,7 @@ if __name__ == "__main__":
                 # For Python files, show identifier list and run both modes.
                 source = text.decode("utf-8")
                 id_pos = get_identifier_positions(source)
+                id_pos = exclude_reserved_names(id_pos)
                 names = sorted({name for name, *_ in id_pos})
                 print(f"{arg} identifiers: {', '.join(names)}")
                 add_stat("mine", len(compress(text, False)))
