@@ -207,6 +207,8 @@ def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
     code = inline_create(logic)
     #code = squeeze(code)
 
+    size_before_minify = len(code)
+
     used_minifier, code = minify(code, verbose)
 
     code, orig_code, info = compress_code(code, verbose, use_lzma, use_bzip2, max_seed)
@@ -215,9 +217,9 @@ def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
 
     if len(code) >= len(orig_code):
         assert len(code) == len(orig_code)
-        print(f"Task {task_id} not compressed: {len(code)} bytes", flush=True)
+        print(f"Task {task_id} only minified: {size_before_minify} -> {len(code)} bytes ({used_minifier})", flush=True)
     else:
-        print(f"Task {task_id} compressed: {len(orig_code)} -> {len(code)} bytes ({info})", flush=True)
+        print(f"Task {task_id} minified and compressed: {size_before_minify} -> {len(orig_code)} -> {len(code)} bytes ({info})", flush=True)
 
     write_code(orig_code, f"stages/task{task_id:03d}.py")
     task_path = f"{basedir}/task{task_id:03d}.py"
