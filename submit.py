@@ -161,11 +161,6 @@ def compress_with_algorithm(code, algorithm="zlib"):
 def _compress_single_variant(code, algorithm, seed):
     """Minify and compress code for a specific algorithm and seed."""
     code = myzlib.map_identifiers(code, ["p"], seed=seed)
-    code = python_minifier.minify(
-        code,
-        rename_locals=False,
-        hoist_literals=False,
-    ).replace("\t", " ")
 
     if algorithm == "asis":
         compressed = code
@@ -222,6 +217,17 @@ def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
     code = inline_create(logic)
     #code = reindent(code)
     #code = squeeze(code)
+
+    minified_code = python_minifier.minify(
+        code,
+        rename_locals=False,
+        hoist_literals=False,
+    ).replace("\t", " ")
+
+    if verbose:
+        print(f"Minified code from {len(code)} to {len(minified_code)} bytes", flush=True)
+
+    code = minified_code
 
     code, orig_code, info = compress_code(code, verbose, use_lzma, use_bzip2, max_seed)
 
