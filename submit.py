@@ -73,13 +73,13 @@ def use_base85(z):
     return 'base64.b85decode("' + c.decode() + '")'
 
 
-def use_decompress_and_base85(z, algo):
+def use_decompress_and_base85(z, algo, args):
     code = f"import base64,{algo}\n"
-    code += f"exec({algo}.decompress(" + use_base85(z) + "))"
+    code += f"exec({algo}.decompress(" + use_base85(z) + f",{args}))"
     return code
 
 
-def use_decompress_and_bytes(z, algo):
+def use_decompress_and_bytes(z, algo, args):
     code = b"#coding:l1\n"
     code += f"import {algo}\n".encode()
     r = bytearray()
@@ -101,13 +101,13 @@ def use_decompress_and_bytes(z, algo):
             r.append(c)
         i += 1
     b = b"bytes('" + bytes(r) + b"','l1')"
-    code += f"exec({algo}.decompress(".encode() + b + b"))"
+    code += f"exec({algo}.decompress(".encode() + b + args.encode() + b"))"
     return code
 
 
-def use_decompress_and_bytes_or_base85(z, algo):
-    b1 = use_decompress_and_bytes(z, algo)
-    b2 = use_decompress_and_base85(z, algo)
+def use_decompress_and_bytes_or_base85(z, algo, args=""):
+    b1 = use_decompress_and_bytes(z, algo, args)
+    b2 = use_decompress_and_base85(z, algo, args)
     if len(b1) < len(b2):
         return b1, "bytes"
     else:
@@ -136,10 +136,18 @@ def compress(code, algo="zlib"):
             "id": lzma.FILTER_LZMA1,
             "preset": 9 | lzma.PRESET_EXTREME,
         }]
-        #compressed = base64.b85encode(lzma.compress(code.encode(),format=lzma.FORMAT_RAW,filters=filters))
         z = lzma.compress(code.encode(),format=2)
-
         main, enc_method = use_decompress_and_bytes_or_base85(z, "lzma")
+
+    elif algo == "lzma_raw":
+        filters = [{
+            "id": lzma.FILTER_LZMA1,
+            "preset": 9 | lzma.PRESET_EXTREME,
+        }]
+        z = lzma.compress(code.encode(),format=3,filters=filters)
+
+        args = ',3,None,[{"id":33}]'
+        main, enc_method = use_decompress_and_bytes_or_base85(z, "lzma", args)
 
     method += "+" + enc_method
 
@@ -173,7 +181,7 @@ def compress_code_impl(code, algo, seed):
 
 def compress_code(code):
     results = []
-    for algo in ["asis", "zlib", "lzma"]:
+    for algo in ["asis", "zlib", "lzma", "lzma_raw"]:
         for seed in range(30):
             if seed and algo == "asis":
                 break
