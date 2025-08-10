@@ -161,7 +161,7 @@ def compress_code(code, verbose, use_lzma, use_bzip2, max_seed):
     return compressed_code, original_code, method
 
 
-def minify(code, verbose):
+def minify(code, verbose, show_minify):
     minified_codes = []
 
     minified_codes.append(("myminifier", myminifier.minify(code)))
@@ -180,6 +180,11 @@ def minify(code, verbose):
         for used_minifier, minified_code in minified_codes:
             print(f"Minified code from {len(code)} to {len(minified_code)} bytes by {used_minifier}", flush=True)
 
+    if show_minify:
+        for used_minifier, minified_code in minified_codes:
+            print(used_minifier, ":")
+            print(minified_code)
+
     minified_codes.sort(key=lambda x: len(x[1]))
 
     used_minifier, minified_code = minified_codes[0]
@@ -191,7 +196,7 @@ def minify(code, verbose):
     return used_minifier, minified_code
 
 
-def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
+def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed, show_minify):
     if verbose:
         print(f"Checking === {filename} ===", flush=True)
 
@@ -212,7 +217,7 @@ def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
 
     size_before_minify = len(code)
 
-    used_minifier, code = minify(code, verbose)
+    used_minifier, code = minify(code, verbose, show_minify)
 
     code, orig_code, info = compress_code(code, verbose, use_lzma, use_bzip2, max_seed)
 
@@ -252,7 +257,7 @@ def submit(task_id, args, verbose):
 
     # print("Submitting task", task_id)
 
-    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args.use_lzma, args.use_bzip2, args.max_seed)
+    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args.use_lzma, args.use_bzip2, args.max_seed, args.show_minify)
 
     # dsl_filename = f"dsl/task{task_id:03d}.py"
     # if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
@@ -303,6 +308,7 @@ def main():
     parser = argparse.ArgumentParser(description="Submit code golf.")
     parser.add_argument("task_id")
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--show_minify", action="store_true")
     parser.add_argument("--skip_verify", action="store_true")
     parser.add_argument("--code_dir", default="logic")
     parser.add_argument("--use_lzma", action="store_true")
