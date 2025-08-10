@@ -148,9 +148,21 @@ def combine_adjacent_lines(source_code):
     return "\n".join(result_lines)
 
 
+def replce_fixed_range(code):
+    code = code.replace("in range(2):", "in 0,1:")
+    code = code.replace("in range(3):", "in 0,1,2:")
+    code = code.replace("in range(4):", "in 0,1,2,3:")
+    return code
+
+
 def minify(code):
     code = reindent(code)
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
+    code = jam(code)
+
+    # Bad with LZ.
+    # code = replce_fixed_range(code)
+
     return code
