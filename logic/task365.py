@@ -1,17 +1,12 @@
-def p(g):
- R=range
- b,v=[],set()
- for i in R(10):
-  for j in R(10):
-   if g[i][j]and(i,j)not in v:
-    r=j
-    while r<10and g[i][r]:r+=1
-    r-=1
-    t=i
-    while t<10and all(g[t][k]for k in R(j,r+1)):t+=1
-    t-=1
-    k=[[g[u][w]for w in R(j,r+1)]for u in R(i,t+1)]
-    for u in R(i,t+1):
-     for w in R(j,r+1):v.add((u,w))
-    b.append((sum(sum(x==2for x in row)for row in k),k))
- return max(b)[1]
+def p(j):
+ A,c=len(j),len(j[0]);E=-1
+ for k in range(A):
+  for W in range(c):
+   if j[k][W]and(k<1or j[k-1][W]<1)and(W<1or j[k][W-1]<1):
+    l=J=1
+    while W+l<c and j[k][W+l]:l+=1
+    while k+J<A and j[k+J][W]:J+=1
+    a=[C[W:W+l]for C in j[k:k+J]]
+    C=sum(z.count(2)for z in a)
+    if C>E:E=C;e=a
+ return e

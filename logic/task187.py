@@ -1,15 +1,9 @@
-def p(g):
- R=range
- n,m=len(g),len(g[0])
- x=next(g[i][j]for i in R(n)for j in R(m)if g[i][j])
- v=set()
- q=[(i,j)for i in R(n)for j in R(m)if(i==0 or i==n-1 or j==0 or j==m-1)and g[i][j]==0]
- for i,j in q:
-  v.add((i,j))
- while q:
-  i,j=q.pop(0)
-  for a,b in[(0,1),(1,0),(0,-1),(-1,0)]:
-   if 0<=i+a<n and 0<=j+b<m and g[i+a][j+b]==0and(i+a,j+b)not in v:
-    v.add((i+a,j+b))
-    q.append((i+a,j+b))
- return[[x if g[i][j]==x else(3if(i,j)in v else 2)for j in R(m)]for i in R(n)]
+def p(j):
+ A,c,E=len(j),len(j[0]),range;k=[(W,l)for W in(0,A-1)for l in E(c)if j[W][l]<1]+[(W,l)for W in E(A)for l in(0,c-1)if j[W][l]<1]
+ while k:
+  W,l=k.pop()
+  if j[W][l]<1:j[W][l]=3;k+=[(x,y)for x,y in((W+1,l),(W-1,l),(W,l+1),(W,l-1))if 0<=x<A and 0<=y<c and j[x][y]<1]
+ for W in E(A):
+  for l in E(c):
+   if j[W][l]<1:j[W][l]=2
+ return j

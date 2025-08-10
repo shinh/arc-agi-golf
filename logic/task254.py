@@ -1,9 +1,11 @@
-def p(g):
-    cnt=[sum(r[x]==5 for r in g) for x in range(9)]
-    cmax=cnt.index(max(cnt))
-    cmin=min((c,i) for i,c in enumerate(cnt) if c)[1]
-    o=create(9,9)
-    for y in range(9):
-        if g[y][cmax]==5:o[y][cmax]=1
-        if g[y][cmin]==5:o[y][cmin]=2
-    return o
+def p(g,R=range):
+	E,D=len(g),len(g[0]);B=[0 for A in R(D)]
+	for A in R(D):
+		for C in R(E):
+			if g[C][A]>0:B[A]+=1
+			g[C][A]=0
+	F=min([A for A in B if A>0]);A=B.index(F)
+	for C in R(B[A]):g[-(C+1)][A]=2
+	A=B.index(max(B))
+	for C in R(B[A]):g[-(C+1)][A]=1
+	return g

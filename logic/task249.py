@@ -1,1 +1,1 @@
-p=lambda Y:[b*2 for b in Y]
+p=lambda R:[E*2for E in R]

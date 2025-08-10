@@ -1,20 +1,14 @@
+def f(g,p,q,a,b,c):
+ for y in range(q,b+1):
+  for x in range(p,a+1):g[y][x]=c
+def z(g,p,q,a,b):f(g,p,q,a,b,4);f(g,p+1,q+1,a-1,b-1,2);g[q][p]=g[q][a]=g[b][p]=g[b][a]=1
 def p(g):
-    w=h=10
-    o=create(h,w);v=set()
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]==5 and (y,x)not in v:
-                s=[(y,x)];a=[]
-                while s:
-                    y1,x1=s.pop()
-                    if (y1,x1) in v or g[y1][x1]!=5:continue
-                    v.add((y1,x1));a.append((y1,x1))
-                    for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                        ny, nx=y1+dy,x1+dx
-                        if 0<=ny<h and 0<=nx<w:s.append((ny,nx))
-                ys=[y for y,_ in a];xs=[x for _,x in a]
-                t,b=min(ys),max(ys);l,r=min(xs),max(xs)
-                for yy in range(t,b+1):
-                    for xx in range(l,r+1):
-                        o[yy][xx]=1 if yy in(t,b) and xx in(l,r) else 4 if yy in(t,b) or xx in(l,r) else 2
-    return o
+ h,w=len(g),len(g[0])
+ for i in range(h*w):
+  x,y=i%w,i//w
+  if g[y][x]==5:
+   a,b=x,y
+   while a<w-1 and g[b][a+1]==5:a+=1
+   while b<h-1 and g[b+1][a]==5:b+=1
+   z(g,x,y,a,b)
+ return g

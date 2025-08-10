@@ -1,7 +1,7 @@
-def p(m,R=range):
+def p(m):
  n=3;v=[]
- for c in R(len(m[0])):
-  for r in R(len(m)):
-   if m[r][c]:v.append(m[r][c]);break
+ for c in zip(*m):
+  for x in c:
+   if x:v+=[x];break
  v+=[0]*(n*n-len(v))
- return[v[i*n:(i+1)*n]if i%2==0 else v[i*n:(i+1)*n][::-1]for i in R(n)]
+ return[v[i*n:i*n+n][::1-2*(i%2)]for i in range(n)]

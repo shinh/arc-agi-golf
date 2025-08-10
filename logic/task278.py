@@ -1,19 +1,10 @@
-def p(g):
-    h=len(g);w=len(g[0]);o=[r for r in g]
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]==2:
-                if x+1<w and g[y][x+1]==2:
-                    R0=max(0,y-1);R1=min(h-1,y+1);C0=max(0,x-1);C1=min(w-1,x+2)
-                    for r in range(R0,R1+1):
-                        for c in range(C0,C1+1):
-                            if r in(R0,R1) or c in(C0,C1):
-                                if o[r][c]!=2:o[r][c]=3
-                if y+1<h and g[y+1][x]==2:
-                    R0=max(0,y-1);R1=min(h-1,y+2);C0=max(0,x-1);C1=min(w-1,x+1)
-                    for r in range(R0,R1+1):
-                        for c in range(C0,C1+1):
-                            if r in(R0,R1) or c in(C0,C1):
-                                if o[r][c]!=2:o[r][c]=3
-    return o
-
+t=lambda g:[[g[y][x]for y in range(len(g))]for x in range(len(g[0]))]
+def h(g,y,x):
+ if g[y][x]!=2 or g[y][x+1]!=2:return
+ for a in range(max(0,y-1),min(len(g),y+2)):
+  for b in range(max(0,x-1),min(len(g[0]),x+3)):
+   if g[a][b]!=2:g[a][b]=3
+def f(g):
+ for y in range(len(g)):
+  for x in range(len(g[0])-1):h(g,y,x)
+def p(g):f(g);g=t(g);f(g);return t(g)

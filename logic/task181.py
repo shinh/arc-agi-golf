@@ -1,11 +1,1 @@
-def p(g):
-    w=9
-    for r in g:
-        if 4 in r:
-            d=r.index(4)<w//2
-            break
-    for i in range(3):
-        s=g[i][3:6][::-1]
-        if d:g[i][:3]=s
-        else:g[i][-3:]=s
-    return g
+def p(j):A=(j[3][3]<1)*6;[j[r].__setitem__(slice(A,A+3),j[r][3:6][::-1])for r in range(3)];return j

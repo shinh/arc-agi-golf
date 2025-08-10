@@ -1,16 +1,15 @@
-def p(g):
-    h=len(g);w=len(g[0])
-    best=None
-    for c in {v for r in g for v in r}:
-        pos=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==c]
-        if not pos:continue
-        rows=[i for i,j in pos];cols=[j for i,j in pos]
-        si,ei=min(rows),max(rows);sj,ej=min(cols),max(cols)
-        if ei-si<1 or ej-sj<1:continue
-        border={(i,sj)for i in range(si,ei+1)}|{(i,ej)for i in range(si,ei+1)}|{(si,j)for j in range(sj,ej+1)}|{(ei,j)for j in range(sj,ej+1)}
-        if set(pos)==border:
-            area=(ei-si+1)*(ej-sj+1)
-            if not best or area<best[0]:best=(area,si,ei,sj,ej)
-    if not best:return g
-    _,si,ei,sj,ej=best
-    return [row[sj:ej+1] for row in g[si:ei+1]]
+from collections import Counter
+def p(m):
+ c=Counter(e for r in m for e in r if e).most_common()
+ if not c:return[]
+ l=c[-1][0];O=p=-1
+ for i,r in enumerate(m):
+  if l in r:
+   if O<0:O=i
+   p=i
+ S=U=-1
+ for i in range(len(m[0])):
+  if any(m[j][i]==l for j in range(O,p+1)):
+   if S<0:S=i
+   U=i
+ return[r[S:U+1]for r in m[O:p+1]]

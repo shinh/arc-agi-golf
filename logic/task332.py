@@ -1,6 +1,1 @@
-def p(g):
-    w=1-len(g[0])%2
-    for r in g:
-        for x in range(len(r)):
-            if r[x]==5 and x%2==w:r[x]=3
-    return g
+p=lambda g:[[3if g[i][j]==5and(len(g[0])-1-j)%2==0else g[i][j]for j in range(len(g[0]))]for i in range(3)]

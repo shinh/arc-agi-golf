@@ -1,11 +1,7 @@
-def p(g,R=range,r=0):
- for row in g:
-  r+=1
-  c=1
-  for v in row:
-   c=1-c
-   if v:
-    for j in R(len(g)-1,0,-1):g[j]=g[j-1]
-    pat=[4*(i%2==c) for i in R(len(g[0]))]
-    for i in R(r):g[i]=pat
-    return g
+def p(j,A=enumerate):
+ for c,E in A(j):
+  for k,W in A(E):
+   if W and W^4:
+    j[c+1][k]=W
+    for l in range(c+1):j[l][k&1::2]=[4]*len(j[l][k&1::2])
+    return j

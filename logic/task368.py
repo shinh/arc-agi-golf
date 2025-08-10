@@ -1,15 +1,15 @@
-def p(g,R=range):
-	C=len(g);I=1;F,G=0,0;H=[0,5];J,K=0,0
-	for A in R(C):
-		for B in R(C):
-			if g[A][B]not in H and I:
-				I=0;J,K=A,B;D=A;E=B
-				while D<C and g[D][B]not in H:D+=1
-				while E<C and g[A][E]not in H:E+=1
-				F=D-A;G=E-B
-	for A in R(C-F+1):
-		for B in R(C-G+1):
-			if g[A][B]==5:
-				for L in R(F):
-					for M in R(G):g[A+L][B+M]=g[J+L][K+M]
-	return g
+def p(j,A=range):
+	c=len(j);E=1;k,W=0,0;l=[0,5];J,a=0,0
+	for C in A(c):
+		for e in A(c):
+			if j[C][e]not in l and E:
+				E=0;J,a=C,e;K=C;w=e
+				while K<c and j[K][e]not in l:K+=1
+				while w<c and j[C][w]not in l:w+=1
+				k=K-C;W=w-e
+	for C in A(c-k+1):
+		for e in A(c-W+1):
+			if j[C][e]==5:
+				for L in A(k):
+					for b in A(W):j[C+L][e+b]=j[J+L][a+b]
+	return j

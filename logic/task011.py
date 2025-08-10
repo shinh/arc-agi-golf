@@ -1,13 +1,13 @@
-def p(g):
- R=range
- for a in R(3):
-  for b in R(3):
-   if sum(g[a*4+r][b*4+c]==0for r in R(3)for c in R(3))==5:
-    s=[[5if i%4==3or j%4==3else 0for j in R(11)]for i in R(11)]
-    for r in R(3):
-     for c in R(3):
-      v=g[a*4+r][b*4+c]
-      if v:
-       for x in R(3):
-        for y in R(3):s[r*4+x][c*4+y]=v
-    return s
+def p(j):
+ A=range
+ for c in A(3):
+  for E in A(3):
+   if sum(j[c*4+W][E*4+l]==0for W in A(3)for l in A(3))==5:
+    k=[[5if i%4==3or j%4==3else 0for j in A(11)]for i in A(11)]
+    for W in A(3):
+     for l in A(3):
+      J=j[c*4+W][E*4+l]
+      if J:
+       for a in A(3):
+        for C in A(3):k[W*4+a][l*4+C]=J
+    return k

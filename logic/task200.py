@@ -1,9 +1,9 @@
-def p(m,Y=range):
- s,n=next((j,v)for j,v in enumerate(m[-1])if v)
- o=[[0]*10 for _ in Y(10)]
- for i in Y(10):
-  for j in Y(s,10):
-   d=j-s
-   if d%2==0:o[i][j]=n
-   elif(i==0 and d%4==1)or(i==9 and d%4==3):o[i][j]=5
- return o
+def p(g):
+ n,E,R,t=10,enumerate,range,0
+ for i,a in E(g):
+  for j,v in E(a):
+   if v%5:
+    for c in R(j,n,2):
+     for r in R(i+1):g[r][c]=v
+    for c in R(j+1,n,2):g[t*(n-1)][c]=5;t^=1
+    return g

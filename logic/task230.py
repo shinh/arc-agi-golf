@@ -1,10 +1,10 @@
-def p(g):
- o=[r for r in g]
- h=len(g);w=len(g[0])
- for y in range(h-1):
-  for x in range(w-1):
-   if g[y][x]==g[y][x+1]==g[y+1][x]==g[y+1][x+1]==5:
-    for dy,dx,v in(-1,-1,1),(-1,2,2),(2,-1,3),(2,2,4):
-     Y=y+dy;X=x+dx
-     if 0<=Y<h and 0<=X<w:o[Y][X]=v
- return o
+def p(j):
+ A,c=len(j),len(j[0])
+ for E in range(A-1):
+  for k in range(c-1):
+   if j[E][k]==j[E][k+1]==j[E+1][k]==j[E+1][k+1]==5:
+    if E>0and k>0:j[E-1][k-1]=1
+    if E>0and k+2<c:j[E-1][k+2]=2
+    if E+2<A and k>0:j[E+2][k-1]=3
+    if E+2<A and k+2<c:j[E+2][k+2]=4
+ return j

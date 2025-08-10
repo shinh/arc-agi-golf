@@ -1,8 +1,5 @@
 def p(g):
- q=range
- r=[[0]*9for _ in q(9)]
- p=[(i,j,g[i][j])for i in q(9)for j in q(9)if g[i][j]]
- for i,j,v in p:
-  for k in range(9):r[i][k]=r[k][j]=v
- r[p[0][0]][p[1][1]]=r[p[1][0]][p[0][1]]=2
- return r
+	C=range;A=[[0]*9 for A in C(9)];B=[(A,B,g[A][B])for A in C(9)for B in C(9)if g[A][B]]
+	for(E,F,G)in B:
+		for D in range(9):A[E][D]=A[D][F]=G
+	A[B[0][0]][B[1][1]]=A[B[1][0]][B[0][1]]=2;return A
