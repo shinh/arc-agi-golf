@@ -133,7 +133,7 @@ def compress_with_algorithm(code, algorithm="zlib"):
             wbits = 15
             cmpobj = zlib.compressobj(9, wbits=-wbits, strategy=zlib.Z_FIXED)
             compressed = cmpobj.compress(code.encode()) + cmpobj.flush()
-            args = f",{wbits}"
+            args = f",-{wbits}"
         else:
             compressed = zopfli.zlib.compress(
                 code.encode(),
