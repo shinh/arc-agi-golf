@@ -558,7 +558,7 @@ def exclude_ranges(source: str, positions: List[Position]) -> List[str]:
             getch()
         pos_idx += 1
 
-    assert source_idx < len(source)
+    assert source_idx <= len(source)
     if source_idx != len(source):
         chunks.append(source[source_idx:])
 
@@ -624,12 +624,14 @@ def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], 
     reserved = set(keyword.kwlist) | set(dir(builtins)) | set(excludes)
     reserved.update(name for name in counts if name.startswith("__"))
 
+    non_identifier_source = "".join(exclude_ranges(source, positions))
+
     # Build a custom alphabet ordered by letter frequency among the
     # identifiers we actually intend to rename.  Using a tailored alphabet
     # means the shortest aliases start with characters that are more common
     # in the source, potentially improving compression.
     letter_counts: Counter[str] = Counter()
-    for ch in source:
+    for ch in non_identifier_source:
         if ch in string.ascii_lowercase:
             letter_counts[ch] += 1
 
