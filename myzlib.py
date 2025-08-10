@@ -432,10 +432,10 @@ class _BitWriter:
             self.nbits = 0
 
 
-Positions = namedtuple("Positions", ["name", "lineno", "col_offset", "end_lineno", "end_col_offset", "kind"])
+Position = namedtuple("Position", ["name", "lineno", "col_offset", "end_lineno", "end_col_offset", "kind"])
 
 
-def get_identifier_positions(source_code: str) -> List[Positions]:
+def get_identifier_positions(source_code: str) -> List[Position]:
     """Return positions of all identifiers found in *source_code*.
 
     Each element of the returned list is a tuple
@@ -471,7 +471,7 @@ def get_identifier_positions(source_code: str) -> List[Positions]:
                 col_offset = col_offset if col_offset is not None else node.col_offset
                 end_lineno = lineno
                 end_col_offset = col_offset + len(name)
-                positions.append(Positions(name, lineno, col_offset, end_lineno, end_col_offset, kind))
+                positions.append(Position(name, lineno, col_offset, end_lineno, end_col_offset, kind))
 
         def visit_Name(self, node):
             self.record(node, node.id, "name")
@@ -517,7 +517,7 @@ def get_identifier_positions(source_code: str) -> List[Positions]:
     return positions
 
 
-def exclude_reserved_names(positions: List[Positions]) -> List[Positions]:
+def exclude_reserved_names(positions: List[Position]) -> List[Position]:
     # Remove attribute names from the list of positions.
     positions = [p for p in positions if p.kind != "attr"]
 
@@ -528,6 +528,41 @@ def exclude_reserved_names(positions: List[Positions]) -> List[Positions]:
     positions = [p for p in positions if not p.name.startswith("__")]
 
     return positions
+
+
+def exclude_ranges(source: str, positions: List[Position]) -> List[str]:
+    pos_idx = 0
+    cur_lineno = 1
+    cur_col = 0
+    source_idx = 0
+    chunks = []
+
+    def getch():
+        nonlocal source_idx, cur_lineno, cur_col
+        ch = source[source_idx]
+        source_idx += 1
+        if ch == "\n":
+            cur_lineno += 1
+            cur_col = 0
+        else:
+            cur_col += 1
+        return ch
+
+    while pos_idx < len(positions):
+        pos = positions[pos_idx]
+        chunk = ""
+        while cur_lineno < pos.lineno or (cur_lineno == pos.lineno and cur_col < pos.col_offset):
+            chunk += getch()
+        chunks.append(chunk)
+        while cur_lineno < pos.end_lineno or (cur_lineno == pos.end_lineno and cur_col < pos.end_col_offset):
+            getch()
+        pos_idx += 1
+
+    assert source_idx < len(source)
+    if source_idx != len(source):
+        chunks.append(source[source_idx:])
+
+    return chunks
 
 
 # ---------------------------------------------------------------------------
