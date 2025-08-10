@@ -558,7 +558,7 @@ def _shake_alphabet(alphabet, seed):
     return new_alphabet
 
 
-def _build_identifier_mapping(positions, excludes: List[str] = [], seed: int = 0) -> Dict[str, str]:
+def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], seed: int = 0) -> Dict[str, str]:
     """Create a mapping from original identifier to a short alias."""
 
     # Count occurrences for each identifier while skipping attribute names.
@@ -577,18 +577,14 @@ def _build_identifier_mapping(positions, excludes: List[str] = [], seed: int = 0
     # means the shortest aliases start with characters that are more common
     # in the source, potentially improving compression.
     letter_counts: Counter[str] = Counter()
-    for name, freq in counts.items():
-        if name in reserved:
-            continue
-        for ch in name:
-            ch = ch.lower()
-            if ch in string.ascii_lowercase:
-                letter_counts[ch] += freq
+    for ch in source:
+        if ch in string.ascii_lowercase:
+            letter_counts[ch] += 1
 
     # Sort letters by decreasing frequency, breaking ties alphabetically so
     # that the result is deterministic even when counts are equal.
     ordered_letters = sorted(
-        string.ascii_lowercase, key=lambda c: (-letter_counts[c], c)
+        list(letter_counts.keys()), key=lambda c: (-letter_counts[c], c)
     )
     alphabet = "".join(ordered_letters)
 
@@ -668,7 +664,7 @@ def compress(data: Union[str, bytes], is_python: bool) -> bytes:
     if is_python:
         source = data.decode("utf-8") if isinstance(data, bytes) else data
         positions = get_identifier_positions(source)
-        mapping = _build_identifier_mapping(positions)
+        mapping = _build_identifier_mapping(source, positions)
         source = _apply_identifier_mapping(source, positions, mapping)
         data_bytes = source.encode("utf-8")
     else:
@@ -793,7 +789,7 @@ def map_identifiers(source: str, excludes: List[str], seed: int = 0) -> str:
 
     # Build a mapping for all identifiers except those explicitly excluded or
     # reserved by the checks above.
-    mapping = _build_identifier_mapping(positions, excludes + list(reserved), seed=seed)
+    mapping = _build_identifier_mapping(source, positions, excludes + list(reserved), seed=seed)
 
     # Finally apply the mapping to the original source code.
     mapped_source = _apply_identifier_mapping(source, positions, mapping)
