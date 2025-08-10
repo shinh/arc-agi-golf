@@ -40,6 +40,19 @@ def squeeze(s):
     return'\n'.join(R)
 
 
+def jam(s):
+    W='if for while try with class def else elif except finally'.split()
+    L=s.split('\n');bal=lambda t:sum((c in'([{')-(c in')]}')for c in t)
+    h=lambda x:(m:=re.match('[a-z]+',x))and m.group()
+    R=[L[0]];d=bal(L[0])
+    for b in L[1:]:
+        a=R[-1];n=len(a)-len(a.lstrip())
+        if d==0 and n==len(b)-len(b.lstrip())and not a.rstrip().endswith(':'):
+            if(h(a.lstrip())not in W and h(b.lstrip())not in W):
+                R[-1]+=';'+b.lstrip();d+=bal(b);continue
+        R+=[b];d+=bal(b)
+    return'\n'.join(R)
+
 def remove_spaces(code):
     # TODO: Consider not replacing code in string literals.
     code, _ = re.subn(r"(\S) +([\[({,:+\-*/%])", r"\1\2", code)
@@ -49,5 +62,6 @@ def remove_spaces(code):
 def minify(code):
     code = reindent(code)
     code = squeeze(code)
+    code = jam(code)
     code = remove_spaces(code)
     return code
