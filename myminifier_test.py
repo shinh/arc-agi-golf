@@ -40,3 +40,4 @@ def test_merge_handles_slice():
     src = "def p(g):\n b=g[-5:];return b[::-1]+b"
     expected = "def p(g):b=g[-5:];return b[::-1]+b"
     assert myminifier.merge_indented_blocks(src) == expected
+

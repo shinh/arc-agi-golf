@@ -72,7 +72,7 @@ def merge_indented_blocks(source_code):
 
             stripped = candidate_line.lstrip()
             word = stripped.split()[0] if stripped.split() else ""
-            if word in control_words:
+            if ":" in stripped or word in control_words:
                 allow_merge = False
                 break
 
@@ -152,9 +152,28 @@ def combine_adjacent_lines(source_code):
     return "\n".join(result_lines)
 
 
+def replce_fixed_range(code):
+    code = code.replace("in range(2):", "in 0,1:")
+    code = code.replace("in range(3):", "in 0,1,2:")
+    code = code.replace("in range(4):", "in 0,1,2,3:")
+    return code
+
+
+def remove_parens(code):
+    code, _ = re.subn(r"(=)\(([^)]+)\)([;\n])", r"\1\2\3", code)
+    code, _ = re.subn(r"(else)\(([^),]+)\)([;\n])", r"\1 \2\3", code)
+    return code
+
+
 def minify(code):
     code = reindent(code)
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
+    code = remove_parens(code)
+
+    if len(code) < 150:
+        # Bad with LZ.
+        code = replce_fixed_range(code)
+
     return code
