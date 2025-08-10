@@ -179,14 +179,18 @@ def compress_code_impl(code, algo, seed):
     return len(compressed_code), compressed_code, code, info
 
 
-def compress_code(code):
+def compress_code(code, verbose, use_lzma, max_seed):
     results = []
-    for algo in ["asis", "zlib", "lzma", "lzma_raw"]:
-        for seed in range(30):
+    algos = ["asis", "zlib"]
+    if use_lzma:
+        algos += ["lzma", "lzma_raw"]
+    for algo in algos:
+        for seed in range(max_seed + 1):
             if seed and algo == "asis":
                 break
             r = compress_code_impl(code, algo, seed)
-            # print(r[-1], r[0])
+            if verbose:
+                print(r[-1], len(r[2]), "=>", r[0])
             results.append(r)
             #if isinstance(r[1], bytes) and b"\\" not in r[1]:
             #    break
@@ -196,7 +200,7 @@ def compress_code(code):
     return compress_code, code, info
 
 
-def check_task(task_id, filename, verbose):
+def check_task(task_id, filename, verbose, use_lzma, max_seed):
     if verbose:
         print(f"Checking === {filename} ===", flush=True)
 
@@ -216,7 +220,7 @@ def check_task(task_id, filename, verbose):
     #code = reindent(code)
     #code = squeeze(code)
 
-    code, orig_code, info = compress_code(code)
+    code, orig_code, info = compress_code(code, verbose, use_lzma, max_seed)
 
     if len(code) >= len(orig_code):
         assert len(code) == len(orig_code)
@@ -243,13 +247,16 @@ def check_task(task_id, filename, verbose):
     return ok, result, code
 
 
-def submit(task_id, verbose, skip_verify=False, code_dir="logic"):
+def submit(task_id, args, verbose):
+    skip_verify = args.skip_verify
+    code_dir = args.code_dir
+
     if skip_verify:
         return
 
     # print("Submitting task", task_id)
 
-    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose)
+    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args.use_lzma, args.max_seed)
 
     # dsl_filename = f"dsl/task{task_id:03d}.py"
     # if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
@@ -302,18 +309,20 @@ def main():
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--skip_verify", action="store_true")
     parser.add_argument("--code_dir", default="logic")
+    parser.add_argument("--use_lzma", action="store_true")
+    parser.add_argument("--max_seed", type=int, default=0)
     args = parser.parse_args()
 
     if args.task_id == "all":
         executor = ProcessPoolExecutor()
         futures = []
         for task_id in range(1, 401):
-            futures.append(executor.submit(submit, task_id, args.verbose, args.skip_verify, code_dir=args.code_dir))
+            futures.append(executor.submit(submit, task_id, args, args.verbose))
         for future in futures:
             future.result()
         report()
     else:
-        if not submit(int(args.task_id), True, code_dir=args.code_dir):
+        if not submit(int(args.task_id), args, True):
             print("FAIL!!")
             sys.exit(1)
 
