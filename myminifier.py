@@ -76,7 +76,8 @@ def minify(code):
     code = remove_spaces(code)
     code = jam(code)
 
-    # Bad with LZ.
-    # code = replce_fixed_range(code)
+    if len(code) < 150:
+        # Bad with LZ.
+        code = replce_fixed_range(code)
 
     return code
