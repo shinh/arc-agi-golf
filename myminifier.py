@@ -39,6 +39,8 @@ def merge_indented_blocks(source_code):
         "elif",
         "except",
         "finally",
+        "match",
+        "case",
     }
 
     lines = source_code.split("\n")
@@ -113,6 +115,8 @@ def combine_adjacent_lines(source_code):
         "elif",
         "except",
         "finally",
+        "match",
+        "case",
     }
 
     def bracket_balance(text):
