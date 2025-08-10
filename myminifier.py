@@ -72,7 +72,7 @@ def merge_indented_blocks(source_code):
 
             stripped = candidate_line.lstrip()
             word = stripped.split()[0] if stripped.split() else ""
-            if ":" in stripped or word in control_words:
+            if stripped.endswith(":") or word in control_words:
                 allow_merge = False
                 break
 
