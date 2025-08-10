@@ -44,6 +44,8 @@ def remove_spaces(code):
     # TODO: Consider not replacing code in string literals.
     code, _ = re.subn(r"(\S) +([\[({,:+\-*/%\]})])", r"\1\2", code)
     code, _ = re.subn(r"([\[({,:+\-*/%\]})]) +(\w)", r"\1\2", code)
+    # o and x will be confused as octal/hex numbers.
+    code, _ = re.subn(r"(\b[0-9]+) +([a-np-wyz])", r"\1\2", code)
     return code
 
 
