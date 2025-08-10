@@ -155,11 +155,18 @@ def replce_fixed_range(code):
     return code
 
 
+def remove_parens(code):
+    code, _ = re.subn(r"(=)\(([^)]+)\)([;\n])", r"\1\2\3", code)
+    code, _ = re.subn(r"(else)\(([^),]+)\)([;\n])", r"\1 \2\3", code)
+    return code
+
+
 def minify(code):
     code = reindent(code)
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
+    code = remove_parens(code)
 
     if len(code) < 150:
         # Bad with LZ.

@@ -21,7 +21,7 @@ def p(g):
      q=[(v,(i,j,j,i,W-1-j,H-1-i,H-1-i,j,i,W-1-j)[t*2:t*2+2])for v,i,j in U]
      d={(i,j):v for v,(i,j)in q if v!=m}
      if d:
-      hh,ww=(W,H)if t==1 else(H,W)
+      hh,ww=[(H,W),(W,H)][t==1]
       for a in range(h-hh+1):
        for b in range(w-ww+1):
         if all(g[a+i][b+j]==d.get((i,j),B)for i in range(hh)for j in range(ww)):
