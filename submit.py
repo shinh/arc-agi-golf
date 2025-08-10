@@ -1,6 +1,7 @@
 import argparse
 import base64
 import lzma
+import bz2
 import os
 import re
 import sys
@@ -143,6 +144,9 @@ def compress_with_algorithm(code, algorithm="zlib"):
         compressed = lzma.compress(code.encode(), format=3, filters=filters)
         args = ',3,None,[{"id":33}]'
         snippet, encoding = build_decompression_snippet(compressed, "lzma", args)
+    elif algorithm == "bz2":
+        compressed = bz2.compress(code.encode())
+        snippet, encoding = build_decompression_snippet(compressed, "bz2")
     method += "+" + encoding
     return snippet, method
 
@@ -166,12 +170,14 @@ def _compress_single_variant(code, algorithm, seed):
     return len(compressed), compressed, code, method
 
 
-def compress_code(code, verbose, use_lzma, max_seed):
+def compress_code(code, verbose, use_lzma, use_bzip2, max_seed):
     """Try various algorithms/seeds and return the best compression."""
     results = []
     algorithms = ["asis", "zlib"]
     if use_lzma:
         algorithms += ["lzma", "lzma_raw"]
+    if use_bzip2:
+        algorithms += ["bz2"]
     for algorithm in algorithms:
         for seed in range(max_seed + 1):
             if seed and algorithm == "asis":
@@ -188,7 +194,7 @@ def compress_code(code, verbose, use_lzma, max_seed):
     return compressed_code, original_code, method
 
 
-def check_task(task_id, filename, verbose, use_lzma, max_seed):
+def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
     if verbose:
         print(f"Checking === {filename} ===", flush=True)
 
@@ -208,7 +214,7 @@ def check_task(task_id, filename, verbose, use_lzma, max_seed):
     #code = reindent(code)
     #code = squeeze(code)
 
-    code, orig_code, info = compress_code(code, verbose, use_lzma, max_seed)
+    code, orig_code, info = compress_code(code, verbose, use_lzma, use_bzip2, max_seed)
 
     if len(code) >= len(orig_code):
         assert len(code) == len(orig_code)
@@ -244,7 +250,7 @@ def submit(task_id, args, verbose):
 
     # print("Submitting task", task_id)
 
-    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args.use_lzma, args.max_seed)
+    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args.use_lzma, args.use_bzip2, args.max_seed)
 
     # dsl_filename = f"dsl/task{task_id:03d}.py"
     # if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
@@ -298,6 +304,7 @@ def main():
     parser.add_argument("--skip_verify", action="store_true")
     parser.add_argument("--code_dir", default="logic")
     parser.add_argument("--use_lzma", action="store_true")
+    parser.add_argument("--use_bzip2", action="store_true")
     parser.add_argument("--max_seed", type=int, default=0)
     args = parser.parse_args()
 
