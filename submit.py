@@ -68,136 +68,124 @@ def inline_create(code):
     return re.sub(r"create\((\w+),(\w+)\)", r"[[0]*\2 for _ in range(int(\1))]", code)
 
 
-def use_base85(z):
-    c = base64.b85encode(z)
-    return 'base64.b85decode("' + c.decode() + '")'
+def base85_literal(data):
+    """Return a code snippet that decodes the given data using base85."""
+    encoded = base64.b85encode(data).decode()
+    return f'base64.b85decode("{encoded}")'
 
 
-def use_decompress_and_base85(z, algo, args):
-    code = f"import base64,{algo}\n"
-    code += f"exec({algo}.decompress(" + use_base85(z) + f",{args}))"
+def build_decompression_snippet_base85(data, algorithm, args):
+    """Create source code that decompresses base85-encoded data."""
+    code = f"import base64,{algorithm}\n"
+    code += f"exec({algorithm}.decompress(" + base85_literal(data) + f",{args}))"
     return code
 
 
-def use_decompress_and_bytes(z, algo, args):
+def build_decompression_snippet_bytes(data, algorithm, args):
+    """Create source code that decompresses a byte literal."""
     code = b"#coding:l1\n"
-    code += f"import {algo}\n".encode()
-    r = bytearray()
+    code += f"import {algorithm}\n".encode()
+    escaped = bytearray()
     i = 0
-    while i < len(z):
-        c = z[i]
-        if c == 92:
-            r += b"\\\\"
-        elif c == 0:
-            n = z[i + 1:i + 2]
-            r += b"\\x00" if n and 48 <= n[0] <= 57 else b"\\0"
-        elif c == 10:
-            r += b"\\n"
-        elif c == 13:
-            r += b"\\r"
-        elif c == 39:
-            r += b"\\'"
+    while i < len(data):
+        byte = data[i]
+        if byte == 92:  # backslash
+            escaped += b"\\\\"
+        elif byte == 0:
+            nxt = data[i + 1:i + 2]
+            escaped += b"\\x00" if nxt and 48 <= nxt[0] <= 57 else b"\\0"
+        elif byte == 10:
+            escaped += b"\\n"
+        elif byte == 13:
+            escaped += b"\\r"
+        elif byte == 39:
+            escaped += b"\\'"
         else:
-            r.append(c)
+            escaped.append(byte)
         i += 1
-    b = b"bytes('" + bytes(r) + b"','l1')"
-    code += f"exec({algo}.decompress(".encode() + b + args.encode() + b"))"
+    literal = b"bytes('" + bytes(escaped) + b"','l1')"
+    code += f"exec({algorithm}.decompress(".encode() + literal + args.encode() + b"))"
     return code
 
 
-def use_decompress_and_bytes_or_base85(z, algo, args=""):
-    b1 = use_decompress_and_bytes(z, algo, args)
-    b2 = use_decompress_and_base85(z, algo, args)
-    if len(b1) < len(b2):
-        return b1, "bytes"
-    else:
-        return b2, "base85"
+def build_decompression_snippet(data, algorithm, args=""):
+    """Return the shorter of the byte or base85 decompression snippets."""
+    bytes_snippet = build_decompression_snippet_bytes(data, algorithm, args)
+    base85_snippet = build_decompression_snippet_base85(data, algorithm, args)
+    if len(bytes_snippet) < len(base85_snippet):
+        return bytes_snippet, "bytes"
+    return base85_snippet, "base85"
 
 
-def compress(code, algo="zlib"):
-    method = algo
-    if algo == "zlib":
-        z1 = zlib.compress(code.encode(),9)
-        #z2 = zopfli.zlib.compress(code.encode())
-        z2 = zopfli.zlib.compress(
+def compress_with_algorithm(code, algorithm="zlib"):
+    """Compress *code* using the given algorithm.
+
+    Returns a tuple of (decompression snippet, method description)."""
+    method = algorithm
+    if algorithm == "zlib":
+        zlib_compressed = zlib.compress(code.encode(), 9)
+        zopfli_compressed = zopfli.zlib.compress(
             code.encode(),
             numiterations=1000,
             blocksplitting=True,
             blocksplittinglast=False,
-            blocksplittingmax=100
+            blocksplittingmax=100,
         )
-        if len(z2) < len(z1):
+        if len(zopfli_compressed) < len(zlib_compressed):
             method = "zopfli"
-            z1 = z2
-
-        main, enc_method = use_decompress_and_bytes_or_base85(z1, "zlib")
-    elif algo == "lzma":
-        filters = [{
-            "id": lzma.FILTER_LZMA1,
-            "preset": 9 | lzma.PRESET_EXTREME,
-        }]
-        z = lzma.compress(code.encode(),format=2)
-        main, enc_method = use_decompress_and_bytes_or_base85(z, "lzma")
-
-    elif algo == "lzma_raw":
-        filters = [{
-            "id": lzma.FILTER_LZMA1,
-            "preset": 9 | lzma.PRESET_EXTREME,
-        }]
-        z = lzma.compress(code.encode(),format=3,filters=filters)
-
+            zlib_compressed = zopfli_compressed
+        snippet, encoding = build_decompression_snippet(zlib_compressed, "zlib")
+    elif algorithm == "lzma":
+        compressed = lzma.compress(code.encode(), format=2)
+        snippet, encoding = build_decompression_snippet(compressed, "lzma")
+    elif algorithm == "lzma_raw":
+        filters = [{"id": lzma.FILTER_LZMA1, "preset": 9 | lzma.PRESET_EXTREME}]
+        compressed = lzma.compress(code.encode(), format=3, filters=filters)
         args = ',3,None,[{"id":33}]'
-        main, enc_method = use_decompress_and_bytes_or_base85(z, "lzma", args)
-
-    method += "+" + enc_method
-
-    return main, method
+        snippet, encoding = build_decompression_snippet(compressed, "lzma", args)
+    method += "+" + encoding
+    return snippet, method
 
 
-def compress_code_impl(code, algo, seed):
+def _compress_single_variant(code, algorithm, seed):
+    """Minify and compress code for a specific algorithm and seed."""
     code = myzlib.map_identifiers(code, ["p"], seed=seed)
-    rename_locals = False
-    #rename_locals = True
-    #print(code, flush=True)
-
     code = python_minifier.minify(
         code,
-        rename_locals=rename_locals,
-        # TODO: Consider enabling this for non-LZ tasks.
+        rename_locals=False,
         hoist_literals=False,
-    )
-    code = code.replace("\t", " ")
+    ).replace("\t", " ")
 
-    info = algo
-    if algo == "asis":
-        compressed_code = code
+    if algorithm == "asis":
+        compressed = code
+        method = "asis"
     else:
-        compressed_code, info = compress(code, algo)
+        compressed, method = compress_with_algorithm(code, algorithm)
 
-    info += f"+seed{seed}"
-
-    return len(compressed_code), compressed_code, code, info
+    method += f"+seed{seed}"
+    return len(compressed), compressed, code, method
 
 
 def compress_code(code, verbose, use_lzma, max_seed):
+    """Try various algorithms/seeds and return the best compression."""
     results = []
-    algos = ["asis", "zlib"]
+    algorithms = ["asis", "zlib"]
     if use_lzma:
-        algos += ["lzma", "lzma_raw"]
-    for algo in algos:
+        algorithms += ["lzma", "lzma_raw"]
+    for algorithm in algorithms:
         for seed in range(max_seed + 1):
-            if seed and algo == "asis":
+            if seed and algorithm == "asis":
                 break
-            r = compress_code_impl(code, algo, seed)
+            result = _compress_single_variant(code, algorithm, seed)
             if verbose:
-                print(r[-1], len(r[2]), "=>", r[0])
-            results.append(r)
-            #if isinstance(r[1], bytes) and b"\\" not in r[1]:
+                print(result[-1], len(result[2]), "=>", result[0])
+            results.append(result)
+            #if isinstance(result[1], bytes) and b"\\" not in result[1]:
             #    break
-    results.sort(key=lambda a:a[0])
+    results.sort(key=lambda r: r[0])
 
-    size, compress_code, code, info = results[0]
-    return compress_code, code, info
+    _, compressed_code, original_code, method = results[0]
+    return compressed_code, original_code, method
 
 
 def check_task(task_id, filename, verbose, use_lzma, max_seed):
