@@ -173,7 +173,7 @@ def _compress_single_variant(code, algorithm, seed):
 def compress_code(code, verbose, use_lzma, max_seed):
     """Try various algorithms/seeds and return the best compression."""
     results = []
-    algorithms = ["asis", "zlib", "zlib_fixed", "zopfli"]
+    algorithms = ["asis", "zlib", "zopfli"]
     # TODO: Seems bad.
     # algorithms += ["zlib_fixed"]
     if use_lzma:
