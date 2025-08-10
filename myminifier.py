@@ -43,12 +43,12 @@ def squeeze(s):
 def jam(s):
     W='if for while try with class def else elif except finally'.split()
     L=s.split('\n');bal=lambda t:sum((c in'([{')-(c in')]}')for c in t)
+    h=lambda x:(m:=re.match('[a-z]+',x))and m.group()
     R=[L[0]];d=bal(L[0])
     for b in L[1:]:
         a=R[-1];n=len(a)-len(a.lstrip())
         if d==0 and n==len(b)-len(b.lstrip())and not a.rstrip().endswith(':'):
-            t=b.lstrip().split(':')[0].split()
-            if(not t)or t[0]not in W:
+            if(h(a.lstrip())not in W and h(b.lstrip())not in W):
                 R[-1]+=';'+b.lstrip();d+=bal(b);continue
         R+=[b];d+=bal(b)
     return'\n'.join(R)
