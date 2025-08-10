@@ -161,6 +161,123 @@ def compress_code(code, verbose, use_lzma, use_bzip2, max_seed):
     return compressed_code, original_code, method
 
 
+def squeeze(source_code):
+    """Merge simple indented blocks onto a single line.
+
+    The function scans *source_code* line by line.  If a block of code is
+    indented exactly one level deeper than the current line and contains no
+    nested blocks or control-flow keywords, the block is collapsed into the
+    current line separated by semicolons."""
+
+    control_words = {
+        "if",
+        "for",
+        "while",
+        "try",
+        "with",
+        "class",
+        "def",
+        "else",
+        "elif",
+        "except",
+        "finally",
+    }
+
+    lines = source_code.split("\n")
+    merged_lines = []
+    line_index = 0
+
+    while line_index < len(lines):
+        current_line = lines[line_index]
+        current_indent = len(current_line) - len(current_line.lstrip())
+        next_index = line_index + 1
+        collected_block = []
+        allow_merge = True
+        candidate_indent = current_indent
+
+        while next_index < len(lines):
+            candidate_line = lines[next_index]
+            candidate_indent = len(candidate_line) - len(candidate_line.lstrip())
+            if candidate_indent <= current_indent:
+                break
+            stripped_line = candidate_line.lstrip()
+            first_word = stripped_line.split()[0] if stripped_line.split() else ""
+            if (
+                candidate_indent > current_indent + 1
+                or ":" in stripped_line
+                or first_word in control_words
+            ):
+                allow_merge = False
+                break
+            collected_block.append(stripped_line)
+            next_index += 1
+
+        if allow_merge and collected_block and candidate_indent <= current_indent:
+            merged = current_line + collected_block[0]
+            merged += "".join(";" + stmt for stmt in collected_block[1:])
+            merged_lines.append(merged)
+            line_index = next_index
+        else:
+            merged_lines.append(current_line)
+            line_index += 1
+
+    return "\n".join(merged_lines)
+
+
+def jam(source_code):
+    """Join adjacent lines when their combination is safe.
+
+    Lines at the same indentation level that are not control-flow statements
+    can be concatenated with semicolons, provided that bracket pairs remain
+    balanced."""
+
+    control_words = {
+        "if",
+        "for",
+        "while",
+        "try",
+        "with",
+        "class",
+        "def",
+        "else",
+        "elif",
+        "except",
+        "finally",
+    }
+
+    def bracket_balance(text):
+        return sum((char in "([{") - (char in ")]}" ) for char in text)
+
+    def first_identifier(text):
+        match = re.match("[a-z]+", text)
+        return match.group() if match else None
+
+    lines = source_code.split("\n")
+    result_lines = [lines[0]]
+    balance = bracket_balance(lines[0])
+
+    for candidate in lines[1:]:
+        last_line = result_lines[-1]
+        last_indent = len(last_line) - len(last_line.lstrip())
+        candidate_indent = len(candidate) - len(candidate.lstrip())
+
+        if (
+            balance == 0
+            and last_indent == candidate_indent
+            and not last_line.rstrip().endswith(":")
+            and first_identifier(last_line.lstrip()) not in control_words
+            and first_identifier(candidate.lstrip()) not in control_words
+        ):
+            result_lines[-1] += ";" + candidate.lstrip()
+            balance += bracket_balance(candidate)
+            continue
+
+        result_lines.append(candidate)
+        balance += bracket_balance(candidate)
+
+    return "\n".join(result_lines)
+
+
 def minify(code, verbose, show_minify):
     minified_codes = []
 
