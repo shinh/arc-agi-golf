@@ -210,6 +210,12 @@ def check_task(task_id, filename, verbose):
 
     code, orig_code, info = compress_code(code)
 
+    if len(code) >= len(orig_code):
+        assert len(code) == len(orig_code)
+        print(f"Task {task_id} not compressed: {len(code)} bytes", flush=True)
+    else:
+        print(f"Task {task_id} compressed: {len(orig_code)} -> {len(code)} bytes ({info})", flush=True)
+
     write_code(orig_code, f"stages/task{task_id:03d}.py")
     task_path = f"{basedir}/task{task_id:03d}.py"
     write_code(code, task_path)
