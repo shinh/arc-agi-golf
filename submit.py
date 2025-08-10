@@ -123,13 +123,16 @@ def compress_with_algorithm(code, algorithm="zlib"):
     Returns a tuple of (decompression snippet, method description)."""
     method = algorithm
     if algorithm in ("zlib", "zlib_fixed", "zopfli"):
+        args = ""
         if algorithm == "zlib":
             compressed = zlib.compress(code.encode(), 9)
             # cmpobj = zlib.compressobj(9, wbits=15)
             # compressed = cmpobj.compress(code.encode()) + cmpobj.flush()
         elif algorithm == "zlib_fixed":
-            cmpobj = zlib.compressobj(9, wbits=-zlib.MAX_WBITS, strategy=zlib.Z_FIXED)
+            wbits = 15
+            cmpobj = zlib.compressobj(9, wbits=-wbits, strategy=zlib.Z_FIXED)
             compressed = cmpobj.compress(code.encode()) + cmpobj.flush()
+            args = f",{wbits}"
         else:
             compressed = zopfli.zlib.compress(
                 code.encode(),
@@ -138,7 +141,7 @@ def compress_with_algorithm(code, algorithm="zlib"):
                 blocksplittinglast=False,
                 blocksplittingmax=100,
             )
-        snippet, encoding = build_decompression_snippet(compressed, "zlib")
+        snippet, encoding = build_decompression_snippet(compressed, "zlib", args)
     elif algorithm == "lzma":
         compressed = lzma.compress(code.encode(), format=2)
         snippet, encoding = build_decompression_snippet(compressed, "lzma")
@@ -175,7 +178,7 @@ def compress_code(code, verbose, use_lzma, max_seed):
     results = []
     algorithms = ["asis", "zlib", "zopfli"]
     # TODO: Seems bad.
-    # algorithms += ["zlib_fixed"]
+    algorithms += ["zlib_fixed"]
     if use_lzma:
         algorithms += ["lzma", "lzma_raw"]
     for algorithm in algorithms:
