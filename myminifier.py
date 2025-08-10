@@ -160,7 +160,6 @@ def minify(code):
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
-    code = jam(code)
 
     if len(code) < 150:
         # Bad with LZ.
