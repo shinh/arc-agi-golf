@@ -173,6 +173,10 @@ def minify(code, verbose):
             hoist_literals=False,
         ).replace("\t", " ")))
 
+    if verbose:
+        for used_minifier, minified_code in minified_codes:
+            print(f"Minified code from {len(code)} to {len(minified_code)} bytes by {used_minifier}", flush=True)
+
     minified_codes.sort(key=lambda x: len(x[1]))
 
     used_minifier, minified_code = minified_codes[0]
@@ -181,8 +185,6 @@ def minify(code, verbose):
     elif len(minified_codes[0][1]) == (minified_codes[1][1]):
         used_minifier += "(tie)"
 
-    if verbose:
-        print(f"Minified code from {len(code)} to {len(minified_code)} bytes by {used_minifier}", flush=True)
     return used_minifier, minified_code
 
 
