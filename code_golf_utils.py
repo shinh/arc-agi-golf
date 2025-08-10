@@ -20,6 +20,7 @@ import importlib.util
 import json
 import os
 import sys
+import warnings
 
 try:
     import matplotlib.pyplot as plt
@@ -213,7 +214,9 @@ def verify_program(task_num, examples, task_path=None, quiet=False):
     print("Error: Unable to import task.py.")
     return
   module = sys.modules[task_name] = importlib.util.module_from_spec(spec)
-  spec.loader.exec_module(module)
+  with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=SyntaxWarning)
+    spec.loader.exec_module(module)
   if not hasattr(module, "p"):
     print("Error: Unable to locate function p() in task.py.")
     return

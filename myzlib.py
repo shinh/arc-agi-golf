@@ -18,6 +18,7 @@ import builtins
 import keyword
 import random
 import string
+import warnings
 from collections import Counter
 from typing import Dict, Iterable, List, Tuple, Union
 
@@ -441,7 +442,9 @@ def get_identifier_positions(source_code):
     touching attribute names which could otherwise change semantics.
     """
 
-    tree = ast.parse(source_code)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=SyntaxWarning)
+        tree = ast.parse(source_code)
     positions = []
     lines = source_code.splitlines()
 
@@ -775,7 +778,9 @@ def map_identifiers(source: str, excludes: List[str], seed: int = 0) -> str:
     # invalid Python code.  Examples are names introduced by import statements
     # or mentioned in ``global``/``nonlocal`` declarations.  The AST stores
     # those names separately, so we scan the tree again to collect them.
-    tree = ast.parse(source)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=SyntaxWarning)
+        tree = ast.parse(source)
     reserved: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, (ast.Import, ast.ImportFrom)):

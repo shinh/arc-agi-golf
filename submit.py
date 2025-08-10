@@ -5,6 +5,7 @@ import bz2
 import os
 import re
 import sys
+import warnings
 import zlib
 import zopfli.zlib
 
@@ -165,13 +166,15 @@ def minify(code, verbose):
 
     minified_codes.append(("myminifier", myminifier.minify(code)))
 
-    minified_codes.append((
-        "python_minifier",
-        python_minifier.minify(
-            code,
-            rename_locals=False,
-            hoist_literals=False,
-        ).replace("\t", " ")))
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=SyntaxWarning)
+        minified_codes.append((
+            "python_minifier",
+            python_minifier.minify(
+                code,
+                rename_locals=False,
+                hoist_literals=False,
+            ).replace("\t", " ")))
 
     if verbose:
         for used_minifier, minified_code in minified_codes:
