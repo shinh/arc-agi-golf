@@ -122,19 +122,18 @@ def compress_with_algorithm(code, algorithm="zlib"):
 
     Returns a tuple of (decompression snippet, method description)."""
     method = algorithm
-    if algorithm == "zlib":
-        zlib_compressed = zlib.compress(code.encode(), 9)
-        zopfli_compressed = zopfli.zlib.compress(
-            code.encode(),
-            numiterations=1000,
-            blocksplitting=True,
-            blocksplittinglast=False,
-            blocksplittingmax=100,
-        )
-        if len(zopfli_compressed) < len(zlib_compressed):
-            method = "zopfli"
-            zlib_compressed = zopfli_compressed
-        snippet, encoding = build_decompression_snippet(zlib_compressed, "zlib")
+    if algorithm in ("zlib", "zopfli"):
+        if algorithm == "zlib":
+            compressed = zlib.compress(code.encode(), 9)
+        else:
+            compressed = zopfli.zlib.compress(
+                code.encode(),
+                numiterations=1000,
+                blocksplitting=True,
+                blocksplittinglast=False,
+                blocksplittingmax=100,
+            )
+        snippet, encoding = build_decompression_snippet(compressed, "zlib")
     elif algorithm == "lzma":
         compressed = lzma.compress(code.encode(), format=2)
         snippet, encoding = build_decompression_snippet(compressed, "lzma")
@@ -169,7 +168,7 @@ def _compress_single_variant(code, algorithm, seed):
 def compress_code(code, verbose, use_lzma, max_seed):
     """Try various algorithms/seeds and return the best compression."""
     results = []
-    algorithms = ["asis", "zlib"]
+    algorithms = ["asis", "zlib", "zopfli"]
     if use_lzma:
         algorithms += ["lzma", "lzma_raw"]
     for algorithm in algorithms:
