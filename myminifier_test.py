@@ -1,3 +1,6 @@
+import ast
+import glob
+
 import myminifier
 
 
@@ -41,3 +44,9 @@ def test_merge_handles_slice():
     expected = "def p(g):b=g[-5:];return b[::-1]+b"
     assert myminifier.merge_indented_blocks(src) == expected
 
+
+def test_minify_all_solutions():
+    for py in glob.glob("logic/*.py"):
+        code = open(py).read()
+        minified = myminifier.minify(code)
+        ast.parse(minified)
