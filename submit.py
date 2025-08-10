@@ -14,6 +14,7 @@ import code_golf_utils
 import python_minifier
 
 import myzlib
+import myminifier
 
 
 def write_code(code, filename):
@@ -24,45 +25,6 @@ def write_code(code, filename):
     else:
         with open(filename, "w") as f:
             f.write(code)
-
-
-def reindent(code):
-    lines = []
-    cur_indent = 0
-    prev_indent = 0
-    indents = {}
-    for line in code.splitlines():
-        line = re.sub(r"#.*", "", line)
-        line = line.rstrip()
-        if not line:
-            continue
-
-        n = len(line) - len(line.lstrip())
-        if n > prev_indent:
-            cur_indent += 1
-        elif n < prev_indent:
-            cur_indent = indents[n]
-        prev_indent = n
-        indents[n] = cur_indent
-
-        lines.append(" " * cur_indent + line.lstrip())
-    return "\n".join(lines)
-
-
-def squeeze(s):
-    W='if for while try with class def else elif except finally'.split()
-    L=s.split('\n');R=[];i=0
-    while i<len(L):
-        a=L[i];n=len(a)-len(a.lstrip());j=i+1;B=[];ok=1
-        while j<len(L):
-            c=L[j];m=len(c)-len(c.lstrip())
-            if m<=n:break
-            d=c.lstrip();w=d.split()
-            if m>n+1 or ':'in d or w[:1]and w[0]in W:ok=0;break
-            B+=[d];j+=1
-        if ok and B and m<=n:R+=[a+B[0]+''.join(';'+x for x in B[1:])];i=j
-        else:R+=[a];i+=1
-    return'\n'.join(R)
 
 
 def inline_create(code):
@@ -159,7 +121,7 @@ def compress_with_algorithm(code, algorithm="zlib"):
 
 
 def _compress_single_variant(code, algorithm, seed):
-    """Minify and compress code for a specific algorithm and seed."""
+    """Compress code for a specific algorithm and seed."""
     code = myzlib.map_identifiers(code, ["p"], seed=seed)
 
     if algorithm == "asis":
@@ -198,6 +160,32 @@ def compress_code(code, verbose, use_lzma, use_bzip2, max_seed):
     return compressed_code, original_code, method
 
 
+def minify(code, verbose):
+    minified_codes = []
+
+    minified_codes.append(("myminifier", myminifier.minify(code)))
+
+    minified_codes.append((
+        "python_minifier",
+        python_minifier.minify(
+            code,
+            rename_locals=False,
+            hoist_literals=False,
+        ).replace("\t", " ")))
+
+    minified_codes.sort(key=lambda x: len(x[1]))
+
+    used_minifier, minified_code = minified_codes[0]
+    if minified_codes[0][1] == minified_codes[1][1]:
+        used_minifier += "(same)"
+    elif len(minified_codes[0][1]) == (minified_codes[1][1]):
+        used_minifier += "(tie)"
+
+    if verbose:
+        print(f"Minified code from {len(code)} to {len(minified_code)} bytes by {used_minifier}", flush=True)
+    return used_minifier, minified_code
+
+
 def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
     if verbose:
         print(f"Checking === {filename} ===", flush=True)
@@ -215,21 +203,13 @@ def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed):
 
     logic = open(filename).read()
     code = inline_create(logic)
-    #code = reindent(code)
     #code = squeeze(code)
 
-    minified_code = python_minifier.minify(
-        code,
-        rename_locals=False,
-        hoist_literals=False,
-    ).replace("\t", " ")
-
-    if verbose:
-        print(f"Minified code from {len(code)} to {len(minified_code)} bytes", flush=True)
-
-    code = minified_code
+    used_minifier, code = minify(code, verbose)
 
     code, orig_code, info = compress_code(code, verbose, use_lzma, use_bzip2, max_seed)
+
+    info += f"+{used_minifier}"
 
     if len(code) >= len(orig_code):
         assert len(code) == len(orig_code)
