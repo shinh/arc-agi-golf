@@ -71,8 +71,8 @@ def merge_indented_blocks(source_code):
                 break
 
             stripped = candidate_line.lstrip()
-            word = stripped.split()[0] if stripped.split() else ""
-            if stripped.endswith(":") or word in control_words:
+            m = re.match("[a-z]+", stripped)
+            if stripped.endswith(":") or m and m.group() in control_words:
                 allow_merge = False
                 break
 
