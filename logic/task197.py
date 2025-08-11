@@ -1,14 +1,3 @@
+# Maybe optimal, or very close to optimal at least.
 def p(g):
- o=[]
- for r in g:
-  m={}
-  nr=[]
-  for i in range(len(r)):
-   c=r[i]
-   if c:
-    m[g[1][i]]=c
-   elif m:
-    c=m[g[1][i]]
-   nr.append(c)
-  o.append(nr)
- return o
+ return [[r[g[1].index(q)]for q in g[1]]for r in g]
