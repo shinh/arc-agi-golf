@@ -307,7 +307,7 @@ def minify(code, verbose, show_minify):
     used_minifier, minified_code = minified_codes[0]
     if minified_codes[0][1] == minified_codes[1][1]:
         used_minifier += "(same)"
-    elif len(minified_codes[0][1]) == (minified_codes[1][1]):
+    elif len(minified_codes[0][1]) == len(minified_codes[1][1]):
         used_minifier += "(tie)"
 
     return used_minifier, minified_code
