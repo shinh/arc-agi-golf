@@ -1,5 +1,14 @@
+# 165
 def p(g):
-    X=[i for i in range(len(g[0])) if any(r[i] for r in g)]
-    Y=[i for i,r in enumerate(g) if any(r)]
-    a,b=[*{g[y][x] for y in range(Y[0],Y[-1]+1) for x in range(X[0],X[-1]+1) if g[y][x]}]
-    return[[[a,b][c==a]for c in r[X[0]:X[-1]+1]]for r in g[Y[0]:Y[-1]+1]]
+    f=sum(g,[])
+    f.sort(key=f.count)
+    a=list(set(f))[1:3]
+    o=[]
+    for r in g:
+        n=[]
+        for x in range(len(r)):
+            if r[x]:
+                n+=a[r[x]==a[0]],
+        if n:
+            o+=n,
+    return o
