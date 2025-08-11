@@ -3,8 +3,4 @@
 # Task351 37 bytes from theirs: 107 vs 70
 # Task400 37 bytes from theirs: 107 vs 70
 def p(g):
-    o=[]
-    for r,rr in zip(g,g[::-1]):
-        r=[rc for c,rc in zip(r,rr[::-1])if c<1]
-        if r:o+=r,
-    return o
+    return[[rc for c,rc in zip(r,rr[::-1])if c<1]for r,rr in zip(g,g[::-1])if 0 in r]
