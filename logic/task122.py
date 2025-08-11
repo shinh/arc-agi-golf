@@ -1,22 +1,17 @@
 def p(g):
- h=len(g);w=len(g[0]);C={}
- for i,r in enumerate(g):
-  for j,v in enumerate(r):C.setdefault(v,set()).add((i,j))
- def B(s):i,j=zip(*s);return min(i),max(i),min(j),max(j)
- a,b=[k for k in C if k]
- def F(k):
-  S=C[k]
-  for i,j in S:
-   if{(i+1,j),(i-1,j),(i,j+1),(i,j-1)}&S:return k
- p=F(a)or b
- L=C[a^b^p];P=C[p]
- t=min(L,key=sum)
- o=min([q for q in L if q!=t],key=lambda q:abs(q[0]-t[0])+abs(q[1]-t[1]))
- di=(len({i for i,_ in L})>1)*abs(o[0]-t[0])
- dj=(len({j for _,j in L})>1)*abs(o[1]-t[1])
- R=[r for r in g]
- for i,j in P:R[i][j]=0
- for i,j in {(i+di,j+dj)for i,j in P}:
-  if 0<=i<h and 0<=j<w:R[i][j]=p
- return R
-
+    for o in range(4):
+        if o==0 or o==3:
+            ok=0
+            for y in range(len(g)-2):
+                for x in range(len(g[0])-3):
+                    if g[y+1][x:x+4]==[2,3,2,3]:
+                        for dy in 2,1,0:
+                            for dx in 2,1,0:
+                                if dy!=1 or dx!=1:
+                                    g[y+dy][x+dx+2]=g[y+dy][x+dx]
+                                    g[y+dy][x+dx]=0
+                                    ok=1
+                    if ok:break
+                if ok:break
+        g=[list(r)for r in zip(*g[::-1])]
+    return g
