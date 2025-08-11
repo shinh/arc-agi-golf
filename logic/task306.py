@@ -4,6 +4,6 @@ def p(g):
             for x in range(len(g[0])):
                 if t:
                     g[y][x]=g[y%10][x%10]
-                else:
+                elif g[y][x]:
                     g[y%10][x%10]=g[y][x]
     return g
