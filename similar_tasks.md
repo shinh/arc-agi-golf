@@ -15,3 +15,10 @@ not sure flood fill is the best for 048, though
 * https://shinh.skr.jp/t/arc-agi-dashboard/400.html
 
 for 242, 351, and 400 we can use almost equivalent solutions
+
+## find rectangles
+
+* https://shinh.skr.jp/t/arc-agi-dashboard/096.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/273.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/310.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/390.html
