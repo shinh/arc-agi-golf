@@ -1,24 +1,35 @@
+# Far from best (123)
 def p(g):
- h=12;A=[];P=[]
- for i in range(h):
-  for j,v in enumerate(g[i]):
-   if v==8:A+=[(i,j)]
-   elif v==2:P+=[(i,j)]
- r,c=zip(*P);R=min(r);B=max(r);C=min(c);D=max(c)
- r8,c8=map(min,zip(*A))
- d=lambda i,j:max(C-j,0,j-D)+max(R-i,0,i-B)
- t=min(A,key=lambda p:d(*p))
- s=1 if (r8,c8) in A else -1
- e=(1,s);f=(-1,-s)
- if d(t[0]+e[0],t[1]+e[1])>d(t[0]+f[0],t[1]+f[1]):e=f
- a,b=e;i,j=t
- while not(R-1<=i<=B+1 and C-1<=j<=D+1 and (i in (R-1,B+1) or j in (C-1,D+1))):i+=a;j+=b
- if B-R+1==h:s=1 if c8>C else -1;T=(1,s),(-1,s)
- else:s=1 if r8>R else -1;T=(s,1),(s,-1)
- for di,dj in T:
-  x,y=i,j
-  while 0<=x<h and 0<=y<h:
-   if g[x][y]!=8:g[x][y]=3
-   x+=di;y+=dj
- return g
+    def get(y,x):
+        if y<0 or y>11 or x<0 or x>11:
+            return 0
+        return g[y][x]
 
+    for dy,dx in ((1,1),(1,-1),(-1,1),(-1,-1)):
+        ng=[[*r]for r in g]
+        found_r=0
+        for oy in range(12):
+            for x in range(12):
+                y=oy
+                if g[y][x]&get(y-dy,x-dx)==8:
+                    y+=dy
+                    x+=dx
+                    while 0<=x<12and 0<=y<12:
+                        if g[y][x]==2:
+                            found_r=1
+                            y-=dy
+                            x-=dx
+                            if get(y+dy-1,x+dx)&get(y+dy+1,x+dx)==2:
+                                dx=-dx
+                            else:
+                                dy=-dy
+                            #print('found',y,x,dy,dx)
+                            #show(ng,'kkk')
+                            continue
+                        if g[y][x]!=0:
+                            break
+                        ng[y][x]=3
+                        y+=dy
+                        x+=dx
+        g=[g,ng][found_r]
+    return g
