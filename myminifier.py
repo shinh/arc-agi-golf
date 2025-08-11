@@ -1,4 +1,6 @@
+import ast
 import re
+import warnings
 
 
 def reindent(code):
@@ -159,9 +161,39 @@ def replce_fixed_range(code):
     return code
 
 
-def remove_parens(code):
+def remove_trivial_parens(code):
     code, _ = re.subn(r"(=)\(([^)]+)\)([;\n])", r"\1\2\3", code)
     code, _ = re.subn(r"(else)\(([^),]+)\)([;\n])", r"\1 \2\3", code)
+    return code
+
+
+def remove_parens_with_ast(code):
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=SyntaxWarning)
+        orig_canonical_code = ast.unparse(ast.parse(code))
+    start_parens = []
+    for idx in range(len(code)):
+        if code[idx] == "(":
+            start_parens.append(idx)
+        if code[idx] == ")":
+            start_idx = start_parens.pop()
+            new_code = code[:start_idx] + code[start_idx+1:idx] + code[idx+1:]
+            new_ast = None
+            try:
+                with warnings.catch_warnings():
+                    warnings.filterwarnings("ignore", category=SyntaxWarning)
+                    new_ast = ast.parse(new_code)
+            except:
+                pass
+            if new_ast is not None:
+                if orig_canonical_code == ast.unparse(new_ast):
+                    return new_code
+    return None
+
+
+def remove_parens(code):
+    while new_code := remove_parens_with_ast(code):
+        code = new_code
     return code
 
 
@@ -170,6 +202,7 @@ def minify(code):
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
+    code = remove_trivial_parens(code)
     code = remove_parens(code)
 
     if len(code) < 150:
