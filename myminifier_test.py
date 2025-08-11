@@ -50,3 +50,9 @@ def test_minify_all_solutions():
         code = open(py).read()
         minified = myminifier.minify(code)
         ast.parse(minified)
+
+
+def test_remove_semicolons():
+    assert myminifier.remove_semicolons("a=1;b=2;c=3") == "a=1\nb=2\nc=3"
+    assert myminifier.remove_semicolons("if a:b=2;c=3") == "if a:\n b=2\n c=3"
+    assert myminifier.remove_semicolons("if a:\n b=2;c=3") == "if a:\n b=2\n c=3"

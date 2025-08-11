@@ -198,6 +198,10 @@ def remove_parens(code):
     return code
 
 
+def remove_semicolons(code):
+    return code
+
+
 def minify(code):
     code = reindent(code)
     code = merge_indented_blocks(code)
