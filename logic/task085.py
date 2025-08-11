@@ -1,9 +1,7 @@
+# 147
 def p(g):
-    o=[r for r in g]
-    for y in range(1,len(g)-1):
-        a,b,c=g[y-1],g[y],g[y+1]
-        if a==b==c and any(b):
-            k=next(v for v in b if v)
-            s=b.index(k);e=len(b)-1-b[::-1].index(k)
-            for x in range(s,e+1):o[y][x]=k if (x-s)%2==0 else 0
-    return o
+    for r,nr,pr in zip(g,g[-1:]+g,g[1:]+g):
+        for x in range(len(r)):
+            if len(set([r[x],nr[x],pr[x],r[x-1],(r+[0])[x+1]]))==1:
+                r[x]=0
+    return g

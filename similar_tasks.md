@@ -21,6 +21,7 @@ for 242, 351, and 400 we can use almost equivalent solutions
 ## find rectangles
 
 * https://shinh.skr.jp/t/arc-agi-dashboard/096.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/238.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/273.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/310.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/390.html
