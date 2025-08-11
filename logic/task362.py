@@ -1,13 +1,4 @@
+# 91 vs 77 (sota)
 def p(g):
  n=sum(g,[]).count(5)
- o=[]
- for y in range(len(g)):
-  nr=[]
-  for x in range(len(g[0])):
-   c=(g[y-n]*2)[x+n]
-   if c%5:
-    nr.append(c)
-   else:
-    nr.append(0)
-  o.append(nr)
- return o
+ return [[c*(c%5>0)for c in r[n:]+r[:n]]for r in g[-n:]+g[:-n]]
