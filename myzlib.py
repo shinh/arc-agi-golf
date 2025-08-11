@@ -603,17 +603,21 @@ def _generate_aliases(num_aliases: int, reserved, alphabet: str = string.ascii_l
     return names
 
 
-def _shake_alphabet(alphabet, seed):
+def _shake_list(list, seed):
     rng = random.Random(seed)
-    new_alphabet = ""
-    while alphabet:
-        if rng.random() > 0.2 or len(alphabet) == 1:
-            new_alphabet += alphabet[0]
-            alphabet = alphabet[1:]
+    new_list = []
+    while list:
+        if rng.random() > 0.2 or len(list) == 1:
+            new_list += [list[0]]
+            list = list[1:]
         else:
-            new_alphabet += alphabet[1]
-            alphabet = alphabet[0] + alphabet[2:]
-    return new_alphabet
+            new_list += [list[1]]
+            list = [list[0]] + list[2:]
+    return new_list
+
+
+def _shake_alphabet(alphabet, seed):
+    return "".join(_shake_list([c for c in alphabet], seed))
 
 
 def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], seed: int = 0) -> Dict[str, str]:
@@ -646,7 +650,7 @@ def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], 
     )
     alphabet = "".join(ordered_letters)
 
-    if seed:
+    if seed and seed % 2 == 0:
         alphabet = _shake_alphabet(alphabet, seed)
 
     orig_names = []
@@ -654,6 +658,9 @@ def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], 
         if name in reserved:
             continue
         orig_names.append(name)
+
+    if seed and seed % 2 == 1:
+        orig_names = _shake_list(orig_names, seed)
 
     mapping: Dict[str, str] = {}
     new_names = _generate_aliases(len(orig_names), reserved, alphabet=alphabet)
