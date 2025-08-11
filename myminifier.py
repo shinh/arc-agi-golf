@@ -221,8 +221,14 @@ def remove_semicolons(code):
     return "\n".join(res)
 
 
+def replace_list_func(code):
+    code, _ = re.subn(r"list\((\w+)\)", r"[*\1]", code)
+    return code
+
+
 def minify(code):
     code = reindent(code)
+    code = replace_list_func(code)
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
