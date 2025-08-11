@@ -1,14 +1,13 @@
 def p(g):
- k=sum(r[-1]==5 for r in g);y=-1
- for r in g:
-  y+=1;x=-1
-  for v in r:
-   x+=1
-   if v and v-5:c=v;p=x
-  if r.count(c)==10:s=y
- p-=k;s+=k
- o=create(10,10)
- for y in range(10):
-  if y==s:o[y]=[c]*10
-  else:o[y][p]=c
+ n=sum(g,[]).count(5)
+ o=[]
+ for y in range(len(g)):
+  nr=[]
+  for x in range(len(g[0])):
+   c=(g[y-n]*2)[x+n]
+   if c%5:
+    nr.append(c)
+   else:
+    nr.append(0)
+  o.append(nr)
  return o
