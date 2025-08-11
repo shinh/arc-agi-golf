@@ -570,8 +570,8 @@ def exclude_ranges(source: str, positions: List[Position]) -> List[str]:
 # ---------------------------------------------------------------------------
 
 
-def _alias_generator(alphabet: str = string.ascii_lowercase):
-    """Yield a stream of short, valid Python identifiers.
+def _generate_aliases(num_aliases: int, reserved, alphabet: str = string.ascii_lowercase):
+    """Generate short, valid Python identifiers.
 
     Parameters
     ----------
@@ -582,9 +582,10 @@ def _alias_generator(alphabet: str = string.ascii_lowercase):
         callers may provide a custom ordering to bias the output.
     """
 
+    names = []
     index = 0
     base = len(alphabet)
-    while True:
+    while len(names) < num_aliases:
         n = index
         name = ""
         # Convert *index* to a string in the given base using the supplied
@@ -596,7 +597,10 @@ def _alias_generator(alphabet: str = string.ascii_lowercase):
             if n == 0:
                 break
         index += 1
-        yield name
+        if name not in reserved:
+            names.append(name)
+
+    return names
 
 
 def _shake_alphabet(alphabet, seed):
@@ -645,16 +649,15 @@ def _build_identifier_mapping(source: str, positions, excludes: List[str] = [], 
     if seed:
         alphabet = _shake_alphabet(alphabet, seed)
 
-    mapping: Dict[str, str] = {}
-    gen = _alias_generator(alphabet=alphabet)
+    orig_names = []
     for name, _ in counts.most_common():
         if name in reserved:
             continue
-        alias = next(gen)
-        while alias in reserved:
-            alias = next(gen)
-        mapping[name] = alias
-    return mapping
+        orig_names.append(name)
+
+    mapping: Dict[str, str] = {}
+    new_names = _generate_aliases(len(orig_names), reserved, alphabet=alphabet)
+    return dict(zip(orig_names, new_names))
 
 
 def _apply_identifier_mapping(source: str, positions, mapping: Dict[str, str]) -> str:
