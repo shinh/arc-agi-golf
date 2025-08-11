@@ -1,15 +1,10 @@
-def p(g):
- H=lambda a:[r[:]for r in a[::-1]]
- V=lambda a:[r[::-1]for r in a]
- m=9**9
- for k in {x for r in g for x in r}:
-  a=[r[:]for r in g]
-  for t in H,V:
-   b=t(a)
-   for y in range(24):
-    for x in range(24):
-     if b[y][x]!=k:a[y][x]=b[y][x]
-  s=sum(r.count(k)for r in g)
-  if s<m:
-   m=s;p=[(i,j)for i,r in enumerate(g)for j,x in enumerate(r)if x==k];y0=min(i for i,_ in p);y1=max(i for i,_ in p);x0=min(j for _,j in p);x1=max(j for _,j in p);o=[r[x0:x1+1]for r in a[y0:y1+1]]
- return o
+# Note task242 and task351 are very similar but best scores are quite different.
+# Task242 53 bytes from theirs: 107 vs 54
+# Task351 37 bytes from theirs: 107 vs 70
+# Task400 37 bytes from theirs: 107 vs 70
+def p(g,R=range(24)):
+    o=[]
+    for y in R:
+        r=[g[23-y][23-x]for x in R if g[y][x]==1]
+        if r:o+=r,
+    return o
