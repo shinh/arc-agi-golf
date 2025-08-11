@@ -14,7 +14,7 @@ Common techniques:
 * inline assignments that are only used once (unless a side effect makes order of evaluation important)
 * use := if it can allow the entire thing to become a lambda instead of def
 * look for values that are created twice and avoid duplication (e.g. range, range(16), enumerate)
-* For tasks that need to check in four directions, instead of writing similar code four times, loop over range(4) and inside do g=[list(r)for r in zip(*g[::-1])] to rotate 90 degrees.
+* For tasks that need to check in four directions, instead of writing similar code four times, loop over range(4) and inside do g=[*map(list,zip(*g[::-1]))] to rotate 90 degrees.
 * Using max(..., key=) to get the most frequent color can sometimes be replaced with simply 0, g[0][0], or max(g[0]) depending on the task.
 * Comments will be automatically removed, so please write them.
 * Add anything else here if it seems useful.
