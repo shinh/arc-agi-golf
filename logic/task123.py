@@ -1,1 +1,1 @@
-p=lambda g,R=range(10):[[g[m][m]for x in R for m in[max(y,x)%(4+(g[4][4]>0))]]for y in R]
+p=lambda g,R=range(10):[[g[(m:=max(y,x)%(n:=4+(g[4][4]>0)))][m]for x in R]for y in R]
