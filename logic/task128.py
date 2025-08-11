@@ -1,10 +1,5 @@
+# rot90 -> shift -> rot270
+# 112 vs 72
 def p(g):
- for x in range(15):
-   n=0
-   while g[15-1-n][x]:
-    c=g[14-n][x]
-    g[14-n][x]=0
-    n+=1
-   for i in range(n):
-    g[14-n-i][x]=c
- return g
+    g=[[0]*(c:=r.index(0))+r[:15-c]for r in[[*r]for r in zip(*g[::-1])]]
+    return[[*r]for r in zip(*g)][::-1]
