@@ -157,7 +157,7 @@ def show_legend():
     ax.text(2 * idx + 0.9, 1.1, str(idx), color=color)
   ax.set_xticks([])
   ax.set_yticks([])
-  plt.close(fig)
+  #plt.close(fig)
 
 
 def show_examples(examples, bgcolor=(255, 255, 255)):
@@ -204,7 +204,7 @@ def show_examples(examples, bgcolor=(255, 255, 255)):
     offset += 2
   ax.set_xticks([])
   ax.set_yticks([])
-  plt.close(fig)
+  #plt.close(fig)
 
 
 def verify_program(task_num, examples, task_path=None, quiet=False):
