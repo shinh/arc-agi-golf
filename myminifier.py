@@ -226,6 +226,11 @@ def replace_list_func(code):
     return code
 
 
+def replace_def_p(code):
+    code = re.sub(r"^def p\((\w+)\):return\s*(.*)$", r"p=lambda \1:\2", code)
+    return code
+
+
 def minify(code):
     code = reindent(code)
     code = replace_list_func(code)
@@ -234,6 +239,8 @@ def minify(code):
     code = combine_adjacent_lines(code)
     code = remove_trivial_parens(code)
     code = remove_parens(code)
+
+    code = replace_def_p(code)
 
     if len(code) < 150:
         # Bad with LZ.
