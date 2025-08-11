@@ -199,7 +199,26 @@ def remove_parens(code):
 
 
 def remove_semicolons(code):
-    return code
+    res=[]
+    for line in code.split("\n"):
+        base=len(line)-len(line.lstrip())
+        line=line.strip()
+        ind=base
+        tok=""
+        for ch in line:
+            if ch==';':
+                if tok.strip():
+                    res.append(" "*ind+tok.strip())
+                tok=""
+            elif ch==':':
+                res.append(" "*ind+tok.strip()+':')
+                tok=""
+                ind+=1
+            else:
+                tok+=ch
+        if tok.strip():
+            res.append(" "*ind+tok.strip())
+    return "\n".join(res)
 
 
 def minify(code):
