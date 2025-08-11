@@ -1,3 +1,2 @@
-# We can assume g has only 0 and 2. Isolated pixels must become to 1.
-def p(g):
-    return [[r[i]-(r[i]and[*r[1:],0][i]+[0,*r][i]+pr[i]+nr[i]<1)for i in range(len(r))]for r,pr,nr in zip(g,[[0]*9]+g,g[1:]+[[0]*9])]
+z=[0]
+p=lambda g:[[v//2**(l|r|u|d<1)for v,l,r,u,d in zip(r,r[1:]+z,z+r,pr,nr)]for r,pr,nr in zip(g,[z*9]+g,g[1:]+[z*9])]
