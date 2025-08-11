@@ -1,4 +1,8 @@
-def p(g,R=range(16),o=[]):
+# Note task242 and task351 are very similar but best scores are quite different.
+# Task351 37 bytes from theirs: 107 vs 70
+# Task242 53 bytes from theirs: 107 vs 54
+def p(g,R=range(16)):
+    o=[]
     for y in R:
         r=[g[15-y][15-x]for x in R if g[y][x]==3]
         if r:o+=r,
