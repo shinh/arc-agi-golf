@@ -1,5 +1,9 @@
+# find unique 3x3 block by zero pattern
 def p(g):
- R=range
- b=[[[g[i+r*3][j+c*3]for j in R(3)]for i in R(3)]for r in R(len(g)//3)for c in R(len(g[0])//3)]
- for x in b:
-  if[tuple(tuple(y[i][j]==0 for j in R(3))for i in R(3))for y in b].count(tuple(tuple(x[i][j]==0 for j in R(3))for i in R(3)))==1:return x
+ R=range;b=[];m=[]
+ for y in R(0,len(g),3):
+  for x in R(0,len(g[0]),3):
+   t=[r[x:x+3]for r in g[y:y+3]]
+   b+=t,;m+=[[c<1 for c in r]for r in t],
+ return b[m.index(min(m,key=m.count))]
+
