@@ -1,3 +1,1 @@
-def p(g):
-    b=g[-5:]
-    return b[::-1]+b
+p=lambda g:g[9:4:-1]+g[5:]
