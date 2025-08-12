@@ -1,18 +1,5 @@
-def f(x,y,g):
-	global a;v.append((x,y))
-	for A in R(x-1,x+2):
-		for B in R(y-1,y+2):
-			if(A,B)in v:continue
-			v.append((A,B))
-			if A<0 or A>=h or B<0 or B>=w or(A,B)in[(r,c),(r+1,c),(r,c+1),(r+1,c+1)]:continue
-			if g[A][B]==2:a=8
-			if g[A][B]==8:f(A,B,g)
+# flood fill from first 2 block through 8s to other 2
 def p(g):
-	global a,v,r,c,h,w,R;a,v,h,w,R,C=0,[],len(g),len(g[0]),range,enumerate
-	for(r,D)in C(g):
-		for(c,E)in C(D):
-			if E==2:
-				for A in R(r-1,r+3):
-					for B in R(c-1,c+3):
-						if A>=0 and A<h and B>=0 and B<w and g[A][B]==8:f(A,B,g)
-				return[[a]]
+ R=range;h=len(g);w=len(g[0]);s=sum(g,[]);i=s.index(2);v={(i//w+d//2,i%w+d%2)for d in R(4)}
+ f=lambda x,y:any(-1<a<h and -1<b<w and(a,b)not in v and(g[a][b]==2 or g[a][b]==8 and(v.add((a,b))or f(a,b)))for a in R(x-1,x+2)for b in R(y-1,y+2))
+ return[[8*any(f(*k)for k in tuple(v))]]
