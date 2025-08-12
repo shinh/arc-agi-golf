@@ -1,5 +1,13 @@
-# flood fill from first 2 block through 8s to other 2
+# rotate grid to flow right through 8s from first 2 block
+# to detect connection to another 2 block using rotation
+
 def p(g):
- R=range;h=len(g);w=len(g[0]);s=sum(g,[]);i=s.index(2);v={(i//w+d//2,i%w+d%2)for d in R(4)}
- f=lambda x,y:any(-1<a<h and -1<b<w and(a,b)not in v and(g[a][b]==2 or g[a][b]==8 and(v.add((a,b))or f(a,b)))for a in R(x-1,x+2)for b in R(y-1,y+2))
- return[[8*any(f(*k)for k in tuple(v))]]
+ w=len(g[0]);s=sum(g,[]);i=s.index(2);f=0
+ for d in range(4):g[i//w+d//2][i%w+d%2]=1
+ for _ in range(64):
+  for r in g:
+   for j in range(len(r)-1):
+    if r[j]==1<r[j+1]:f|=r[j+1]<3;r[j+1]=1
+  if f:return[[8]]
+  g=[list(r)for r in zip(*g[::-1])]
+ return[[0]]
