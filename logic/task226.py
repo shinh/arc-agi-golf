@@ -1,9 +1,10 @@
-def f(g,y,x,c):
- if not(0<=y<len(g)and 0<=x<len(g[0])):return
- if g[y][x]:return
- g[y][x]=c
- for a,b in[(0,-1),(0,1),(-1,0),(1,0)]:f(g,y+a,x+b,c)
+# rotate the grid so flood fill can flow from one side only
 def p(g):
- h,w=len(g),len(g[0]);f(g,0,0,1)
- for i in range(4):f(g,h//2-1+i%2,w//2-1+i//2,2)
- f(g,h-1,w-1,3);return g
+ m=len(g)//2
+ g[0][0]=1;g[-1][-1]=3
+ for i in range(4):
+  y=m-1+i//2;x=m-1+i%2;g[y][x]=g[y][x] or 2
+ for _ in range(80):
+  g=[[a or(0<b<4 and b)for a,b in zip(r,r[1:]+(5,))]for r in zip(*g[::-1])]
+ return g
+
