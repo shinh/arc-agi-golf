@@ -1,15 +1,2 @@
-def p(g):
-    h=len(g);w=len(g[0]);q=[]
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]<2:g[y][x]=1
-            if not y or not x or y==h-1 or x==w-1:q+=[(y,x)]
-    while q:
-        y,x=q.pop()
-        if g[y][x]!=1:continue
-        g[y][x]=0
-        if y:q.append((y-1,x))
-        if x:q.append((y,x-1))
-        if y+1<h:q.append((y+1,x))
-        if x+1<w:q.append((y,x+1))
-    return g
+# rotate with zip(*g[::-1]) so 0 only needs to flow right
+p=lambda g,n=65:n>64 and p([[c or 1 for c in r]for r in g],64)or n and p([[a*(a>1 or b>0)for a,b in zip(r,r[1:]+(0,))]for r in zip(*g[::-1])],n-1)or g
