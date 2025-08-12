@@ -56,3 +56,9 @@ def test_remove_semicolons():
     assert myminifier.remove_semicolons("a=1;b=2;c=3") == "a=1\nb=2\nc=3"
     assert myminifier.remove_semicolons("if a:b=2;c=3") == "if a:\n b=2\n c=3"
     assert myminifier.remove_semicolons("if a:\n b=2;c=3") == "if a:\n b=2\n c=3"
+
+
+def test_remove_spaces_ignores_strings():
+    # remove_spaces should not touch contents of string literals
+    src = "a='1 + 2'; b + c"
+    assert myminifier.remove_spaces(src) == "a='1 + 2';b+c"
