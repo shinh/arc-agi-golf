@@ -1,7 +1,6 @@
-# rotate grid and flood fill from rare colors
+# rotate & fill alternating colors
 
 def p(g):
-    l=set()
-    for _ in range(280):
-        g=[[(l.add(b),[a,[*(l-{0,8,b}),0][0]][b not in (0,8) and a==0])[-1]for a,b in zip(r,[*r[1:],8])]for r in zip(*g[::-1])]
+    t=sum({*sum(g,[])}-{0,8})
+    for _ in[0]*272:g=[[a or b%8 and t-b for a,b in zip(r,r[1:]+(8,))]for r in zip(*g[::-1])]
     return g
