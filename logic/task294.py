@@ -1,1 +1,2 @@
-p=lambda g:[[2 if g[i][j]==5and all(0<=i+d[0]<10and 0<=j+d[1]<10and g[i+d[0]][j+d[1]]==5 for d in[(-1,0),(1,0),(0,-1),(0,1)])else g[i][j]for j in range(10)]for i in range(10)]
+# rotate flood-fill to erode 5-pixels
+p=lambda g:(f:=lambda m,n=4:n and f([[a*b//5 for a,b in zip(r,r[1:]+(0,))]for r in zip(*m[::-1])],n-1)or m, [[c-3*(d>0) for c,d in zip(r,t)]for r,t in zip(g,f(g))])[1]
