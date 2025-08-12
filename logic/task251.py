@@ -1,15 +1,3 @@
-def p(g):
-    h=len(g);w=len(g[0]);q=[]
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]<2:g[y][x]=1
-            if not y or not x or y==h-1 or x==w-1:q+=[(y,x)]
-    while q:
-        y,x=q.pop()
-        if g[y][x]!=1:continue
-        g[y][x]=0
-        if y:q.append((y-1,x))
-        if x:q.append((y,x-1))
-        if y+1<h:q.append((y+1,x))
-        if x+1<w:q.append((y,x+1))
-    return g
+# rotate the image 90 degrees 4x times with zip(*g[::-1]) instead of applying logic at 4 different directions
+p=lambda g,n=64:n and p([[[a or b==1,a^1-(a>1)][n<2]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)or g
+

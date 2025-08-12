@@ -1,5 +1,3 @@
-def p(g):
-    X=[i for i in range(len(g[0])) if any(r[i] for r in g)]
-    Y=[i for i,r in enumerate(g) if any(r)]
-    a,b=[*{g[y][x] for y in range(Y[0],Y[-1]+1) for x in range(X[0],X[-1]+1) if g[y][x]}]
-    return[[[a,b][c==a]for c in r[X[0]:X[-1]+1]]for r in g[Y[0]:Y[-1]+1]]
+# 101
+def p(g):a,b={c for r in g for c in r if c};return[r for r in[[c^a^b for c in r if c]for r in g]if r]
+
