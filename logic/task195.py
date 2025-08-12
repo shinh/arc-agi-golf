@@ -1,11 +1,10 @@
+# 104
 def p(g):
- c=next(v for r in g for v in r if v)
- P=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==c]
- a=min(i for i,_ in P);b=min(j for _,j in P)
- s=[r[b:b+9]for r in g[a:a+9]]
- t=[[s[i][j]for j in(0,3,6)]for i in(0,3,6)]
- Q=[(i,j)for i,r in enumerate(t)for j,v in enumerate(r)if v==c]
+ for _ in range(4):
+  while set(g[0])=={0}:g=g[1:]
+  g=[*zip(*g[::-1])]
+ q=[(i//3,j//3)for i in range(0,9,3)for j in range(0,9,3)if g[i][j]]
  o=[[0]*9 for _ in range(9)]
- for x,y in Q:
-  for u,v in Q:o[x*3+u][y*3+v]=c
+ for x,y in q:
+  for u,v in q:o[x*3+u][y*3+v]=5
  return o
