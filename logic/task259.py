@@ -1,4 +1,2 @@
-def p(g):
- y=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v-1]
- y0=min(i for i,_ in y);y1=max(i for i,_ in y)+1;x0=min(j for _,j in y);x1=max(j for _,j in y)+1
- return[[[c,0][c==1]for c in r[x0:x1]]for r in g[y0:y1]]
+# rotate off 1 borders, then clear remaining 1s
+p=lambda g,t=64:t and p([*zip(*g[2>max(g[0]):][::-1])],t-1)or[[g*(g>1)for g in g]for g in g]
