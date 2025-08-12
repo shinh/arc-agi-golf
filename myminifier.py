@@ -94,13 +94,15 @@ def merge_indented_blocks(source_code):
 
 
 def remove_spaces(code):
-    # TODO: Consider not replacing code in string literals.
-    code, _ = re.subn(r"(\S) +([\[({,:+\-*/%\]})\"'=;!])", r"\1\2", code)
-    code, _ = re.subn(r"([\[({,:+\-*/%\]})'\"=;!]) +(\w)", r"\1\2", code)
-    code = code.replace("= ", "=")
-    # o and x will be confused as octal/hex numbers.
-    code, _ = re.subn(r"(\b[0-9]+) +([a-np-wyz])", r"\1\2", code)
-    return code
+    parts = re.split(r"('(?:[^'\\]|\\.)*'|\"(?:[^\"\\]|\\.)*\")", code)
+    for i in range(0, len(parts), 2):
+        segment = parts[i]
+        segment, _ = re.subn(r"(\S) +([\[({,:+\-*/%\]})\"'=;!])", r"\1\2", segment)
+        segment, _ = re.subn(r"([\[({,:+\-*/%\]})'\"=;!]) +(\w)", r"\1\2", segment)
+        segment = segment.replace("= ", "=")
+        segment, _ = re.subn(r"(\b[0-9]+) +([a-np-wyz])", r"\1\2", segment)
+        parts[i] = segment
+    return "".join(parts)
 
 
 def combine_adjacent_lines(source_code):
