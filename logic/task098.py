@@ -1,1 +1,2 @@
-def p(g):h,w=len(g),len(g[0]);return[[g[i][j]if g[i][j]and any((y<0 or y>=h or x<0 or x>=w or g[y][x]==0)for y,x in[(i-1,j),(i+1,j),(i,j-1),(i,j+1)])else 0 for j in range(w)]for i in range(h)]
+# erosion via flood fill using rot90 trick
+p=lambda g,o=None,n=4:n and p([[a*(b>0)for a,b in zip(r,r[1:]+(0,))]for r in zip(*g[::-1])],o or g,n-1)or[[a*(b==0)for a,b in zip(orow,row)]for orow,row in zip(o,g)]
