@@ -1,9 +1,8 @@
 def p(g):
     o=g
     for i in range(80):
-        o=[*map(list,zip(*o[len(set(o[0])-{0,8})<1:][::-1]))]
-    for i in range(80):
-        g=[*map(list,zip(*g[len(set(g[0])&{8})<1:][::-1]))]
+        o=[*map(list,zip(*o[not{*o[0]}-{0,8}:][::-1]))]
+        g=[*map(list,zip(*g[not{*g[0]}&{8}:][::-1]))]
 
     L=len(g)
     for y in range(L):
