@@ -1,6 +1,6 @@
+# Not bad, but not golfed yet.
 def p(o):
-    r=[]
-    for c in set(sum(o,[]))-{0}:
+    for c in set(sum(o,[])):
         g=o
         for i in range(80):
             g=[*map(list,zip(*g[c not in g[0]:][::-1]))]
