@@ -41,3 +41,7 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 * https://shinh.skr.jp/t/arc-agi-dashboard/259.html
 
 Unlike crop in https://www.kaggle.com/code/jazivxt/oh-barnacles , for these tasks inputs will be cropped to a single rectangle
+
+* https://shinh.skr.jp/t/arc-agi-dashboard/238.html
+
+Current solution uses crop for 238
