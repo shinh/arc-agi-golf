@@ -1,3 +1,4 @@
+# Not golfed yet.
 def p(g):
     for o in range(4):
         ref=0
