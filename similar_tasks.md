@@ -25,3 +25,13 @@ for 242, 351, and 400 we can use almost equivalent solutions
 * https://shinh.skr.jp/t/arc-agi-dashboard/273.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/310.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/390.html
+
+## crop
+
+* https://shinh.skr.jp/t/arc-agi-dashboard/138.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/185.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/195.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/205.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/259.html
+
+Unlike crop in https://www.kaggle.com/code/jazivxt/oh-barnacles , for these tasks inputs will be cropped to a single rectangle
