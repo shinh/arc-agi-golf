@@ -1,3 +1,2 @@
 def p(g):
-    t=[r+r[::-1]for r in g]
-    return t+t[::-1]
+    return[r+r[::-1]for r in g+g[::-1]]
