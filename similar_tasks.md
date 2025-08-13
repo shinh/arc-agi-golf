@@ -9,14 +9,20 @@
 
 not sure flood fill is the best for 048, though
 
-## complement
+## complement + crop
 
-* https://shinh.skr.jp/t/arc-agi-dashboard/175.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/242.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/351.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/400.html
 
 for 242, 351, and 400 we can use almost equivalent solutions
+
+https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
+
+## complement
+
+* https://shinh.skr.jp/t/arc-agi-dashboard/175.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/287.html
 
 ## find rectangles
 
