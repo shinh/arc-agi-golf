@@ -25,11 +25,13 @@ def main():
     code = open("logic/core.py").read()
     code += "\n"
 
-    if args.debug:
+    task_code = open(f"{code_dir}/task{task_id}.py").read()
+
+    if args.debug or "show" in task_code:
         code += open("logic/debug.py").read()
         code += "\n"
 
-    code += open(f"{code_dir}/task{task_id}.py").read()
+    code += task_code
     open("task.py", "w").write(code)
 
     examples = code_golf_utils.load_examples(int(task_id))
