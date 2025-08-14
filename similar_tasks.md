@@ -39,6 +39,7 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 
 ## crop
 
+* https://shinh.skr.jp/t/arc-agi-dashboard/031.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/138.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/185.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/195.html
