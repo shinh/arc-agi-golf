@@ -9,4 +9,6 @@
 # 61 - expand
 # p=lambda g:[*map(list,zip(*filter(any,zip(*filter(any,g)))))]
 # 61 - eval
-p=lambda g:eval("[*map(list,"+"zip(*filter(any,"*2+"g)))))]")
+# p=lambda g:eval("[*map(list,"+"zip(*filter(any,"*2+"g)))))]")
+# 56 - inner eval
+p=lambda g:[*map(list,eval('zip(*filter(any,'*2+'g))))'))]
