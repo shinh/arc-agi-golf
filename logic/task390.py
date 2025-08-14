@@ -1,4 +1,5 @@
 # Not golfed yet.
+# Note this is almost identical to task390.
 def p(g):
     for o in range(4):
         for r in g:
