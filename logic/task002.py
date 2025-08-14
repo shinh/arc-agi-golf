@@ -27,4 +27,7 @@
 #           maybe instead of using len(g) you could hardcode some factorial so that it goes through the list an integer number of times (factorial of largest size would work) - this could then be put into a default assignment of a parameter).
 
 # The AI found a better magic formula:
-p=lambda g,n=64:n and p([[[a or b==1,4*-~-a%11][n<2]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)or g
+#p=lambda g,n=64:n and p([[[a or b==1,4*-~-a%11][n<2]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)or g
+
+# Better recursion
+p=lambda g,n=63:-n*g or p([[[a or b==1,4*-~-a%11][n<1]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)
