@@ -1,5 +1,6 @@
 import ast
 import glob
+import pytest
 
 import myminifier
 
@@ -62,3 +63,26 @@ def test_remove_spaces_ignores_strings():
     # remove_spaces should not touch contents of string literals
     src = "a='1 + 2'; b + c"
     assert myminifier.remove_spaces(src) == "a='1 + 2';b+c"
+
+
+def test_replace_unpacking_funcs_handles_nested():
+    # ensure list() and set() become unpacking
+    f=myminifier.replace_unpacking_funcs
+    assert f("list(a)")=="[*a]"
+    assert f("list(map(all,a))")=="[*map(all,a)]"
+    assert f("set(a)")=="{*a}"
+    assert f("set(map(all,a))")=="{*map(all,a)}"
+    assert f("set()")=="set()"
+
+
+def test_replace_unpacking_funcs_skips_strings():
+    # should skip if argument has string literal
+    f=myminifier.replace_unpacking_funcs
+    with pytest.warns(UserWarning):
+        assert f('list(")")')=='list(")")'
+    with pytest.warns(UserWarning):
+        assert f('set("(")')=='set("(")'
+    with pytest.warns(UserWarning):
+        assert f("list(')')")=="list(')')"
+    with pytest.warns(UserWarning):
+        assert f("set('(')")=="set('(')"
