@@ -1,1 +1,2 @@
-def p(g,E=enumerate):a,b=zip(*[(i,j)for i,r in E(g)for j,x in E(r)if x]);return[r[min(b):max(b)+1]for r in g[min(a):max(a)+1]]
+# 69
+p=lambda g,n=79:-n*g or p([*map(list,zip(*g[any(g[-1])-2::-1]))],n-1)
