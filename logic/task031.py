@@ -7,4 +7,6 @@
 # 62 - loop
 # p=lambda g,n=1:-n*g or p([*map(list,zip(*filter(any,g)))],n-1)
 # 61 - expand
-p=lambda g:[*map(list,zip(*filter(any,zip(*filter(any,g)))))]
+# p=lambda g:[*map(list,zip(*filter(any,zip(*filter(any,g)))))]
+# 61 - eval
+p=lambda g:eval("[*map(list,"+"zip(*filter(any,"*2+"g)))))]")

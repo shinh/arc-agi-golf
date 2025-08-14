@@ -271,7 +271,8 @@ def minify(code):
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
     code = remove_trivial_parens(code)
-    code = remove_parens(code)
+    if "eval" not in code and "exec" not in code:
+        code = remove_parens(code)
 
     code = replace_def_p(code)
 
