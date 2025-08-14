@@ -1,4 +1,4 @@
-#
+# Not golfed yet.
 def p(g):
     for _ in[0]*4:
         ref=0

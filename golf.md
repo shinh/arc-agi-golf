@@ -18,3 +18,4 @@ Common techniques:
 * Using max(..., key=) to get the most frequent color can sometimes be replaced with simply 0, g[0][0], or max(g[0]) depending on the task.
 * Comments will be automatically removed, so please write them.
 * Add anything else here if it seems useful.
+* A short way to crop to smaller rectangle is `g=[*map(list,zip(*g[-2+(cond_fn(g[-1]))::-1]))]`
