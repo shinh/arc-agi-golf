@@ -223,10 +223,41 @@ def remove_semicolons(code):
     return "\n".join(res)
 
 
-def replace_list_func(code):
-    code, _ = re.subn(r"list\((\w+)\)", r"[*\1]", code)
+def replace_unpacking_funcs(code):
+    """Replace list()/set() calls with their unpacking forms."""
+    # loop through both names and their corresponding braces
+    for name,l,r in(("list","[*","]"),("set","{*","}")):
+        i=0
+        while True:
+            j=code.find(name+"(",i)
+            if j<0:break
+            k=j+len(name)+1
+            n=1
+            s=0
+            while n and k<len(code):
+                if code[k:k+3] in("'''","\"\"\""):
+                    s=1;q=code[k:k+3];k+=3
+                    while k<len(code)and code[k:k+3]!=q:
+                        if code[k]=='\\':k+=1
+                        k+=1
+                    k+=3
+                else:
+                    c=code[k]
+                    if c in"'\"":
+                        s=1;q=c;k+=1
+                        while k<len(code)and code[k]!=q:
+                            if code[k]=='\\':k+=1
+                            k+=1
+                        k+=1
+                    else:
+                        n+=(c=="(")-(c==")")
+                        k+=1
+            a=code[j+len(name)+1:k-1]
+            if s:warnings.warn(name+"() contains string literal; skipping")
+            elif a.strip() and "for"not in a:
+                code=code[:j]+l+a+r+code[k:]
+            i=j+1
     return code
-
 
 def replace_def_p(code):
     code = re.sub(r"^def p\((\w+)\):return\s*(.*)$", r"p=lambda \1:\2", code)
@@ -235,7 +266,7 @@ def replace_def_p(code):
 
 def minify(code):
     code = reindent(code)
-    code = replace_list_func(code)
+    code = replace_unpacking_funcs(code)
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
     code = combine_adjacent_lines(code)
