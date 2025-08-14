@@ -1,9 +1,5 @@
 def p(g):
-    sx=sy=99
-    for y in range(len(g)):
-        for x in range(len(g[0])):
-            if g[y][x]not in g[0]:
-                sx=min(sx,x)
-                sy=min(sy,y)
-                l=(y-sy)//3
-    return[[g[sy+l*y][sx+l*x]*(g[sy+l*y][sx+l*x]not in g[0]and g[sy+l*y][sx+l*x]==g[sy+l*y+l][sx+l*x]==g[sy+l*y][sx+l*x+l]==g[sy+l*y+l][sx+l*x+l])for x in range(3)]for y in range(3)]
+    c=max(g[0])
+    for i in range(2):
+        g=[[*r]for r in zip(*g)if{*r}-{0,c}]
+    return[[[0,g[y][x]][g[y][x]==g[y+1][x]==g[y][x+1]==g[y+1][x+1]!=c]for x in range(3)]for y in range(3)]
