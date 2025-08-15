@@ -1,20 +1,11 @@
+# 201
 def p(g):
-    h=w=10;g=[r for r in g]
-    b=0
-    s=set()
-    for i in range(10):
-        for j in range(10):
-            if g[i][j] and(i,j)not in s:
-                c=g[i][j];q=[(i,j)];t={(i,j)};s.add((i,j));xs=[i];ys=[j]
-                while q:
-                    x,y=q.pop()
-                    for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
-                        nx,ny=x+dx,y+dy
-                        if 0<=nx<10 and 0<=ny<10 and g[nx][ny]==c and(nx,ny)not in s:
-                            s.add((nx,ny));q+=[(nx,ny)];t.add((nx,ny));xs+=[nx];ys+=[ny]
-                mnx,mxx=min(xs),max(xs);mny,mxy=min(ys),max(ys)
-                for (cx,cy),(dx,dy) in[((mxx,mxy),(1,1)),((mnx,mxy),(-1,1)),((mxx,mny),(1,-1)),((mnx,mny),(-1,-1))]:
-                    if(cx,cy)not in t:
-                        x,y=cx+dx,cy+dy
-                        while 0<=x<10 and 0<=y<10:g[x][y]=c;x+=dx;y+=dy
+    for o in range(4):
+        for y in range(9):
+            for x in range(9):
+                if g[y][x]and g[y+1][x]and g[y][x+1]:
+                    for p in range(2,9):
+                        if y+p<10 and x+p<10:
+                            g[y+p][x+p]=g[y][x]
+        g=[*map(list,zip(*g[::-1]))]
     return g
