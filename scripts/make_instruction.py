@@ -68,7 +68,7 @@ def main():
     4. Record the **final score** the same way as step 1.
     5. Report both first and final scores.
 
-Repeat the rewrite-and-submit process multiple times, reporting the score after each attempt, until no further reduction is achieved.
+Repeat the rewrite-and-submit process multiple times, reporting the score after each attempt, until no further reduction is achieved. Known best score is {known_best_score}.
 
 ### References
 
