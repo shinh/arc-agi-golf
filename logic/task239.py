@@ -1,5 +1,4 @@
 def p(g):
-    # histogram
-    t=sum(g,[])
-    s=sorted({*t}-{0},key=lambda c:(-t.count(c),c))
-    return [[(t.count(c)>i)*c for c in s]for i in range(t.count(s[0]))]
+ # histogram
+ t=sum(g,[]);d=sorted((-t.count(c),c)for c in{*t}-{0})
+ return [[c*(-n>i)for n,c in d]for i in range(-d[0][0])]
