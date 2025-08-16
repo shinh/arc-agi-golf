@@ -2,10 +2,8 @@
 R=range(9)
 
 def p(g):
- o=[*map(list,g)]
+ o=eval(str(g))
  for y in R:
   for x in R:
-   if all(a:=g[y][x:x+2]+g[y+1][x:x+2]):
-    for r in o[y+2:][:len({*a})]:
-     r[x:x+2]=3,3
+   for r in o[y+2:][:all(a:=g[y][x:x+2]+g[y+1][x:x+2])*len({*a})]:r[x:x+2]=3,3
  return o
