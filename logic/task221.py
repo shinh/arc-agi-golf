@@ -1,10 +1,4 @@
 def p(g):
-    h=w=3;z=sum(c==0 for r in g for c in r)
-    c=[c for r in g for c in r if c][0];k=sum(c==x for r in g for x in r)
-    o=[[0]*w*z for _ in range(h*z)]
-    for t in range(k):
-        by, bx=divmod(t,z)
-        for y in range(h):
-            for x in range(w):
-                o[by*h+y][bx*w+x]=g[y][x]
-    return o
+    # tile g where color repeats; zeros set grid size
+    f=sum(g,[]);z=f.count(0);r=range(z*3)
+    return [[g[y%3][x%3]*(z*(y//3)+x//3<9-z)for x in r]for y in r]
