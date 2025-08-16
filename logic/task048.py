@@ -1,13 +1,16 @@
-# rotate grid to flow right through 8s from first 2 block
-# to detect connection to another 2 block using rotation
+# flood fill through 8s from first 2 block
+# detect connection to another 2 block
 
 def p(g):
- w=len(g[0]);s=sum(g,[]);i=s.index(2);f=0
- for d in range(4):g[i//w+d//2][i%w+d%2]=1
- for _ in range(64):
-  for r in g:
-   for j in range(len(r)-1):
-    if r[j]==1<r[j+1]:f|=r[j+1]<3;r[j+1]=1
-  if f:return[[8]]
-  g=[list(r)for r in zip(*g[::-1])]
+ w=len(g[0])+2
+ s=sum(([0]+r+[0]for r in g),[0]*w)+[0]*w
+ i=s.index(2);q=[]
+ for d in 0,1,w,w+1:s[i+d]=1;q+=i+d,
+ while q:
+  i=q.pop()
+  for d in-1,1,-w,w:
+   v=s[i+d]
+   if v==2:return[[8]]
+   if v==8:s[i+d]=1;q+=i+d,
  return[[0]]
+
