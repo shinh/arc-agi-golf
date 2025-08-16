@@ -1,15 +1,9 @@
 def p(g):
- # connect 1s
- def f(s):
-  for r in s:
-   l=-1
-   for x,v in enumerate(r):
-    if v==1:
-     if~l:r[l+1:x]=[8]*(x-l-1)
-     l=x
- f(g)
- t=[*map(list,zip(*g))]
- f(t)
- g[:]=map(list,zip(*t))
+ # link 1s in both axes
+ for _ in 0,1:
+  for r in g:
+   q=[i for i,v in enumerate(r)if v==1]
+   for a,b in zip(q,q[1:]):r[a+1:b]=[8]*(b-a-1)
+  g=[*map(list,zip(*g))]
  return g
 
