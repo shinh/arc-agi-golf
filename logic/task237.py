@@ -1,9 +1,9 @@
 def p(g):
-    h=len(g);w=len(g[0])
-    o=[r for r in g]
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c:
-                for i in range(x,w):o[y][i]=c
-                for j in range(y,h):o[j][w-1]=c
-    return o
+    # extend from first colored cell to right and down last column
+    c=0;w=len(g[0])
+    for r in g:
+        r[-1]=c
+        for x,v in enumerate(r):
+            if v:r[x:]=[c:=v]*(w-x);break
+    return g
+
