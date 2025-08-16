@@ -1,9 +1,7 @@
+# grow triangles above and below the 2 row
 def p(g,R=range):
- n=len(g)
- for i in R(n):
-  if g[i][0]==2:
-   a=0
-   while a<n and g[i][a]==2:a+=1
-   for x in R(n):
-    for y in R((a+i-x)*(x!=i)):g[x][y]=3-2*(x>i)
+ a=sum(g[i:=next(zip(*g)).index(2)])>>1
+ for x in R(a+i):
+  t=a+i-x;g[x][:t]=[2+(i>x)-(x>i)]*t
  return g
+
