@@ -1,1 +1,2 @@
-def p(g):a=[i for i,r in enumerate(g)if any(r)];b=[j for j in range(len(g[0]))if any(r[j]for r in g)];return[r[b[0]:b[-1]+1][::-1]for r in g[a[0]:a[-1]+1]]
+# crop bounding box and mirror horizontally
+p=lambda g:[[*r[::-1]]for r in eval('zip(*filter(any,'*2+'g))))')]
