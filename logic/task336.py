@@ -1,9 +1,6 @@
 def p(g):
  # box fill then extend line
- a=c=10;b=d=dx=dy=0
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
-   if v==5:a=min(a,y);b=max(b,y);c=min(c,x);d=max(d,x)
+ a,c=divmod((s:=sum(g,[])).index(5),10);b,d=divmod(99-s[::-1].index(5),10);dx=dy=0
  for r in g[a+1:b]:r[c+1:d]=[8]*(d-c-1)
  for x in range(c,d+1):
   if g[a][x]<1:y=a;dy=-1;break
