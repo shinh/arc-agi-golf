@@ -1,2 +1,2 @@
 # crop bbox of nonzeros and double size
-def p(g):A=[*map(any,g)];B=[*map(any,zip(*g))];return[[x for x in r[B.index(1):len(B)-B[::-1].index(1)]for _ in(0,0)]for r in g[A.index(1):len(A)-A[::-1].index(1)]for _ in(0,0)]
+def p(g):y,x=zip(*((i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v));return[[v for v in r[min(x):max(x)+1]for _ in(0,0)]for r in g[min(y):max(y)+1]for _ in(0,0)]
