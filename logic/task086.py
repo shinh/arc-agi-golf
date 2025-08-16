@@ -1,30 +1,20 @@
-def p(g):
-    h=len(g);w=len(g[0])
-    o=[r[:]for r in g]
-    seen=[[0]*w for _ in range(h)]
-    for i in range(h):
-        for j in range(w):
-            if seen[i][j] or not g[i][j]:continue
-            q=[(i,j)];seen[i][j]=1;pts=[]
-            while q:
-                y,x=q.pop();pts.append((y,x,g[y][x]))
-                for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                    ny=y+dy;nx=x+dx
-                    if 0<=ny<h and 0<=nx<w and not seen[ny][nx] and g[ny][nx]:
-                        seen[ny][nx]=1;q.append((ny,nx))
-            colors={c for _,_,c in pts};a=pts[0][2];b=(colors-{a}).pop()
-            ys=[y for y,_,_ in pts];xs=[x for _,x,_ in pts]
-            mn,mx=min(ys),max(ys);ln,rx=min(xs),max(xs)
-            dh=(mx-mn+1)-2;dw=(rx-ln+1)-2
-            for y in range(mn,mx+1):
-                for x in range(ln,rx+1):o[y][x]=a
-            for y,x,_ in pts:
-                for ny in (y-dh,y+dh):
-                    if 0<=ny<h:o[ny][x]=a
-                for nx in (x-dw,x+dw):
-                    if 0<=nx<w:o[y][nx]=a
-            for x in range(ln,rx+1):
-                o[mn][x]=b;o[mx][x]=b
-            for y in range(mn,mx+1):
-                o[y][ln]=b;o[y][rx]=b
+def p(g):# flood fill then expand
+    h=len(g);w=len(g[0]);o=[r[:]for r in g]
+    for i,r in enumerate(g):
+        for j,v in enumerate(r):
+            if v:
+                a=v;b=0;g[i][j]=0;ps=[(i,j)];mn=mx=i;ln=rx=j
+                for y,x in ps:
+                    for Y,X in((y+1,x),(y-1,x),(y,x+1),(y,x-1)):
+                        if 0<=Y<h and 0<=X<w and (t:=g[Y][X]):
+                            g[Y][X]=0;ps+=[(Y,X)];mn=min(mn,Y);mx=max(mx,Y);ln=min(ln,X);rx=max(rx,X)
+                            if t!=a:b=t
+                dh=mx-mn-1;dw=rx-ln-1
+                for y in range(mn,mx+1):
+                    for x in range(ln,rx+1):o[y][x]=a
+                for y,x in ps:
+                    for Y,X in((y-dh,x),(y+dh,x),(y,x-dw),(y,x+dw)):
+                        if 0<=Y<h and 0<=X<w:o[Y][X]=a
+                for x in range(ln,rx+1):o[mn][x]=o[mx][x]=b
+                for y in range(mn,mx+1):o[y][ln]=o[y][rx]=b
     return o
