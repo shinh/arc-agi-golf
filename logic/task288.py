@@ -1,6 +1,8 @@
 def p(g):
-    r=len(g)-2;w=len(g[0]);a=next(i for i,c in enumerate(g[r]) if c);b=w-1-next(i for i,c in enumerate(g[r][::-1]) if c);y=g[-1][w//2]
-    for i in range(1,r+1):
-        if a-i>=0:g[r-i][a-i]=y
-        if b+i<w:g[r-i][b+i]=y
+    # draw diagonals
+    d=g[-2];w=len(d);y=g[-1][w//2]
+    a=next(i for i in range(w)if d[i]);b=w-1-next(i for i in range(w)if d[~i])
+    for i in range(1,len(g)-1):
+        if a>=i:g[-2-i][a-i]=y
+        if b+i<w:g[-2-i][b+i]=y
     return g
