@@ -1,8 +1,7 @@
 def p(g):
     # draw diagonals
-    d=g[-2];w=len(d);y=g[-1][w//2]
-    a=next(i for i in range(w)if d[i]);b=w-1-next(i for i in range(w)if d[~i])
-    for i in range(1,len(g)-1):
-        if a>=i:g[-2-i][a-i]=y
-        if b+i<w:g[-2-i][b+i]=y
+    w=len(d:=g[-2]);a=d.index(max(d))
+    for r in g[-3::-1]:
+        if a:a-=1;r[a]=r[w+~a]=g[-1][w//2]
     return g
+
