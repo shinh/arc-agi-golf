@@ -1,5 +1,4 @@
-def p(g):
-    r=[i for i in range(10)if g[0][i]>4]
-    for row in g[1:]:
-        if row[-1]==5:row[:]=[2*(i in r)for i in range(10)];row[-1]=5
-    return g
+def p(g):# copy
+ for r in g[1:]:
+  if r[9]:r[:9]=[2*(v>4)for v in g[0][:9]]
+ return g
