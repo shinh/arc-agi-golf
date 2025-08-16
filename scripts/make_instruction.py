@@ -68,6 +68,10 @@ def main():
     4. Record the **final score** the same way as step 1.
     5. Report both first and final scores.
 
+Repeat the rewrite-and-submit process multiple times, reporting the score after each attempt, until no further reduction is achieved.
+
+### References
+
 This task's categories are {categories}. Here is the list of code similar to this task:
 
 """.format(title=title, categories=categories[task_id], known_best_score=known_best_score, our_score=our_score))
