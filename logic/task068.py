@@ -1,7 +1,6 @@
-def p(g):
-    h=w=10;a=sum(g,[])
-    v=[c for c in a if c and a.count(c)==1][0];y,x=divmod(a.index(v),w);o=create(h,w)
-    for Y in-1,0,1:
-        for X in-1,0,1:
-            if 0<=y+Y<h and 0<=x+X<w:o[y+Y][x+X]=2
+def p(g):# surround unique cell with 2s
+    a=sum(g,[]);v=min(a,key=a.count);y,x=divmod(a.index(v),10);o=create(10,10)
+    for Y in y-1,y,y+1:
+        for X in x-1,x,x+1:
+            if-1<Y<10 and-1<X<10:o[Y][X]=2
     o[y][x]=v;return o
