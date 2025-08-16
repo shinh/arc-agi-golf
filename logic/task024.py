@@ -1,1 +1,5 @@
-def p(g,E=enumerate):Z={c for R in g for c,v in E(R)if v==2};return[[1 if 1 in R else 3 if 3 in R else 2 if v<1and c in Z else v for c,v in E(R)]for R in g]
+# propagate 1/3 rows and 2 columns
+def p(g):
+ Z=[2in c for c in zip(*g)]
+ return[[1if 1in R else 3if 3in R else 2if v<1and Z[c]else v for c,v in enumerate(R)]for R in g]
+
