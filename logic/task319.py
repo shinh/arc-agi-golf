@@ -3,8 +3,8 @@ def p(g):
  f=sum(g,[]);B=max(f,key=f.count)
  O={frozenset((c,(i,j))for i,r in enumerate(g)for j,v in enumerate(r)if v==c)for c in set(f)-{B}}
  E=next(s for s in O if any(i in(0,len(g)-1)or j in(0,len(g[0])-1)for _,(i,j)in s))
- (c1,S1),(c2,S2)=[(next(iter(s))[0],[p for _,p in s])for s in O-{E}]
- E=[p for _,p in E]
+ (c1,S1),(c2,S2)=[(next(iter(s))[0],[p[1]for p in s])for s in O-{E}]
+ E=[p[1]for p in E]
  def m(S,c):
   R,C=zip(*S);mi,Ma=min(R),max(R);mj,Mb=min(C),max(C);a=[[B]*(Mb-mj+1)for _ in range(Ma-mi+1)]
   for i,j in S:a[i-mi][j-mj]=c
