@@ -1,3 +1,5 @@
+# rotate until target row then scale inside 2-frame
+
 def p(g):
     o=g
     for i in range(120):
