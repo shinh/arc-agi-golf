@@ -1,8 +1,6 @@
-def p(g,E=enumerate):
+def p(g,E=enumerate):# ring5
  for r,R in E(g):
   for c,C in E(R):
-   if C==5:
-    for i in range(r-1,r+2):
-     for j in range(c-1,c+2):
-      if[i,j]!=[r,c]:g[i][j]=1
+   if C>4:
+    for L in g[r-1:r+2]:L[c-1:c+2]=[1]*3;R[c]=5
  return g
