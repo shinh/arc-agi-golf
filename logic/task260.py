@@ -10,4 +10,4 @@ def p(g):
                             g[a-min(a,b)+i][b-min(a,b)+i]=f
             elif c:
                f=c
-    return[[c*(c!=5)for c in r]for r in g]
+    return[[c-5and c for c in r]for r in g]
