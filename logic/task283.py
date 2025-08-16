@@ -1,14 +1,12 @@
-def f(g,p,q,a,b,c):
- for y in range(q,b+1):
-  for x in range(p,a+1):g[y][x]=c
-def z(g,p,q,a,b):f(g,p,q,a,b,4);f(g,p+1,q+1,a-1,b-1,2);g[q][p]=g[q][a]=g[b][p]=g[b][a]=1
-def p(g):
- h,w=len(g),len(g[0])
- for i in range(h*w):
-  x,y=i%w,i//w
-  if g[y][x]==5:
-   a,b=x,y
-   while a<w-1 and g[b][a+1]==5:a+=1
-   while b<h-1 and g[b+1][a]==5:b+=1
-   z(g,x,y,a,b)
+def p(g):#frame 5-rect
+ h=len(g)
+ for y,r in enumerate(g):
+  for x,v in enumerate(r):
+   if v==5:
+    a,b=x,y
+    while a<len(r)-1 and r[a+1]==5:a+=1
+    while b<h-1 and g[b+1][a]==5:b+=1
+    for R in g[y:b+1]:R[x:a+1]=[4]*(a-x+1)
+    for R in g[y+1:b]:R[x+1:a]=[2]*(a-x-1)
+    g[y][x]=g[y][a]=g[b][x]=g[b][a]=1
  return g
