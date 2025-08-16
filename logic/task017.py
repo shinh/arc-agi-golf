@@ -1,9 +1,9 @@
-def p(j,u=enumerate):
-	A=range;c=len(j);E=len(j[0]);k=lambda W,l:W==l or W*l<1;J=next((K for K in A(1,E)if all(k(L,e)for w in j for(L,e)in zip(w,w[K:]))),E);a=next((K for K in A(1,c)if all(k(L,e)for(K,w)in zip(j,j[K:])for(L,e)in zip(K,w))),c);C={}
-	for(e,K)in u(j):
-		for(w,L)in u(K):
-			if L:C[e%a,w%J]=L
-	for(e,K)in u(j):
-		for(w,L)in u(K):
-			if not L:K[w]=C[e%a,w%J]
-	return j
+def p(g,u=enumerate):
+    # fill zeros from repeating block
+    f=lambda a,b:a==b or a*b<1
+    for j in range(1,len(g[0])+1):
+        if all(f(a,b)for r in g for a,b in zip(r,r[j:])):break
+    for i in range(1,len(g)+1):
+        if all(f(a,b)for r,s in zip(g,g[i:])for a,b in zip(r,s)):break
+    d={(y%i,x%j):v for y,r in u(g) for x,v in u(r) if v}
+    return[[v or d[y%i,x%j] for x,v in u(r)]for y,r in u(g)]
