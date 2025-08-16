@@ -1,8 +1,5 @@
 # alternate columns expanding from marker
-def p(g,I=range):
- w=len(g[0])
- b=max(i for i,v in enumerate(sum(g,[]))if v)
- a,b=b//w+2,b%w
- for i in I(w):
-  a,c=a-1,7+i%2;[w>b+j>=0 and g[y].__setitem__(b+j,c)for y in I(a)for j in(-i,i)]
+def p(g):
+ x=g[0].index(7);h=sum(r[x]>0 for r in g)
+ for y in range(h):[len(g[0])>x+j>=0 and g[y].__setitem__(x+j,7+j%2)for j in range(y-h+1,h-y)]
  return g
