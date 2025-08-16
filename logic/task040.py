@@ -1,7 +1,3 @@
-def p(g):
-    if all(g[0])and all(g[-1]):a,b,n=g[0][0],g[-1][0],0
-    else:a,b,n=g[0][0],g[0][-1],1
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v==3:r[x]=(a,b)[(y,x)[n]>4]
-    return g
+def p(g,e=enumerate):
+    # pick colors from edges and paint 3s by row/col index
+    t=g[0];u=g[-1];n=1>all(t+u);return[[(v,(t[0],(u[0],t[-1])[n])[(y,x)[n]>4])[v==3]for x,v in e(r)]for y,r in e(g)]
