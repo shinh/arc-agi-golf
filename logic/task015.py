@@ -1,11 +1,9 @@
-L=len
-R=range
+# color diagonals of 2 with 4 and orthogonals of 1 with 7
+E=enumerate
 def p(g):
- h,w=L(g),L(g[0])
- for r in R(h):
-  for c in R(w):
-   if g[r][c]==2:
-    for i,j in[[1,1],[-1,-1],[-1,1],[1,-1]]:g[i+r][j+c]=4
-   if g[r][c]==1:
-    for i,j in[[0,1],[0,-1],[-1,0],[1,0]]:g[i+r][j+c]=7
+ for r,row in E(g):
+  for c,v in E(row):
+   for t in 1,-1:
+    if v==2:g[r+t][c+t]=g[r+t][c-t]=4
+    if v==1:g[r][c+t]=g[r+t][c]=7
  return g
