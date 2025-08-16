@@ -1,19 +1,16 @@
+# copy frame
 def p(g):
- n=len(g);o=[r[:]for r in g];B=[0]*10;D=B[:]
- for i in range(n):
-  for j in range(n):
-   if (c:=g[i][j])<1:continue
-   t=[(i,j)];C=[];g[i][j]=-1;r0=r1=i;c0=c1=j
-   while t:
-    x,y=t.pop();C+=x*n+y,;r0=min(r0,x);r1=max(r1,x);c0=min(c0,y);c1=max(c1,y)
-    for u,v in((1,0),(0,1),(-1,0),(0,-1)):
-     if n>(nx:=x+u)>=0<=(ny:=y+v)<n and g[nx][ny]==c:g[nx][ny]=-1;t+=(nx,ny),
-   if r1-r0>1 and c1-c0>1 and len(C)==2*(r1-r0+c1-c0)and all(p//n in(r0,r1)or p%n in(c0,c1)for p in C):
-    D[c]+=1;B[c]=B[c]or(r0,c0,r1,c1)
- c=min(range(10),key=lambda k:(D[k] or 99,k));r0,c0,r1,c1=B[c];h=r1-r0+1;w=c1-c0+1
- R=[(x,y)for x in range(h)for y in range(w) if x*y*(x-h+1)*(y-w+1)==0]
- for i in range(1,n-h+2):
-  for j in range(1,n-w+2):
-   if all(g[i+x][j+y]==0 for x in range(h-2)for y in range(w-2) if x*y*(x-h+3)*(y-w+3)==0):
-    for x,y in R:o[i+x-1][j+y-1]=c
- return o
+ n=len(g);o=[r[:]for r in g]
+ for c in range(1,10):
+  P=[(i,j)for i in range(n)for j in range(n)if g[i][j]==c]
+  if P:
+   r0=min(i for i,j in P);r1=max(i for i,j in P);c0=min(j for i,j in P);c1=max(j for i,j in P)
+   h=r1-r0+1;w=c1-c0+1
+   if h>2<w and len(P)==2*h+2*w-4 and all(i in(r0,r1)or j in(c0,c1)for i,j in P):
+    for i in range(n-h+1):
+     for j in range(n-w+1):
+      if(i,j)!=(r0,c0)and all(g[i+x][j+y]<1 for x in range(h)for y in range(w) if x*y*(x-h+1)*(y-w+1)):
+       for x in range(h):
+        for y in range(w):
+         if x*y*(x-h+1)*(y-w+1)==0:o[i+x][j+y]=c
+       return o
