@@ -1,9 +1,3 @@
+# extend lines
 def p(g):
-    r=[i for i,v in enumerate(g)if v.count(5)==10][0];o=[r for r in g]
-    for y,row in enumerate(g):
-        for x,v in enumerate(row):
-            if v==1:
-                for k in range((0,y)[y>r],(y+1,10)[y>r]):o[k][x]=1
-            elif v==2:
-                for k in (range(y,r),range(r+1,y+1))[y>r]:o[k][x]=2
-    return o
+ r=[v.count(5)>9 for v in g].index(1);[g[k].__setitem__(x,v)for y,R in enumerate(g)for x,v in enumerate(R)if 0<v<3 for k in range(*((0,y+1),(y,10),(y,r),(r+1,y+1))[(v&2)|(y>r)])];return g
