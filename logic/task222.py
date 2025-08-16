@@ -1,22 +1,16 @@
 def p(g):
-    h=w=16;best=()
-    for y0 in range(h):
-        for y1 in range(y0+1,h+1):
-            for x0 in range(w):
-                c=g[y0][x0]
-                if c==0:continue
-                for x1 in range(x0+1,w+1):
-                    a=(y1-y0)*(x1-x0)
-                    if best and a<=best[0]:continue
-                    ok=1
-                    for y in range(y0,y1):
-                        for x in range(x0,x1):
-                            if g[y][x]!=c:ok=0;break
-                        if not ok:break
-                    if ok:best=(a,y0,y1,x0,x1,c)
-    o=create(h,w)
-    if best:
-        a,y0,y1,x0,x1,c=best
-        for y in range(y0,y1):
-            for x in range(x0,x1):o[y][x]=c
+    # largest uniform rect
+    B=0
+    for y0 in range(16):
+        for x0 in range(16):
+            c=g[y0][x0]
+            if c:
+                for y1 in range(y0+1,17):
+                    for x1 in range(x0+1,17):
+                        if all(g[y][x]==c for y in range(y0,y1) for x in range(x0,x1)) and (a:=(y1-y0)*(x1-x0))>B:
+                            B,R=a,(y0,y1,x0,x1,c)
+    o=create(16,16)
+    if B:
+        y0,y1,x0,x1,c=R
+        for y in range(y0,y1):o[y][x0:x1]=[c]*(x1-x0)
     return o
