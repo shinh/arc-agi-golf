@@ -1,13 +1,8 @@
 def p(g):
-    for r in g:
-        a=[i for i,v in enumerate(r)if v==8]
-        if a[1:]:
-            for i in range(a[0]+1,a[-1]):
-                if r[i]<1:r[i]=3
-    h=len(g)
-    for x in range(len(g[0])):
-        a=[y for y in range(h)if g[y][x]==8]
-        if a[1:]:
-            for y in range(a[0]+1,a[-1]):
-                if g[y][x]<1:g[y][x]=3
+    # fill gaps between two 8s horizontally then vertically
+    for _ in 0,1:
+        for r in g:
+            try:a=r.index(8);b=len(r)+~r[::-1].index(8);r[a+1:b]=[v or 3 for v in r[a+1:b]]
+            except:0
+        g=[*map(list,zip(*g))]
     return g
