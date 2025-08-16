@@ -1,8 +1,5 @@
-def p(g):
- h=len(g);w=len(g[0]);o=[r for r in g]
- for y in range(h):
-  for x in range(w):
-   c=g[y][x]
-   if c and all(0>y+dy or y+dy>=h or 0>x+dx or x+dx>=w or g[y+dy][x+dx]!=c for dy in(-1,0,1) for dx in(-1,0,1) if dy or dx):
-    o[y][x]=0
- return o
+def p(g):# zero isolated tiles
+ for y,r in enumerate(g):
+  for x,c in enumerate(r):
+   if c and sum(R[x-(x>0):x+2].count(c)for R in g[y-(y>0):y+2])<2:r[x]=0
+ return g
