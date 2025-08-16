@@ -1,12 +1,10 @@
 def p(g):
- h=len(g);w=len(g[0]);y=-1
- for r in g:
-  y+=1;x=-1
-  for v in r:
-   x+=1
+ # expand 1s around 2s
+ for y,r in enumerate(g):
+  for x,v in enumerate(r):
    if v==2:
-    for yy in range(y-1,y+2):
-     for xx in range(x-1,x+2):
-      if 0<=yy<h and 0<=xx<w and g[yy][xx]==0:g[yy][xx]=1
+    for Y in y-1,y,y+1:
+     for X in x-1,x,x+1:
+      if -1<Y<len(g) and -1<X<len(r) and g[Y][X]<1:g[Y][X]=1
  return g
 
