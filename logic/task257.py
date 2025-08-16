@@ -1,2 +1,3 @@
 def p(g):
-    return [[next((g[y+Y][x+X]for Y,X in((0,0),(0,5),(5,0),(5,5))if g[y+Y][x+X]),0)for x in range(4)]for y in range(4)]
+    # choose first nonzero among four corner samples
+    return[[a[x]or a[x+5]or b[x]or b[x+5]for x in range(4)]for a,b in zip(g,g[5:])]
