@@ -1,19 +1,19 @@
 def p(g):
-    h=w=15;o=[r for r in g];v=set()
-    for y in range(h):
-        for x in range(w):
+    # flood fill each 6-cluster then box it
+    R=range(15);v=set();t=((1,0),(-1,0),(0,1),(0,-1))
+    for y in R:
+        for x in R:
             if g[y][x]==6 and (y,x)not in v:
                 s=[(y,x)];Y=[];X=[]
                 while s:
-                    y1,x1=s.pop()
-                    if(y1,x1)in v:continue
-                    v.add((y1,x1));Y+=[y1];X+=[x1]
-                    for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                        ny, nx=y1+dy,x1+dx
-                        if 0<=ny<h and 0<=nx<w and g[ny][nx]==6 and (ny,nx)not in v:s.append((ny,nx))
-                r0=max(min(Y)-1,0);r1=min(max(Y)+2,h);c0=max(min(X)-1,0);c1=min(max(X)+2,w)
-                for yy in range(r0,r1):
-                    for xx in range(c0,c1):
-                        if yy in (r0,r1-1) or xx in (c0,c1-1):o[yy][xx]=3
-                        elif g[yy][xx]!=6:o[yy][xx]=4
-    return o
+                    y,x=s.pop()
+                    if(y,x)in v:continue
+                    v.add((y,x));Y+=y,;X+=x,
+                    for a,b in t:
+                        c=y+a;d=x+b
+                        if 0<=c<15 and 0<=d<15 and g[c][d]==6:s+=[(c,d)]
+                a=max(min(Y)-1,0);b=min(max(Y)+2,15);c=max(min(X)-1,0);d=min(max(X)+2,15)
+                for Y in range(a,b):
+                    for X in range(c,d):
+                        g[Y][X]=3 if Y in(a,b-1)or X in(c,d-1)else 6-2*(g[Y][X]!=6)
+    return g
