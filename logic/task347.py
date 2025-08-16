@@ -1,6 +1,4 @@
-def p(g,N=range(3)):
- for r in N:
-  for c in N:
-   g[r][c]+=g[r][c+3]
-   if g[r][c]>0:g[r][c]=6
- return[R[:3]for R in g]
+def p(g):
+ # halves->6
+ return[[6*(a+b>0)for a,b in zip(r,r[3:])]for r in g]
+
