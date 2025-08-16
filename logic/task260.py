@@ -1,4 +1,5 @@
 def p(g):
+    # draw diagonal line when 5 has empty cross arms
     for y in range(9):
         for x in range(9):
             if (c:=g[y][x])==5:
