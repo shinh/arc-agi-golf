@@ -1,1 +1,2 @@
-p=lambda g:[[[5,5,5],[0,0,0],[0,0,0]],[[5,0,0],[0,5,0],[0,0,5]],[[0,0,5],[0,5,0],[5,0,0]]][len(set(v for r in g for v in r))-1]
+# map color count to row/diag pattern
+p=lambda g:[[5*(y==[0,x,2-x][len({*sum(g,[])})-1])for x in(0,1,2)]for y in(0,1,2)]

@@ -1,1 +1,3 @@
-def p(g):t=[i for r in g for i,x in enumerate(r)if x>0];a,b=min(t),max(t)+1;return[r[a:b]*2 for r in g if max(r)>0]
+# crop nonzero rows/cols then double
+p=lambda g,f=filter:[[*r,*r]for r in zip(*f(any,zip(*f(any,g))))]
+

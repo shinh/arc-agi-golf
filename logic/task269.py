@@ -1,1 +1,2 @@
-p=lambda g:(n:=sum(c>0for r in g for c in r),[sum(([x]*n for x in r),[])for r in g for _ in range(n)])[1]
+# scale grid by count of colored cells
+def p(g):s=sum;n=s(map(bool,s(g,[])));return s([[s(([x]*n for x in r),[])]*n for r in g],[])

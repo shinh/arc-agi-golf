@@ -1,8 +1,8 @@
 def p(g):
- h=len(g);w=len(g[0]);b=0
+ # nearest unique even-step color
  c=[(y,x,v)for y,r in enumerate(g)for x,v in enumerate(r)if v]
- for y in range(h):
-  for x in range(w):
-   d=sorted((abs(y-a)+abs(x-b),a,b,v)for a,b,v in c);(m,a,b,v)=d[0];n=d[1][0]if len(d)>1 else 99
-   if m<n and max(abs(y-a),abs(x-b))%2<1:g[y][x]=v
+ for y,r in enumerate(g):
+  for x in range(len(r)):
+   d=sorted((abs(y-a)+abs(x-b),a,b,v)for a,b,v in c)+[(9e9,)*4];m,a,b,v=d[0];
+   if d[1][0]>m and ~max(abs(y-a),abs(x-b))&1:r[x]=v
  return g

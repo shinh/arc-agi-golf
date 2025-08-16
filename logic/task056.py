@@ -1,3 +1,3 @@
-def p(g):
-    n=sum((v>0)<<i for i,v in enumerate(sum(g,[])))
-    return [[{171:1,341:2,118:3,186:6}[n]]]
+# center/corners decide color
+def p(g):a,b,c=g;c=sum(map(bool,a[::2]+c[::2]+b[1:2]*2));return[[0o2030610>>c*3&7]]
+

@@ -1,3 +1,2 @@
-def p(g):
-    h=len(g);w=len(g[0]);l=[r[:w//2]for r in g];r=[r[w//2+w%2:]for r in g]
-    return l if l==r else g[:h//2]
+# left if halves equal else top half
+def p(g):w=len(g[0])//2;return(l:=[r[:w]for r in g])*(l==[r[-w:]for r in g])or g[:len(g)//2]

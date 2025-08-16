@@ -1,2 +1,2 @@
-def p(g):
-    return [[max(b:=[g[y+i][x+j]for i in range(3)for j in range(3)],key=b.count)for x in(0,3,6)]for y in(0,3,6)]
+def p(g):# 3x3 mode
+ return[[max(b:=sum((r[x:x+3]for r in g[y:y+3]),[]),key=b.count)for x in(0,3,6)]for y in(0,3,6)]

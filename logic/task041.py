@@ -1,6 +1,3 @@
 def p(g,z=0):
- for r in g:
-  for i,x in enumerate(r):
-   if x:z=(not z)*x
-   else:r[i]=z
+ for r in g:r[:]=[(z:=x*(z<1)) or x if x else z for x in r]#toggle fill
  return g

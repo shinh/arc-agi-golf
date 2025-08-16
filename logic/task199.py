@@ -1,7 +1,6 @@
-def p(j,A=enumerate):
- for c,E in A(j):
-  for k,W in A(E):
-   if W and W^4:
-    j[c+1][k]=W
-    for l in range(c+1):j[l][k&1::2]=[4]*len(j[l][k&1::2])
-    return j
+def p(g,A=enumerate):#stripe
+ for y,r in A(g):
+  for x,v in A(r):
+   if 0<v!=4:
+    for R in g[:y+1]:R[x&1::2]=[4]*len(R[x&1::2])
+    g[y+1][x]=v;return g
