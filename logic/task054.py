@@ -1,15 +1,15 @@
+# copy motif into rectangular holes and extend rays
+
 def p(g):
- h=[r[:]for r in g];b=g[0][0];R=[];V=set()
+ b=g[0][0];h=[r[:]for r in g];v=[[0]*30 for _ in g];R=[]
  for y in range(30):
   for x in range(30):
-   if g[y][x]!=b and(y,x)not in V:
-    c=g[y][x];S={(y,x)};V.add((y,x));q=[(y,x)]
-    while q:
-     y0,x0=q.pop()
-     for Y,X in((y0+1,x0),(y0-1,x0),(y0,x0+1),(y0,x0-1)):
-      if 0<=Y<30 and 0<=X<30 and g[Y][X]==c and(Y,X)not in S:
-       S.add((Y,X));q.append((Y,X));V.add((Y,X))
-    ys,xs=zip(*S);y0=min(ys);y1=max(ys);x0=min(xs);x1=max(xs);n=len(S)
+   if g[y][x]!=b and not v[y][x]:
+    c=g[y][x];q=[(y,x)];v[y][x]=1
+    for i,j in q:
+     for Y,X in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
+      if 0<=Y<30 and 0<=X<30 and g[Y][X]==c and not v[Y][X]:v[Y][X]=1;q.append((Y,X))
+    ys,xs=zip(*q);y0=min(ys);y1=max(ys);x0=min(xs);x1=max(xs);n=len(q)
     if n>20 and(y1-y0+1)*(x1-x0+1)-n<5:R+=[(y0,y1,x0,x1,c)]
  P=[(y,x)for y in range(30)for x in range(30)if g[y][x]!=b and not any(y0<=y<=y1 and x0<=x<=x1 for y0,y1,x0,x1,_ in R)]
  for y,x in P:h[y][x]=b
@@ -18,10 +18,10 @@ def p(g):
  for y,x in P:A[y-my][x-mx]=g[y][x]
  H=len(A);W=len(A[0]);cy=H//2;cx=W//2;cen=A[cy][cx];C=[]
  for dy,dx in((-1,0),(0,1),(1,0),(0,-1)):
-  y,x=cy+dy,cx+dx
+  y,x=cy+dy,cx+dx;c=b;f=0
   if 0<=y<H and 0<=x<W and A[y][x]!=b:
-   c=A[y][x];y+=dy;x+=dx;C+=[c,0<=y<H and 0<=x<W and A[y][x]==c]
-  else:C+=[b,0]
+   c=A[y][x];y+=dy;x+=dx;f=0<=y<H and 0<=x<W and A[y][x]==c
+  C+=[c,f]
  for y0,y1,x0,x1,c in R:
   for y in range(y0,y1+1):
    for x in range(x0,x1+1):
@@ -30,16 +30,12 @@ def p(g):
       ty=y-cy+dy
       if y0<=ty<=y1:
        u=h[ty]
-       for dx,val in enumerate(r):
+       for dx,v in enumerate(r):
         tx=x-cx+dx
-        if x0<=tx<=x1:u[tx]=c if val==b else val
-     if C[1]:
-      for Y in range(y0,y):h[Y][x]=C[0]
-     if C[3]:
-      for X in range(x+1,x1+1):h[y][X]=C[2]
-     if C[5]:
-      for Y in range(y+1,y1+1):h[Y][x]=C[4]
-     if C[7]:
-      for X in range(x0,x):h[y][X]=C[6]
+        if x0<=tx<=x1:u[tx]=c if v==b else v
+     for i,(dy,dx) in enumerate(((-1,0),(0,1),(1,0),(0,-1))):
+      if C[i*2+1]:
+       Y=y+dy;X=x+dx
+       while y0<=Y<=y1 and x0<=X<=x1:h[Y][X]=C[i*2];Y+=dy;X+=dx
      h[y][x]=cen
  return h
