@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+
+import argparse
+import glob
+import json
+import os
+
+import sota
+
+
+def read_ours():
+    ours = []
+    for code, py in zip(sorted(glob.glob("logic/*.py")), sorted(glob.glob("submissions/*.py"))):
+        ours.append((os.path.getsize(py), open(code).read()))
+    return ours
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Make an instruction for AI.")
+    parser.add_argument("task_id")
+    args = parser.parse_args()
+
+    task_id = "%03d" % int(args.task_id)
+
+    ours = read_ours()
+    theirs = sota.read_sota()
+
+    categories = json.load(open("scripts/categories.json"))
+
+    categroy = set(categories[task_id])
+
+    similar_tasks = []
+    for t, cs in categories.items():
+        if t == task_id:
+            continue
+        mutual_cats = categroy and set(cs)
+        if mutual_cats:
+            ti = int(t) - 1
+            ratio = theirs[ti] / ours[ti][0]
+            similar_tasks.append((ratio, ours[ti][1], list(mutual_cats), t))
+
+    similar_tasks.sort()
+    # print(similar_tasks)
+
+    our_score = 2500 - ours[int(task_id) - 1][0]
+    known_best = min(ours[int(task_id) - 1][0], theirs[int(task_id) - 1])
+    known_best_score = 2500 - known_best
+
+    title = f"Your task is to **rewrite `logic/{task_id}.py` into a fully code-golfed solution**"
+
+    print(r"""{title}
+
+### Rules
+    - The rewritten code must pass **all official test cases** (checked with `python3 verify.py <task_id>`).
+    - Do **not** delete comments or rename symbols. They will be minified automatically later. Add comments to describe the approach.
+    - When code is long (e.g., >200B), you may duplicate code or write long expressions: final submission will be compressed by zlib.
+
+### Workflow
+    1. Record the **initial score**:
+
+    python3 submit.py <task_id> | tail -n 1
+
+    2. Rewrite the code to minimize size (golf as much as possible).
+    3. Verify correctness:
+
+    python3 verify.py <task_id>
+
+    4. Record the **final score** the same way as step 1.
+    5. Report both first and final scores.
+
+This task's categories are {categories}. Here is the list of code similar to this task:
+
+""".format(title=title, categories=categories[task_id], known_best_score=known_best_score, our_score=our_score))
+
+    for ratio, code, cats, tid in similar_tasks[:5]:
+        print(r"""task{tid}: categories={cats}
+
+{code}
+""".format(code=code.strip(), cats=cats, tid=tid))
+
+
+if __name__ == "__main__":
+    main()
