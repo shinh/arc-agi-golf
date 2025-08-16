@@ -1,10 +1,9 @@
-def p(g):
- # expand 1s around 2s
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
+def p(g):# expand 1s around 2s
+ e=enumerate
+ for y,r in e(g):
+  for x,v in e(r):
    if v==2:
-    for Y in y-1,y,y+1:
-     for X in x-1,x,x+1:
-      if -1<Y<len(g) and -1<X<len(r) and g[Y][X]<1:g[Y][X]=1
+    c=x-(x>0)
+    for R in g[y-(y>0):y+2]:R[c:x+2]=[q or 1 for q in R[c:x+2]]
  return g
 
