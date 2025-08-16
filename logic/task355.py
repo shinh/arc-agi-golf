@@ -1,16 +1,5 @@
-def p(g):
-    h=len(g);w=len(g[0])
-    f=sum(g,[])
-    p=min(f,key=f.count)
-    u=[]
-    for y in range(h):
-        for x in range(w):
-            m=[]
-            for dy in range(-4,5):
-                for dx in range(-4,5):
-                    if 0<=y+dy<h and 0<=x+dx<w and p!=g[y+dy][x+dx]:
-                        m+=g[y+dy][x+dx],
-            m=max(m,key=m.count)
-            if p==g[y][x]:
-                u+=m,
+def p(g):# rare color's neighborhood majority color
+    h=len(g);w=len(g[0]);f=sum(g,[]);p=min(f,key=f.count);r=range
+    u=[max(m:=[v for R in g[max(0,y-4):y+5] for v in R[max(0,x-4):x+5] if v-p],key=m.count)for y in r(h)
+        for x in r(w)if p==g[y][x]]
     return[[max(u,key=u.count)]]
