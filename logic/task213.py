@@ -1,25 +1,11 @@
 def p(g):
-    h=len(g);w=len(g[0])
-    for y in range(h):
-        for x in range(w):
-            c=g[y][x]
-            if c not in (0,5):
-                Y=[i for i in range(h)for j in range(w)if g[i][j]==c]
-                X=[j for i in range(h)for j in range(w)if g[i][j]==c]
-                v=max(Y)-min(Y)>max(X)-min(X)
-                break
-        else:continue
-        break
+    # orient then palette
+    c=next(v for r in g for v in r if v%5)
+    v=sum(c in r for r in g)>sum(c in r for r in zip(*g))
     d=[]
-    if v:
-        for x in range(w):
-            for y in range(h):
-                c=g[y][x]
-                if c not in (0,5)and c not in d:
-                    d.append(c);break
-        return [d]*len(d)
-    for r in g:
+    for r in (zip(*g)if v else g):
         for c in r:
-            if c not in (0,5)and c not in d:d.append(c)
-    n=len(d)
-    return [[c]*n for c in d]
+            if c%5 and c not in d:
+                d+=c,
+                if v:break
+    return [d]*len(d)if v else[[c]*len(d)for c in d]
