@@ -1,25 +1,20 @@
 def p(g):
-    h=w=16
-    d={}
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v:d.setdefault(v,set()).add((y,x))
-    for c,s in d.items():
-        ys,xs=zip(*s)
-        if len(s)==(max(ys)-min(ys)+1)*(max(xs)-min(xs)+1):rc=s;R=c
-        else:sh=s;S=c
-    v=lambda s:{(i,(m:=min(j for _,j in s)+max(j for _,j in s))-j)for i,j in s}
-    h_=lambda s:{((m:=min(i for i,_ in s)+max(i for i,_ in s))-i,j)for i,j in s}
-    u=rc|sh;ys,xs=zip(*u)
-    m=max((max(ys)-min(ys)+1)//2+1,(max(xs)-min(xs)+1)//2+1)
-    best=set();sc=-1
-    for P in(v(sh),h_(sh)):
-        for dj in range(-m,m+1):
-            for di in range(-m,m+1):
-                s={(i+di,j+dj)for i,j in P}
-                if all((0<=i<h and 0<=j<w and g[i][j]) or not(0<=i<h and 0<=j<w) for i,j in s):
-                    t=len(s&sh)
-                    if t>sc:sc=t;best=s
-    for i,j in rc:g[i][j]=0
-    for i,j in best:g[i][j]=S
-    return g
+ h=16;d={}
+ # collect colored positions
+ [d.setdefault(v,set()).add((y,x))for y,r in enumerate(g)for x,v in enumerate(r)if v]
+ for c,s in d.items():
+  ys,xs=zip(*s);A=(max(ys)-min(ys)+1)*(max(xs)-min(xs)+1)
+  if len(s)==A:rc=s
+  else:sh=s;S=c
+ ys,xs=zip(*sh);a=max(ys)+min(ys);b=max(xs)+min(xs)
+ best=set();sc=-1;R=range(-h,h+1)
+ # mirror shape and slide to overlap
+ for P in({(i,b-j)for i,j in sh},{(a-i,j)for i,j in sh}):
+  for dj in R:
+   for di in R:
+    s={(i+di,j+dj)for i,j in P}
+    t=len(s&sh)
+    if t>sc and all(i<0 or i>=h or j<0 or j>=h or g[i][j] for i,j in s):sc=t;best=s
+ for i,j in rc:g[i][j]=0
+ for i,j in best:g[i][j]=S
+ return g
