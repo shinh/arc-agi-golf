@@ -1,15 +1,8 @@
-def p(g):
-    h=len(g);w=len(g[0]);I=[r for r in g]
-    for y,r in enumerate(I):
-        xs=[x for x,v in enumerate(r) if v]
-        if len(xs)>1:
-            a=xs[0];R=r[a:xs[-1]+1];Y=y;break
-    n=len(R)
-    for x in range(w):g[Y][x]=R[(x-a)%n]
-    for x in range(w):
-        ys=[y for y in range(h) if I[y][x]]
-        if len(ys)>1:
-            c=ys[0];C=[I[y][x] for y in range(c,ys[-1]+1)];X=x;break
-    m=len(C)
-    for y in range(h):g[y][X]=C[(y-c)%m]
+def p(g):# expand patterns horizontally then vertically
+    for r in g:
+        if (S:=[x for x,v in enumerate(r) if v])[1:]:R=r[S[0]:S[-1]+1];break
+    r[:]=[R[(x-S[0])%len(R)]for x in range(len(r))]
+    for X,C in enumerate(zip(*g)):
+        if (T:=[y for y,v in enumerate(C) if v])[1:]:C=C[T[0]:T[-1]+1];break
+    for y,v in enumerate(g):v[X]=C[(y-T[0])%len(C)]
     return g
