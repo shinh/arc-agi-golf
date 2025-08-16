@@ -1,15 +1,13 @@
-def p(j,A=range):
-	c=len(j);E=1;k,W=0,0;l=[0,5];J,a=0,0
-	for C in A(c):
-		for e in A(c):
-			if j[C][e]not in l and E:
-				E=0;J,a=C,e;K=C;w=e
-				while K<c and j[K][e]not in l:K+=1
-				while w<c and j[C][w]not in l:w+=1
-				k=K-C;W=w-e
-	for C in A(c-k+1):
-		for e in A(c-W+1):
-			if j[C][e]==5:
-				for L in A(k):
-					for b in A(W):j[C+L][e+b]=j[J+L][a+b]
-	return j
+def p(g,A=range):# copy first non-05 block onto 5
+ c=len(g)
+ for y in A(c):
+  for x in A(c):
+   if g[y][x]%5:
+    h=w=1
+    while y+h<c and g[y+h][x]%5:h+=1
+    while x+w<c and g[y][x+w]%5:w+=1
+    for Y in A(c-h+1):
+     for X in A(c-w+1):
+      if g[Y][X]==5:
+       for L in A(h):g[Y+L][X:X+w]=g[y+L][x:x+w]
+    return g
