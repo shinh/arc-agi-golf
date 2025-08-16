@@ -1,10 +1,3 @@
-def p(g):
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
-   if v==8:c=x
-   if v==2:s=y
- o=[[0]*6 for _ in g]
- for y in range(6):
-  if y==s:o[y]=[2]*6;o[y][c]=4
-  else:o[y][c]=8
- return o
+def p(g):# cross row of 2 and column of 8
+ i=sum(g,[]).index;s=i(2)//6;c=i(8)%6;g=range(6)
+ return[[y==s and 2<<(x==c) or 8*(x==c) for x in g]for y in g]
