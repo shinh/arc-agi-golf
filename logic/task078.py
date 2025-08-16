@@ -1,9 +1,4 @@
 def p(g):
- q=range
- h,w=len(g),len(g[0])
- res=[[0]*w for _ in q(h)]
- for j in q(w):
-  nz=[g[i][j]for i in q(h)if g[i][j]!=0]
-  for k,v in enumerate(nz):
-   res[k][j]=v
- return res
+# stack nonzero cells up
+ h=len(g)
+ return[list(r)for r in zip(*[((*filter(None,c),)+(0,)*h)[:h]for c in zip(*g)])]
