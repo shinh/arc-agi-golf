@@ -1,16 +1,14 @@
-def p(g):
- h=w=10;v=set()
+def p(g):# flood fill groups of 5; size 6->2 else 1
+ h=w=10
+ def f(x,y):
+  if-1<x<h>y>-1 and g[x][y]==5:
+   g[x][y]=0
+   return[(x,y)]+f(x+1,y)+f(x-1,y)+f(x,y+1)+f(x,y-1)
+  return[]
  for i in range(h):
   for j in range(w):
-   if g[i][j]==5 and (i,j) not in v:
-    q=[(i,j)];c=[]
-    while q:
-     x,y=q.pop()
-     if (x,y)in v:continue
-     v.add((x,y));c.append((x,y))
-     for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
-      nx,ny=x+dx,y+dy
-      if 0<=nx<h and 0<=ny<w and g[nx][ny]==5 and (nx,ny)not in v:q.append((nx,ny))
-    t=[1,2][len(c)==6]
+   c=f(i,j)
+   if c:
+    t=1+(len(c)==6)
     for x,y in c:g[x][y]=t
  return g
