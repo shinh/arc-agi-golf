@@ -1,9 +1,11 @@
 def p(g):
-    h=len(g);w=len(g[0])
-    o=[[g[y%h][x%w] for x in range(w*2)]for y in range(h*2)]
-    c=[(y,x)for y in range(h*2)for x in range(w*2)if o[y][x]]
-    for y,x in c:
-        for dy,dx in(-1,-1),(-1,1),(1,-1),(1,1):
-            Y=y+dy;X=x+dx
-            if 0<=Y<h*2 and 0<=X<w*2 and o[Y][X]==0:o[Y][X]=8
-    return o
+ # tile grid and add 8s diagonally
+ h=len(g);w=len(g[0]);H=h*2;W=w*2;r=range;o=[g[y%h]*2 for y in r(H)]
+ for y in r(H):
+  for x in r(W):
+   if g[y%h][x%w]:
+    for Y in y-1,y+1:
+     for X in x-1,x+1:
+      if H>Y>=0<=X<W and o[Y][X]<1:o[Y][X]=8
+ return o
+
