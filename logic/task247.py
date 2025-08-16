@@ -1,8 +1,4 @@
-def p(g):
-    d={};f={}
-    for r in g:
-        for x,v in enumerate(r):
-            if v:d[v]=d.get(v,0)+1;f.setdefault(v,x)
-    m=max(d.values())
-    c=sorted([k for k,v in d.items()if v==m],key=f.get)
-    return [c]*m
+def p(g):# flatten and count
+    s=sum(g,[])
+    t=sorted((s.count(i),s.index(i)%len(g[0]),i)for i in {*s}-{0})
+    m=t[-1][0];return[[i for a,b,i in t if a==m]]*m
