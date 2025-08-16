@@ -1,12 +1,12 @@
-def p(g):
-    n=19
-    for y in range(n):
-        for x in range(n):
-            c=g[y][x]
-            if c:g[y][x]=g[n-1-y][x]=g[y][n-1-x]=g[n-1-y][n-1-x]=c
-    for _ in range(4):
-        t=[(y,x,g[y][x])for y in range(n)for x in range(n)if g[y][x]and y+1<x<n-2-y and x%2]
-        for y,x,c in t:
-            for j in range(x,n-2-y,2):g[y][j]=c
-        g=[list(r)for r in zip(*g[::-1])]
+def p(g,E=enumerate):
+    # mirror colors and spread them through rotated scans
+    for y,r in E(g):
+        for x,c in E(r):
+            if c:r[x]=g[18-y][x]=r[18-x]=g[18-y][18-x]=c
+    for _ in'0'*4:
+        for y,r in E(g):
+            for x,c in E(r):
+                if c and y+1<x<17-y and x%2:
+                    for j in range(x,17-y,2):r[j]=c
+        g=[*map(list,zip(*g[::-1]))]
     return g
