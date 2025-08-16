@@ -1,6 +1,6 @@
 # flood fill using rot90 so we only flow to the right
 def p(g):
-    for _ in range(80):
+    for _ in[0]*80:
         g=[[[a,2][a<1<b]for a,b in zip(r,[*r[1:],2])]for r in zip(*g[::-1])]
     for r in g:
         s=-1
