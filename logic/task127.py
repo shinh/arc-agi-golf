@@ -1,8 +1,6 @@
-def p(g,q=range):
- for i in q(1,len(g),4):
-  for j in q(1,len(g[0]),4):
-   v=g[i][j]+5
-   for x in q(3):
-    for y in q(3):
-     g[i-1+x][j-1+y]=v
+# expand each center row into solid 3x3 blocks
+def p(g):
+ for i in range(1,len(g),4):
+  g[i-1:i+2]=[sum(([c+5]*3+[5]for c in g[i][1::4]),[])[:-1]]*3
  return g
+
