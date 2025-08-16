@@ -1,8 +1,8 @@
 def p(g):
-    o=[r for r in g];h=len(g);w=len(g[0])
-    for k in{c for r in g for c in r if c}:
-        ys=[y for y in range(h)for x in range(w)if g[y][x]==k]
-        xs=[x for y in range(h)for x in range(w)if g[y][x]==k]
-        for y in range(min(ys),max(ys)+1):
-            for x in range(min(xs),max(xs)+1):o[y][x]=k
-    return o
+ # fill each color's bounding box
+ e=enumerate
+ for k in{v for r in g for v in r if v}:
+  y,x=zip(*[(i,j)for i,r in e(g)for j,v in e(r)if v==k])
+  a=min(x);b=max(x)+1
+  for i in range(min(y),max(y)+1):g[i][a:b]=[k]*(b-a)
+ return g
