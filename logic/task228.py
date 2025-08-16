@@ -1,13 +1,10 @@
 def p(g):
-    w=h=T=L=10;B=R=0
-    for y in range(h):
-        for x in range(w):
-            if g[y][x]:
-                if y<T:T=y
-                if y>B:B=y
-                if x<L:L=x
-                if x>R:R=x
+    # find colored rectangle, clear inside, push inner corners outward
+    T=L=9;B=R=0
+    for y in range(10):
+        for x in range(10):
+            if g[y][x]:T=min(T,y);B=max(B,y);L=min(L,x);R=max(R,x)
     a,b,c,d=g[T+1][L+1],g[T+1][R-1],g[B-1][L+1],g[B-1][R-1]
-    for y in range(T+1,B):g[y][L+1:R]=[0]*(R-L-1)
-    g[T-1][L-1]=d;g[T-1][R+1]=c;g[B+1][L-1]=b;g[B+1][R+1]=a
+    for r in g[T+1:B]:r[L+1:R]=[0]*(R-L-1)
+    g[T-1][L-1],g[T-1][R+1],g[B+1][L-1],g[B+1][R+1]=d,c,b,a
     return g
