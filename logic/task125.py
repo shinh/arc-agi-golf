@@ -7,8 +7,7 @@ def p(g):
                 s=[(y,x)];Y=[y];X=[x];g[y][x]=0
                 while s:
                     y,x=s.pop()
-                    for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                        ny,nx=y+dy,x+dx
+                    for ny,nx in((y+1,x),(y-1,x),(y,x+1),(y,x-1)):
                         if w>ny>=0<=nx<w and g[ny][nx]==6:
                             s+=[(ny,nx)];g[ny][nx]=0;Y+=ny,;X+=nx,
                 a=max(min(Y)-1,0);b=min(max(Y)+2,w);c=max(min(X)-1,0);d=min(max(X)+2,w)
