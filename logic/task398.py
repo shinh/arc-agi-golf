@@ -1,2 +1,1 @@
-def p(g):#expand
- r=g[0];n=25-5*r.count(0);return[([0]*n+r+[0]*n)[i+1:i+1+n]for i in range(n)]
+def p(g):n=25-5*g[0].count(0);return[(([0]*n+g[0])*2)[i+1:][:n]for i in range(n)]#expand
