@@ -1,7 +1,6 @@
-def p(g,E=enumerate):
- for r,R in E(g):
-  i,X,S=0,[],0
-  for c,C in E(R):
-   if C>0:X=[C,5]*20;S=1
-   if S:g[r][c]=X[i];i+=1
+def p(g):
+ # alt from first color with 5
+ for R in g:
+  for i,C in enumerate(R):
+   if C>0:R[i:]=([C,5]*20)[:len(R)-i];break
  return g
