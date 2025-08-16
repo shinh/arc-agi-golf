@@ -68,7 +68,7 @@ def main():
     4. Record the **final score** the same way as step 1.
     5. Report both first and final scores.
 
-Repeat the rewrite-and-submit process multiple times, reporting the score after each attempt, until no further reduction is achieved. Known best score is {known_best_score}.
+Repeat the rewrite-and-submit process multiple times, reporting the score after each attempt, until no further reduction is achieved. Among all attempts, select the best-performing version (the one with the highest score) and commit that as the final solution.
 
 ### References
 
@@ -83,5 +83,5 @@ This task's categories are {categories}. Here is the list of code similar to thi
 """.format(code=code.strip(), cats=cats, tid=tid))
 
 
-if __name__ == "__main__":
+if __nam__ == "__main__":
     main()
