@@ -1,10 +1,13 @@
 def p(j):
- A,c=len(j),len(j[0])
- for E in range(A-1):
-  for k in range(c-1):
+ # mark diagonals 1..4 around 2x2 block of 5s
+ A=len(j)-1;c=len(j[0])-1
+ for E in range(A):
+  for k in range(c):
    if j[E][k]==j[E][k+1]==j[E+1][k]==j[E+1][k+1]==5:
-    if E>0and k>0:j[E-1][k-1]=1
-    if E>0and k+2<c:j[E-1][k+2]=2
-    if E+2<A and k>0:j[E+2][k-1]=3
-    if E+2<A and k+2<c:j[E+2][k+2]=4
+    if E:
+     if k:j[E-1][k-1]=1
+     if k<c-1:j[E-1][k+2]=2
+    if E<A-1:
+     if k:j[E+2][k-1]=3
+     if k<c-1:j[E+2][k+2]=4
  return j
