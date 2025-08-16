@@ -1,14 +1,14 @@
-def p(g):
-    o=[r[:] for r in g]
-    for y in range(10):
-        for x in range(10):
-            if g[y][x]==8:
-                for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                    ny=y+dy;nx=x+dx
-                    while 0<=ny<10 and 0<=nx<10:
-                        v=g[ny][nx]
-                        if v:
-                            if v-8:o[y][x]=v
-                            break
-                        ny+=dy;nx+=dx
+def p(g,E=enumerate):
+    # replace 8 with closest color along cross
+    o=[*map(list,g)]
+    for y,r in E(g):
+        for x,v in E(r):
+            if v==8:
+                for t in g[y+1:],g[:y][::-1]:
+                    for w in t:
+                        v=w[x]
+                        if v:o[y][x]=v-8 and v or o[y][x];break
+                for t in r[x+1:],r[:x][::-1]:
+                    for v in t:
+                        if v:o[y][x]=v-8 and v or o[y][x];break
     return o
