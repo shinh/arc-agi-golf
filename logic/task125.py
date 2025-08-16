@@ -1,19 +1,20 @@
 def p(g):
-    h=w=15;o=[r for r in g];v=set()
-    for y in range(h):
+    # flood each 6 region and draw padded box
+    w=15;o=[r[:]for r in g]
+    for y in range(w):
         for x in range(w):
-            if g[y][x]==6 and (y,x)not in v:
-                s=[(y,x)];Y=[];X=[]
+            if g[y][x]==6:
+                s=[(y,x)];Y=[y];X=[x];g[y][x]=0
                 while s:
-                    y1,x1=s.pop()
-                    if(y1,x1)in v:continue
-                    v.add((y1,x1));Y+=[y1];X+=[x1]
+                    y,x=s.pop()
                     for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-                        ny, nx=y1+dy,x1+dx
-                        if 0<=ny<h and 0<=nx<w and g[ny][nx]==6 and (ny,nx)not in v:s.append((ny,nx))
-                r0=max(min(Y)-1,0);r1=min(max(Y)+2,h);c0=max(min(X)-1,0);c1=min(max(X)+2,w)
-                for yy in range(r0,r1):
-                    for xx in range(c0,c1):
-                        if yy in (r0,r1-1) or xx in (c0,c1-1):o[yy][xx]=3
-                        elif g[yy][xx]!=6:o[yy][xx]=4
+                        ny,nx=y+dy,x+dx
+                        if w>ny>=0<=nx<w and g[ny][nx]==6:
+                            s+=[(ny,nx)];g[ny][nx]=0;Y+=ny,;X+=nx,
+                a=max(min(Y)-1,0);b=min(max(Y)+2,w);c=max(min(X)-1,0);d=min(max(X)+2,w)
+                for y in range(a,b):
+                    for x in range(c,d):
+                        if y in(a,b-1)or x in(c,d-1):o[y][x]=3
+                        elif o[y][x]-6:o[y][x]=4
     return o
+
