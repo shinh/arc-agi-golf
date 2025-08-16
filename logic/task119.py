@@ -3,7 +3,7 @@ def p(g):
  z=lambda y,x:(-1<x<12>y>-1)and g[y][x]
  for a in 1,-1:
   for b in 1,-1:
-   n=[*map(list,g)];f=0
+   f=0;n=[r[:]for r in g]
    for i in range(12):
     for x in range(12):
      y=i
@@ -16,5 +16,5 @@ def p(g):
         continue
        if g[y][x]:break
        n[y][x]=3;y+=a;x+=b
-   g=[g,n][f]
+   f and(g:=n)
  return g
