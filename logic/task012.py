@@ -1,1 +1,6 @@
-def p(g,d=range(-2,3),E=enumerate,A=abs):G=[A[:]for A in g];[G[I+D].__setitem__(C+F,H if A(D)==A(F)else B[C-1])for(I,B)in E(g)for(C,H)in E(B)if H and B[C-1]*B[C+1]for D in d for F in d if A(D)==A(F)or not D*F];return G
+# expand cross pattern into larger diamond with cross arms
+def p(g,r=range(-2,3),E=enumerate):
+    G=[*map(list,g)]
+    [G[i+D].__setitem__(j+F,R[j-1] if D*D-F*F else x)for i,R in E(g)for j,x in E(R)if x and R[j-1]*R[j+1]for D in r for F in r if(D*D-F*F)*D*F==0]
+    return G
+
