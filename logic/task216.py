@@ -1,14 +1,14 @@
 def p(g):
     # crop region with most 2s
-    v=set();m=-1
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c and(y,x)not in v:
-                q=[(y,x)];v|={(y,x)};y1=y2=y;x1=x2=x;n=c==2
-                while q:
-                    i,j=q.pop()
+    R=range(20);h=[r[:]for r in g];m=-1
+    for y in R:
+        for x in R:
+            if h[y][x]:
+                q=[(y,x)];h[y][x]=0
+                for i,j in q:
                     for u,w in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
-                        if-1<u<20>w>-1 and g[u][w]and(u,w)not in v:
-                            v|={(u,w)};q+=[(u,w)];y1=min(y1,u);y2=max(y2,u);x1=min(x1,w);x2=max(x2,w);n+=g[u][w]==2
-                if n>m:m=n;B=y1,y2,x1,x2
-    y1,y2,x1,x2=B;return[r[x1:x2+1]for r in g[y1:y2+1]]
+                        if-1<u<20>w>-1 and h[u][w]:h[u][w]=0;q+=[(u,w)]
+                Y,X=zip(*q);n=sum(g[i][j]==2 for i,j in q)
+                if n>m:m=n;B=min(Y),max(Y),min(X),max(X)
+    a,b,c,d=B
+    return[r[c:d+1]for r in g[a:b+1]]

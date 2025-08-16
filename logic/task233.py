@@ -16,6 +16,7 @@ def p(g):
   if (b-t+1)*(r-l+1)==n and m in (s:=sum(p:=[z[l:r+1]for z in G[t:b+1]],[])) and len({*s})>1:
    r=[p]
    for _ in'123':r+=[p:=[*zip(*p[::-1])]]
+   # try rotations and mirrors to fit
    for t in r+[[s[::-1]for s in q]for q in r]:
     h=len(t);w=len(t[0])
     S=[(i,j)for i in range(H-h+1)for j in range(W-w+1)if all((t[a][b]==m)==(o[i+a][j+b]==0)for a in range(h)for b in range(w))]

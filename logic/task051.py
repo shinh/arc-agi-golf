@@ -1,13 +1,8 @@
 def p(g):
     # extend the lone colored cell toward its neighbor
-    h=len(g);w=len(g[0]);f=sum(g,[])
-    for c in f:
-        if f.count(c)==1:break
-    y,x=divmod(f.index(c),w)
-    for dy,dx in((0,1),(1,0),(0,-1),(-1,0)):
-        y1,x1=y+dy,x+dx
-        if h>y1>=0<=x1<w and g[y1][x1] and not(h>y-dy>=0<=x-dx<w and g[y-dy][x-dx]):
-            while h>y1>=0<=x1<w and g[y1][x1]:y1+=dy;x1+=dx
-            while h>y1>=0<=x1<w:g[y1][x1]=c;y1+=dy;x1+=dx
-            break
-    return g
+    h=len(g);w=len(g[0]);f=sum(g,[]);c=min(f,key=f.count);y,x=divmod(f.index(c),w)
+    for a,b in((0,1),(1,0),(0,-1),(-1,0)):
+        Y,X=y+a,x+b
+        if h>Y>=0<=X<w and g[Y][X] and not(h>y-a>=0<=x-b<w and g[y-a][x-b]):
+            while h>Y>=0<=X<w:g[Y][X]=g[Y][X] or c;Y+=a;X+=b
+            return g
