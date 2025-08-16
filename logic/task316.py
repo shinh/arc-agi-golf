@@ -1,7 +1,3 @@
-def p(m):
- n=3;v=[]
- for c in zip(*m):
-  for x in c:
-   if x:v+=[x];break
- v+=[0]*(n*n-len(v))
- return[v[i*n:i*n+n][::1-2*(i%2)]for i in range(n)]
+# first nonzero per nonempty column, zigzag
+def p(m):v=[next(filter(None,c))for c in zip(*m)if any(c)]+[0]*9;return[v[:3],v[5:2:-1],v[6:9]]
+
