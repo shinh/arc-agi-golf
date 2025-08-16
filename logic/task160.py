@@ -1,8 +1,8 @@
 def p(g):
-    o=[r for r in g]
-    for y in range(8):
-        for x in range(8):
-            if [g[y+i][x:x+3]for i in range(3)]==[[1,1,1],[1,0,1],[1,1,1]]:
-                o[y][x]=o[y][x+2]=o[y+2][x]=o[y+2][x+2]=0
-                o[y][x+1]=o[y+1][x]=o[y+1][x+1]=o[y+1][x+2]=o[y+2][x+1]=2
-    return o
+ r=range(8)# ring->cross
+ for y in r:
+  a,b,c=g[y:y+3]
+  for x in r:
+   if b[x+1]<1<sum(sum(r[x:x+3])for r in(a,b,c))>7:
+    a[x:x+3]=c[x:x+3]=0,2,0;b[x:x+3]=2,2,2
+ return g
