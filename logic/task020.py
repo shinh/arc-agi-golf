@@ -1,13 +1,14 @@
 def p(g):
-    w=h=10;pts=[(y,x,g[y][x])for y in range(h)for x in range(w)if g[y][x]]
-    if not pts:return g
-    ys=[y for y,_,_ in pts];xs=[x for _,x,_ in pts];b,d=min(ys),max(ys);a,c=min(xs),max(xs)
-    cx=(a+c)/2;cy=(b+d)/2
-    o=[[0]*w for _ in range(h)]
-    for y,x,v in pts:
-        xx=x-cx;yy=y-cy
-        for Y,X in((y,x),(cy+xx,cx-yy),(2*cy-y,2*cx-x),(cy-xx,cx+yy)):
-            Y=int(round(Y));X=int(round(X))
-            if 0<=Y<h and 0<=X<w:o[Y][X]=v
+    # rotate points around their box center
+    P=[(y,x,v)for y,r in enumerate(g)for x,v in enumerate(r)if v]
+    if not P:return g
+    ys,xs,_=zip(*P);b,d=min(ys),max(ys);a,c=min(xs),max(xs);cx=(a+c)/2;cy=(b+d)/2
+    o=[[0]*10 for _ in g]
+    for y,x,v in P:
+        x-=cx;y-=cy
+        o[int(round(y+cy))][int(round(x+cx))]=v;x,y=y,-x
+        o[int(round(y+cy))][int(round(x+cx))]=v;x,y=y,-x
+        o[int(round(y+cy))][int(round(x+cx))]=v;x,y=y,-x
+        o[int(round(y+cy))][int(round(x+cx))]=v;x,y=y,-x
     return o
 
