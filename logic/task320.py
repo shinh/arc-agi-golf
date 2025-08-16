@@ -1,6 +1,5 @@
 def p(m,O=range):
- r=len(m);c=len(m[0]);p=[i[:]for i in m]
- for j in O(c):
-  S=[i for i in O(r)if m[i][j]];l=len(S)//2
-  for i in O(l):p[S[-1-i]][j]=8
- return p
+ # color bottom half of each filled column 8
+ for j in O(len(m[0])):
+  for k in (S:=[i for i in O(len(m))if m[i][j]])[-(len(S)//2):]:m[k][j]=8
+ return m
