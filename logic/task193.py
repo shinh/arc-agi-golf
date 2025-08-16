@@ -1,1 +1,2 @@
-p=lambda g,E=enumerate:[[v if(i and g[i-1][j]==v)+(i+1<len(g)and g[i+1][j]==v)+(j and r[j-1]==v)+(j+1<len(g)and r[j+1]==v)>1else 0 for j,v in E(r)]for i,r in E(g)]
+#2+ same
+p=lambda g,E=enumerate:[[v*((r[j-1:j]+r[j+1:j+2]+[w[j]for w in g[i-1:i]+g[i+1:i+2]]).count(v)>1)for j,v in E(r)]for i,r in E(g)]
