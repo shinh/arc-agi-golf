@@ -1,11 +1,7 @@
-def p(g,R=range):
-	E,D=len(g),len(g[0]);B=[0 for A in R(D)]
-	for A in R(D):
-		for C in R(E):
-			if g[C][A]>0:B[A]+=1
-			g[C][A]=0
-	F=min([A for A in B if A>0]);A=B.index(F)
-	for C in R(B[A]):g[-(C+1)][A]=2
-	A=B.index(max(B))
-	for C in R(B[A]):g[-(C+1)][A]=1
-	return g
+def p(g):
+ B=[sum(map(bool,c))for c in zip(*g)];g=[[0]*len(B)for _ in g]# count nonzero cells per column and draw bars
+ for v,n in((2,min({*B}-{0})),(1,max(B))):
+  i=B.index(n)
+  for r in g[-n:]:r[i]=v
+ return g
+
