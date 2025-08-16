@@ -1,8 +1,8 @@
 def p(g):
- h=len(g);w=len(g[0]);f=sum(g,[])
- B=max(f,key=f.count)
+ # compare border mini to shapes
+ f=sum(g,[]);B=max(f,key=f.count)
  O={frozenset((c,(i,j))for i,r in enumerate(g)for j,v in enumerate(r)if v==c)for c in set(f)-{B}}
- E=next(s for s in O if any(i in(0,h-1)or j in(0,w-1)for _,(i,j)in s))
+ E=next(s for s in O if any(i in(0,len(g)-1)or j in(0,len(g[0])-1)for _,(i,j)in s))
  (c1,S1),(c2,S2)=[(next(iter(s))[0],[p for _,p in s])for s in O-{E}]
  E=[p for _,p in E]
  def m(S,c):
@@ -10,5 +10,4 @@ def p(g):
   for i,j in S:a[i-mi][j-mj]=c
   return a
  g1,g2,e=m(S1,c1),m(S2,c2),m(E,c1)
- o=lambda G,P:any(all(G[(i+a)//2][(j+b)//2]==P[a][b]for a in range(len(P))for b in range(len(P[0])))for i in range(len(G)*2-len(P)+1)for j in range(len(G[0])*2-len(P[0])+1))
- return g1 if o(g1,e)else g2
+ return g1 if any(all(g1[(i+a)//2][(j+b)//2]==e[a][b]for a in range(len(e))for b in range(len(e[0])))for i in range(len(g1)*2-len(e)+1)for j in range(len(g1[0])*2-len(e[0])+1))else g2
