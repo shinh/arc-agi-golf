@@ -1,1 +1,2 @@
-p=lambda g,a=[2]*3,b=[0]*3:[[a,[0,2,0],b],[a,b,b],[[2,2,0],b,b],[[2,0,0],b,b]][4-sum(r.count(1)for r in g)]
+# draw bar in first row and center if count is four
+p=lambda g,b=[0]*3:(n:=sum(sum(g,[])))and[([2]*n+b)[:3],(n>3)*[0,2,0]or b,b]
