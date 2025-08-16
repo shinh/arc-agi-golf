@@ -8,4 +8,5 @@
 #
 # and and another task contains both the above pattern and a larger pattern.
 def p(g):
+    # brute-force scan for the largest framed rectangle
     return max(([r[sx:ex+1]for r in g[sy:ey+1]]for sy in range(1,len(g)-1)for sx in range(1,len(g[0])-1)for ey in range(sy,len(g)-1)for ex in range(sx,len(g[0])-1)if{g[sy][sx-1]}=={*g[sy-1][sx-1:ex+2],*g[ey+1][sx-1:ex+2],g[sy][ex+1],*[g[y][sx-1]for y in range(sy-1,ey+2)]}),key=len)
