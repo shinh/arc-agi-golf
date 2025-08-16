@@ -4,7 +4,7 @@ def p(g):
     for y in range(10):
         for x in range(10):
             if g[y][x]:T=min(T,y);B=max(B,y);L=min(L,x);R=max(R,x)
-    a,b,c,d=g[T+1][L+1],g[T+1][R-1],g[B-1][L+1],g[B-1][R-1]
+    t=g[T+1][:];b=g[B-1][:]
     for r in g[T+1:B]:r[L+1:R]=[0]*(R-L-1)
-    g[T-1][L-1],g[T-1][R+1],g[B+1][L-1],g[B+1][R+1]=d,c,b,a
+    g[T-1][L-1],g[T-1][R+1],g[B+1][L-1],g[B+1][R+1]=b[R-1],b[L+1],t[R-1],t[L+1]
     return g
