@@ -1,4 +1,5 @@
 def p(g):
+ # expand rare color into cross
  h=len(g);w=len(g[0])
  t=sum(g,[]);c=min(t,key=t.count)
  S={divmod(i,w)for i,v in enumerate(t)if v==c}
@@ -10,7 +11,7 @@ def p(g):
     q=-9
     for x in range(w):
      if(y,x)in S:
-      if x-q<5:S|={(y,t)for t in range(q+1,x)}
+      if x-q<5:S|={(y,t)for t in range(q,x)}
       q=x
    h,w=w,h;S={(x,y)for y,x in S}
  L=0;M=set()
@@ -28,9 +29,10 @@ def p(g):
     x+=1
   h,w=w,h;S={(x,y)for y,x in S};M={(x,y)for y,x in M}
  m=L//2
- for y,x in M|{(y,x)for y,x in S if{(y-1,x),(y+1,x)}&S and{(y,x-1),(y,x+1)}&S}:
+ M|={(y,x)for y,x in S if{(y-1,x),(y+1,x)}&S and{(y,x-1),(y,x+1)}&S}
+ for y,x in M:
   for d in range(-m,m+1):
-   if 0<=y+d<h:S.add((y+d,x))
-   if 0<=x+d<w:S.add((y,x+d))
+   0<=y+d<h and S.add((y+d,x))
+   0<=x+d<w and S.add((y,x+d))
  for y,x in S:g[y][x]=(8,c)[g[y][x]==c]
  return g
