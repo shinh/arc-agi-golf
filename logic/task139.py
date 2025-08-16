@@ -1,7 +1,9 @@
-from itertools import product
+# fill zeros in a 3x3 window whose sides contain 4
 def p(g,O=range):
- for y,x in product(O(len(g)-2),O(len(g[0])-2)):
-  R=O(y,y+3)
-  if not all(4 in i for i in[g[y][x:x+3],g[y+2][x:x+3],[g[a][x]for a in R],[g[a][x+2]for a in R]]):continue
-  for a,b in product(R,O(x,x+3)):g[a][b]+=7*(g[a][b]==0)
+ for y in O(len(g)-2):
+  R=g[y:y+3]
+  for x in O(len(g[0])-2):
+   if all(4 in i for i in[R[0][x:x+3],R[2][x:x+3],[r[x]for r in R],[r[x+2]for r in R]]):
+    for r in R:
+     for b in O(x,x+3):r[b]=r[b] or 7
  return g
