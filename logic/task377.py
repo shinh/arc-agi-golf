@@ -1,7 +1,4 @@
 def p(g):
- u=lambda a:[r for i,r in enumerate(a)if r not in a[:i]]
- g=u(g);g=list(map(list,zip(*g)))
- g=u(g);g=list(map(list,zip(*g)))
- g+=g[-2::-1];g=list(map(list,zip(*g)))
- g+=g[-2::-1]
- return g
+ # dedupe+mirror
+ u=lambda a:dict.fromkeys(map(tuple,a));t=lambda g:[*map(list,zip(*g))];r=lambda a:a+a[-2::-1]
+ return r(t(r(t(u(t(u(g)))))))
