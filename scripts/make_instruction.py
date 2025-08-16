@@ -46,7 +46,7 @@ def main():
     known_best = min(ours[int(task_id) - 1][0], theirs[int(task_id) - 1])
     known_best_score = 2500 - known_best
 
-    title = f"Your task is to **rewrite `logic/{task_id}.py` into a fully code-golfed solution**"
+    title = f"Your task is to **rewrite `logic/task{task_id}.py` into a fully code-golfed solution**"
 
     print(r"""{title}
 
