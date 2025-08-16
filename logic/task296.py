@@ -1,3 +1,5 @@
 def p(g):
- # max per region
- return[[max(g[y][x]for y in rs for x in cs)for cs in([0],range(1,6),[6])]for rs in([0],[1,2,3],[4])]
+ #max per region
+ g[1:4]=[*map(max,zip(*g[1:4]))],
+ for r in g:r[1:6]=max(r[1:6]),
+ return g
