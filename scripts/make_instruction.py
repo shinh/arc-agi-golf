@@ -10,8 +10,8 @@ import sota
 
 def read_ours():
     ours = []
-    for code, py in zip(sorted(glob.glob("logic/*.py")), sorted(glob.glob("submissions/*.py"))):
-        ours.append((os.path.getsize(py), open(code).read()))
+    for code, o in zip(sorted(glob.glob("logic/*.py")), sorted(glob.glob("ours//*.txt"))):
+        ours.append((2500 - int(open(o).read()), open(code).read()))
     return ours
 
 
