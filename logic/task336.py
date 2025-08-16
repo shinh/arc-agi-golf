@@ -1,23 +1,16 @@
 def p(g):
- h=w=10
- a=h;b=0;c=w;d=0
+ # box fill then extend line
+ a=c=10;b=d=dx=dy=0
  for y,r in enumerate(g):
   for x,v in enumerate(r):
-   if v==5:
-    if y<a:a=y
-    if y>b:b=y
-    if x<c:c=x
-    if x>d:d=x
- for y in range(a+1,b):
-  for x in range(c+1,d):g[y][x]=8
- x=y=0;dy=dx=0
- for i in range(c,d+1):
-  if g[a][i]==0:y=a;x=i;dy=-1;break
-  if g[b][i]==0:y=b;x=i;dy=1;break
- if dy==0:
-  for i in range(a,b+1):
-   if g[i][c]==0:y=i;x=c;dx=-1;break
-   if g[i][d]==0:y=i;x=d;dx=1;break
- while 0<=y<h and 0<=x<w:
-  g[y][x]=8;y+=dy;x+=dx
+   if v==5:a=min(a,y);b=max(b,y);c=min(c,x);d=max(d,x)
+ for r in g[a+1:b]:r[c+1:d]=[8]*(d-c-1)
+ for x in range(c,d+1):
+  if g[a][x]<1:y=a;dy=-1;break
+  if g[b][x]<1:y=b;dy=1;break
+ else:
+  for y in range(a,b+1):
+   if g[y][c]<1:x=c;dx=-1;break
+   if g[y][d]<1:x=d;dx=1;break
+ while 0<=y<10 and 0<=x<10:g[y][x]=8;y+=dy;x+=dx
  return g
