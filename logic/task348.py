@@ -1,11 +1,8 @@
+# alternate columns expanding from marker
 def p(g,I=range):
- h,w,a,b=len(g),len(g[0]),0,0
- for y in I(h):
-  for x in I(w):
-   if g[y][x]:a,b=y+2,x
- def s(y,x,c):
-  if 0<=x<w:g[y][x]=c
+ w=len(g[0])
+ b=max(i for i,v in enumerate(sum(g,[]))if v)
+ a,b=b//w+2,b%w
  for i in I(w):
-  a,c=a-1,7+i%2
-  for y in I(a):s(y,b-i,c);s(y,b+i,c)
+  a,c=a-1,7+i%2;[w>b+j>=0 and g[y].__setitem__(b+j,c)for y in I(a)for j in(-i,i)]
  return g
