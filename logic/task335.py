@@ -1,5 +1,6 @@
-def p(g,R=range):
-	F=lambda v:next((B,A.index(v))for(B,A)in enumerate(g)if v in A);C,A=F(8);B,D=F(2)
-	for E in R(C+1,B+1)if C<B else R(B,C):g[E][A]=4
-	for E in R(A,D)if A<D else R(D+1,A):g[B][E]=4
-	return g
+def p(g):
+        i=sum(g,[]).index;w=len(g[0]);C,A=divmod(i(8),w);B,D=divmod(i(2),w)
+        # connect 8 to 2 with a 4 path
+        while C-B:C+=B>C or-1;g[C][A]=4
+        while A-D:g[B][A]=4;A+=D>A or-1
+        return g
