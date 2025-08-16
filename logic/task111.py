@@ -1,5 +1,5 @@
 def p(g):
-    for y,r in enumerate(g):
-        if 5 in r:
-            x=r.index(5)-1
-            return [g[y+i][x:x+3] for i in range(1,4)]
+ # flatten index and crop
+ i=sum(g,[]).index(5);w=len(g[0])
+ return[g[i//w+j][i%w-1:i%w+2]for j in(1,2,3)]
+
