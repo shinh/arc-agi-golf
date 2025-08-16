@@ -1,13 +1,32 @@
+# draw lines from each colored cell toward a nearby 3
 def p(g):
- h=w=10;r=[r for r in g]
- for i in range(h):
-  for j in range(w):
-   c=g[i][j]
-   if c and c!=3:
-    for dx,dy in((1,0),(-1,0),(0,1),(0,-1)):
-     x,y=i+dx,j+dy
-     while 0<=x<h and 0<=y<w and g[x][y]==0:x+=dx;y+=dy
-     if 0<=x<h and 0<=y<w and g[x][y]==3:
-      x-=dx;y-=dy
-      while(x,y)!=(i,j):r[x][y]=c;x-=dx;y-=dy
- return r
+ for r in g:
+  for j,c in enumerate(r):
+   if c and c-3:
+    k=j+1
+    while k<10 and r[k]==0:k+=1
+    if k<10 and r[k]==3:r[j+1:k]=[c]*(k-j-1)
+ g=[*map(list,zip(*g[::-1]))]
+ for r in g:
+  for j,c in enumerate(r):
+   if c and c-3:
+    k=j+1
+    while k<10 and r[k]==0:k+=1
+    if k<10 and r[k]==3:r[j+1:k]=[c]*(k-j-1)
+ g=[*map(list,zip(*g[::-1]))]
+ for r in g:
+  for j,c in enumerate(r):
+   if c and c-3:
+    k=j+1
+    while k<10 and r[k]==0:k+=1
+    if k<10 and r[k]==3:r[j+1:k]=[c]*(k-j-1)
+ g=[*map(list,zip(*g[::-1]))]
+ for r in g:
+  for j,c in enumerate(r):
+   if c and c-3:
+    k=j+1
+    while k<10 and r[k]==0:k+=1
+    if k<10 and r[k]==3:r[j+1:k]=[c]*(k-j-1)
+ g=[*map(list,zip(*g[::-1]))]
+ return g
+
