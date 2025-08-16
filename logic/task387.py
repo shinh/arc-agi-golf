@@ -1,19 +1,18 @@
 def p(g):
  # flood fill each color, draw complement borders, then color outer ring by parity
- h=len(g);w=len(g[0]);o=[r[:]for r in g];f=[];a=h;b=0;c=w;d=0;u=sum({*sum(g,[])})
+ h=len(g);w=len(g[0]);o=[r[:]for r in g];f=[];a=h;c=w;b=d=0;u=sum({*sum(g,[])})
  for y in range(h):
   for x in range(w):
-   k=g[y][x]
-   if k:
-    g[y][x]=0;q=[(y,x)];y0=y1=y;x0=x1=x
-    while q:
-     i,j=q.pop();f+=[(i,j)];a=min(a,i);b=max(b,i);c=min(c,j);d=max(d,j);y0=min(y0,i);y1=max(y1,i);x0=min(x0,j);x1=max(x1,j)
-     for ny,nx in(i+1,j),(i-1,j),(i,j+1),(i,j-1):
-      if h>ny>=0<=nx<w and g[ny][nx]==k:g[ny][nx]=0;q+=[(ny,nx)]
-    k=u-k;y0-=y0>0;y1+=y1<h-1;x0-=x0>0;x1+=x1<w-1
-    for j in range(x0,x1+1):o[y0][j]=o[y1][j]=k
-    for i in range(y0,y1+1):o[i][x0]=o[i][x1]=k
+   if k:=g[y][x]:
+    g[y][x]=0;q=[(y,x)];A=B=y;C=D=x
+    for i,j in q:
+     f+=[(i,j)];a=min(a,i);b=max(b,i);c=min(c,j);d=max(d,j);A=min(A,i);B=max(B,i);C=min(C,j);D=max(D,j)
+     for I,J in(i+1,j),(i-1,j),(i,j+1),(i,j-1):
+      if h>I>=0<=J<w and g[I][J]==k:g[I][J]=0;q+=[(I,J)]
+    k=u-k;A-=A>0;B+=h-1>B;C-=C>0;D+=w-1>D
+    for j in range(C,D+1):o[A][j]=o[B][j]=k
+    for i in range(A,B+1):o[i][C]=o[i][D]=k
  for i in range(a,b+1):
   for j in range(c,d+1):
-   if (i in(a,b)or j in(c,d))and o[i][j]<1 and min(abs(i-y)+abs(j-x)for y,x in f)&1<1:o[i][j]=5
+   if(i in(a,b)or j in(c,d))and o[i][j]<1 and min(abs(i-y)+abs(j-x)for y,x in f)&1<1:o[i][j]=5
  return o
