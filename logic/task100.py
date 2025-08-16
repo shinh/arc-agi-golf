@@ -1,2 +1,2 @@
-def p(g):#ignore0
- return[[max(g:=sum(g,[]),key=lambda x:x and g.count(x))]*2]*2
+# pick most frequent nonzero
+p=lambda g:[[max(range(1,10),key=sum(g,[]).count)]*2]*2#ignore0
