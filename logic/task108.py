@@ -1,3 +1,3 @@
-def p(g):
-    r=[[max(g[2*i][2*j:2*j+2]+g[2*i+1][2*j:2*j+2])for j in range(5)]for i in range(5)]
-    return[[c for c in row for _ in range(4)]for row in r for _ in range(4)]
+def p(g,t=(0,2,4,6,8)):
+    # get max of each 2x2 block then upscale by 4
+    return sum([[sum([[max(g[i][j:j+2]+g[i+1][j:j+2])]*4 for j in t],[])]*4 for i in t],[])
