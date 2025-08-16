@@ -1,29 +1,17 @@
 def p(g):
- h=w=10;v=[[0]*w for _ in g];B=[]
- for y in range(h):
-  for x in range(w):
+ # flood-fill rectangles framed by 1's with inner color
+ v=[[0]*10 for _ in g]
+ for y in range(10):
+  for x in range(10):
    if g[y][x]==1 and not v[y][x]:
-    q=[(y,x)];v[y][x]=1;R=[];C=[]
+    q=[(y,x)];v[y][x]=1;u=d=y;l=r=x
     while q:
-     i,j=q.pop();R+=[i];C+=[j]
-     for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-      ni=i+dy;nj=j+dx
-      if 0<=ni<h and 0<=nj<w and g[ni][nj]==1 and not v[ni][nj]:v[ni][nj]=1;q+=[(ni,nj)]
-    B+=[(min(R),max(R),min(C),max(C))]
- for y in range(h):
-  for x in range(w):
-   c=g[y][x]
-   if c and c!=1:
-    for a,b,l,r in B:
-     if a<=y<=b and l<=x<=r:
-      t=max(0,a-1);v=[[0]*w for _ in g];q=[(y,x)];v[y][x]=1
-      while q:
-       i,j=q.pop()
-       for dy,dx in((1,0),(-1,0),(0,1),(0,-1)):
-        ni=i+dy;nj=j+dx
-        if t<=ni<=b and l<=nj<=r and g[ni][nj]==0 and not v[ni][nj]:v[ni][nj]=1;q+=[(ni,nj)]
-      for i in range(h):
-       for j in range(w):
-        if v[i][j]:g[i][j]=c
-      break
+     i,j=q.pop()
+     for n,m in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
+      if 0<=n<10>m>-1 and g[n][m]==1 and not v[n][m]:
+       v[n][m]=1;q+=[(n,m)];u=min(u,n);d=max(d,n);l=min(l,m);r=max(r,m)
+    c=max(g[i][j]for i in range(u,d+1)for j in range(l,r+1))
+    for i in range(u and u-1,d+1):
+     for j in range(l,r+1):
+      if g[i][j]<1:g[i][j]=c
  return g
