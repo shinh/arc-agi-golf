@@ -1,2 +1,2 @@
 def p(g):
-    a=g[0][0];h,w=[sum(a not in r for r in t)+1 for t in (g,zip(*g))];return[[a]*w]*h # fill top-left color block
+    a=g[0][0];f=lambda t:-~sum(a not in r for r in t);return[[a]*f(zip(*g))]*f(g) # fill top-left block
