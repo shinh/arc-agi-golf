@@ -1,9 +1,6 @@
 def p(g):
- t={}
- for y,r in enumerate(g):
-  for c in r:t.setdefault(c,y)
- u=t[1];o=[[0]*len(g[0])for _ in g]
- for y,r in enumerate(g):
-  for x,c in enumerate(r):
-   if c:o[y+u-t[c]][x]=c
+ # align colors to first row of 1
+ f=sum(g,[]);i=f.index;w=len(g[0]);u=i(1)//w;o=[[0]*w for _ in g]
+ for k,c in enumerate(f):
+  if c:o[k//w+u-i(c)//w][k%w]=c
  return o
