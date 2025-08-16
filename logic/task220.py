@@ -1,11 +1,11 @@
 def p(g,E=enumerate):
- d={8:4,2:1,3:6};X=[[C for i,C in E(R)]for R in g]
- for r,R in E(g):
+# color neighbors
+ d={8:4,2:1,3:6};N=-1,0,1;X=[*map(list,g)]
+ for r,R in E(X):
   for c,C in E(R):
-   if C:
-    for i in range(-1,2):
-     for j in range(-1,2):
-      try:
-       if[i,j]!=[0,0]:X[r+i][c+j]=d[C]
+   for i in N:
+    for j in N:
+     if C and(i|j):
+      try:X[r+i][c+j]=d[C]
       except:0
  return X
