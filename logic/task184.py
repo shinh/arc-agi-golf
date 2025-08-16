@@ -1,20 +1,7 @@
 def p(g):
+ # merge blocks separated by empty rows/cols, keep first colors
  R=range
  n,m=len(g),len(g[0])
- r=[i for i in R(n)if all(g[i][j]==0for j in R(m))]
- c=[j for j in R(m)if all(g[i][j]==0for i in R(n))]
- r=[-1]+r+[n]
- c=[-1]+c+[m]
- o=[]
- for i in R(len(r)-1):
-  t=[]
-  for j in R(len(c)-1):
-   for x in R(r[i]+1,r[i+1]):
-    for y in R(c[j]+1,c[j+1]):
-     if g[x][y]:
-      t.append(g[x][y])
-      break
-    else:continue
-    break
-  if t:o.append(t)
- return o
+ r=[-1]+[i for i in R(n)if not any(g[i])]+[n]
+ c=[-1]+[j for j in R(m)if not any(g[i][j]for i in R(n))]+[m]
+ return [t for a,b in zip(r,r[1:]) if (t:=[v for c,d in zip(c,c[1:]) if (v:=next((g[x][y]for x in R(a+1,b)for y in R(c+1,d)if g[x][y]),0))])]
