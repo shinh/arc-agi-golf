@@ -1,31 +1,25 @@
 def p(g):
-    w=h=20
-    seen=set();objs=[]
-    for i in range(h):
-        for j in range(w):
-            if g[i][j]==0 or(i,j) in seen:continue
-            c=g[i][j];q=[(i,j)];seen.add((i,j));cells=[]
-            while q:
-                y,x=q.pop();cells+=[(y,x)]
+    # find biggest frame and recolor matching shapes
+    v=set();o=[];h=w=20
+    for y in range(h):
+        for x in range(w):
+            if g[y][x]<1 or (y,x)in v:continue
+            c=g[y][x];v.add((y,x));q=[(y,x)]
+            for Y,X in q:
                 for a,b in((1,0),(-1,0),(0,1),(0,-1)):
-                    u,v=y+a,x+b
-                    if 0<=u<h and 0<=v<w and g[u][v]==c and (u,v)not in seen:
-                        seen.add((u,v));q+=[(u,v)]
-            objs+=[cells]
-    frames=[]
-    for s in objs:
-        ys=[y for y,x in s];xs=[x for y,x in s]
-        t,b=min(ys),max(ys);l,r=min(xs),max(xs)
-        if all(y in(t,b) or x in(l,r) for y,x in s) and len(s)==2*(b-t+r-l+2)-4:
-            frames+=[(t,b,l,r)]
-    t,b,l,r=max(frames,key=lambda z:(z[1]-z[0])*(z[3]-z[2]))
-    t+=1;b-=1;l+=1;r-=1
-    pat=[(y,x) for y in range(t,b+1) for x in range(l,r+1) if g[y][x]]
-    col=g[pat[0][0]][pat[0][1]]
-    mi=min(y for y,x in pat);mj=min(x for y,x in pat)
-    shp={(y-mi,x-mj) for y,x in pat}
-    for s in objs:
-        mi=min(y for y,x in s);mj=min(x for y,x in s)
-        if {(y-mi,x-mj) for y,x in s}==shp:
-            for y,x in s:g[y][x]=col
+                    u,V=Y+a,X+b
+                    if 0<=u<h and 0<=V<w and g[u][V]==c and (u,V)not in v:v.add((u,V));q+=(u,V),
+            o+=q,
+    f=[]
+    for s in o:
+        ys,xs=zip(*s);t=min(ys);b=max(ys);l=min(xs);r=max(xs)
+        if all(y in(t,b) or x in(l,r) for y,x in s) and len(s)==2*(b-t+r-l):f+=((b-t)*(r-l),t,b,l,r),
+    _,t,b,l,r=max(f)
+    P=[(y,x)for y in range(t+1,b)for x in range(l+1,r)if g[y][x]]
+    y,x=P[0];c=g[y][x]
+    ys,xs=zip(*P);a=min(ys);b=min(xs);S={(y-a,x-b)for y,x in P}
+    for s in o:
+        ys,xs=zip(*s);a=min(ys);b=min(xs)
+        if {(y-a,x-b)for y,x in s}==S:
+            for y,x in s:g[y][x]=c
     return g
