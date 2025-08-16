@@ -1,7 +1,4 @@
+# copy colors to horizontal neighbors then repeat rows
 def p(g):
-    r=g[0];m=len(r);s=[0]*m
-    for i,v in enumerate(r):
-        if v:
-            if i:s[i-1]=v
-            if i<m-1:s[i+1]=v
-    return[(r,s)[i%2]for i in range(len(g))]
+    a=[0,*g[0],0];l=len(g)
+    return([g[0],[b or a for a,b in zip(a,a[2:])]]*l)[:l]
