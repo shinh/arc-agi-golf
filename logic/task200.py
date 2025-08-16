@@ -1,9 +1,9 @@
-def p(g):
- n,E,R,t=10,enumerate,range,0
- for i,a in E(g):
-  for j,v in E(a):
-   if v%5:
-    for c in R(j,n,2):
-     for r in R(i+1):g[r][c]=v
-    for c in R(j+1,n,2):g[t*(n-1)][c]=5;t^=1
-    return g
+def p(g):#stripe
+ E,t=enumerate,0
+ i,j,v=next((i,j,v)for i,a in E(g)for j,v in E(a)if v%5)
+ while j<10:
+  for a in g[:i+1]:a[j]=v
+  if j-9:g[t*9][j+1]=5;t^=1
+  j+=2
+ return g
+
