@@ -1,10 +1,5 @@
 def p(g):
-    a=[(y,x)for y,r in enumerate(g)for x,v in enumerate(r)if v and v-5]
-    y=min(y for y,x in a);x=min(x for y,x in a)
-    s=[r[x:x+3]for r in g[y:y+3]]
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v==5:
-                y-=1;x-=1
-                for i in range(3):g[y+i][x:x+3]=s[i]
-                return g
+    # copy 3x3 block to location of 5
+    n=len(g[0]);h=sum(g,[]);y,x=map(min,zip(*[(i//n,i%n)for i,v in enumerate(h)if v%5]));i=h.index(5)+~n
+    for j in 0,1,2:g[i//n+j][i%n:i%n+3]=g[y+j][x:x+3]
+    return g
