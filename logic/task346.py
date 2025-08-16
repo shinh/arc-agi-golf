@@ -1,5 +1,1 @@
-def p(g):
- for i in range(len(g)):
-  for j in range(len(g[0])-1):
-   if(a:=g[i-1][j])*all(a==g[i+di][j+dj]for di in(-1,0,1)for dj in(-1,0,1)if di|dj):
-    return[[g[i][j]]]
+p=lambda g:next([[r[j]]]for i,r in enumerate(g)for j in range(len(r)-1)if r[j-1]and sum(g[i+di][j+dj]==r[j-1]for di in(-1,0,1)for dj in(-1,0,1))>7)# find intruder's center color
