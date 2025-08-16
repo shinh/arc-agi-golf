@@ -1,1 +1,2 @@
-def p(g):r=lambda x:[*map(list,zip(*x[::-1]))];return[x+y for x,y in zip(g,r(g))]+[x+y for x,y in zip(r(r(r(g))),r(r(g)))]
+# tile grid with rotations
+p=lambda g,r=lambda x:[*map(list,zip(*x[::-1]))]:(h:=[*map(list.__add__,g,r(g))])+r(r(h))
