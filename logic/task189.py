@@ -1,3 +1,3 @@
 def p(g):#put corner pattern on 3s
- E=enumerate;A=g[2]==[8]*9;B=all(r[2]==8 for r in g);a=7-7*A;b=7-7*B;c=3*A;d=3*B
- return[[[v,g[a+y//3][b+x//3]][v==3]for x,v in E(r)]for y,r in E([r[d:d+6]for r in g[c:c+6]])]
+ A=min(g[2])>7;B=min(r[2]for r in g)>7;R=range(6)
+ return[[[v:=g[3*A+y][3*B+x],g[7-7*A+y//3][7-7*B+x//3]][v==3]for x in R]for y in R]
