@@ -1,5 +1,4 @@
 # propagate 1/3 rows and 2 columns
 def p(g):
- Z=[2in c for c in zip(*g)]
- return[[1if 1in R else 3if 3in R else 2if v<1and Z[c]else v for c,v in enumerate(R)]for R in g]
+ return[[1in R or 3*(3in R) or v or 2*c for c,v in zip([2in c for c in zip(*g)],R)]for R in g]
 
