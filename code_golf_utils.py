@@ -239,6 +239,8 @@ def verify_program(task_num, examples, task_path=None, quiet=False):
           expected = copy.deepcopy(example)
           wrong += 1
       except:
+        show_examples([example], bgcolor=(200, 255, 200))
+        plt.savefig("expected.png")
         raise
         wrong += 1
     return right, wrong, expected
