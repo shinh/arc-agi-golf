@@ -31,9 +31,11 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 * https://shinh.skr.jp/t/arc-agi-dashboard/096.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/125.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/204.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/233.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/238.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/273.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/310.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/336.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/338.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/390.html
 
