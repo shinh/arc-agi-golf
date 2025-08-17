@@ -1,33 +1,23 @@
 def p(g):
-    objs=[]
+    # move each 3x3 block without 0 to matching hole ignoring color 2
+    r=range(3);O=[]
     for x in range(len(g[0])-2):
         for y in range(len(g)-2):
-            o=[[g[oy][ox]for ox in range(x,x+3)]for oy in range(y,y+3)]
-            s=set(sum(o,[]))
-            if len(s)>1 and len(s&{0})<1:
-                objs+=o,
-                for oy in range(y,y+3):
-                    for ox in range(x,x+3):
-                        g[oy][ox]=0
-
-    g=[*map(list,eval('zip(*filter(any,'*2+'g))))'))]
-    #show(g, "crop")
-    #print(len(objs))
-
-    for o in objs:
-        #print(o)
-        yet=1
-        for t in range(4):
-            if yet:
-                for y in range(len(g)-2):
-                    for x in range(len(g[0])-2):
-                        if all((o[oy][ox]!=2)==(g[y+oy][x+ox]>0)for oy in range(3)for ox in range(3))and yet:
-                            for oy in range(3):
-                                for ox in range(3):
-                                    g[y+oy][x+ox]=o[oy][ox]
-                            yet=0
-
-            # Probably better to rotate o instead of g, though
-            o=[*map(list,zip(*o[::-1]))]
-
+            o=[g[y+i][x:x+3]for i in r];s={*sum(o,[])}
+            if len(s)>1 and 0 not in s:
+                O+=o,
+                for i in r:g[y+i][x:x+3]=0,0,0
+    g=[*map(list,zip(*filter(any,zip(*filter(any,g)))))]
+    for o in O:
+        for _ in 0,1,2,3:
+            for y in range(len(g)-2):
+                for x in range(len(g[0])-2):
+                    if all((v!=2)==(g[y+i][x+j]>0)for i in r for j,v in enumerate(o[i])):
+                        for i in r:g[y+i][x:x+3]=o[i]
+                        break
+                else:continue
+                break
+            else:o=[*zip(*o[::-1])];continue
+            break
     return g
+
