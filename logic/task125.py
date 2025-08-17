@@ -1,4 +1,4 @@
-def p(g):
+def p(g):#paint8snear6
     for y in range(15):
         for x in range(15):
             if g[y][x]==6:
@@ -7,6 +7,5 @@ def p(g):
                 while g[y][ex]==6:ex+=1
                 for fy in range(y-1,ey+1):
                     for fx in range(x-1,ex+1):
-                        if g[fy][fx]==8:
-                            g[fy][fx]=3+(y<fy<ey and x<fx<ex)
+                        if g[fy][fx]==8:g[fy][fx]=3+(y<fy<ey)*(x<fx<ex)
     return g
