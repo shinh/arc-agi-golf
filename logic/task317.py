@@ -1,2 +1,2 @@
 def p(E):#1 near 5
- n=len(E);r=range(n);return[[any(0<=i+d<n>j+e>=0<=E[i+d][j+e]==5 for d in(-1,0,1)for e in(-1,0,1))for j in r]for i in r]
+ r=range(len(E));return[[any(5 in R[j and j-1:j+2] for R in E[i and i-1:i+2])for j in r]for i in r]
