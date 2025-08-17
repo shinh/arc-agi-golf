@@ -1,5 +1,6 @@
 def p(g):
  # expand rare color into cross
+ # fill small gaps, find longest line, extend to cross
  h=len(g);w=len(g[0])
  t=sum(g,[]);c=min(t,key=t.count)
  S={divmod(i,w)for i,v in enumerate(t)if v==c}
