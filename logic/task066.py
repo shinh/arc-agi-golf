@@ -16,19 +16,13 @@ def p(g):
                 continue
 
             cands=[]
-            for dy,dx in ([dy,dx],[-dy,-dx]):
+            for dy,dx in(dy,dx),(-dy,-dx):
                 ny=y
                 nx=x
                 o=[r*1for r in g]
 
                 q=0
-                t=0
-                while t<100:
-                    t+=1
-                    o[ny][nx]=3
-                    ny+=dy
-                    nx+=dx
-                    if not(0<=ny<len(g)and 0<=nx<len(g[0])):break
+                while 0<=ny<len(g)and 0<=nx<len(g[0])and q<9:
                     if g[ny][nx]==2:
                         cands.append((q,o))
                         break
@@ -42,7 +36,8 @@ def p(g):
                         else:
                             dy=[-1,1][ry>ny]
                             dx=0
+                    else:
+                        o[ny][nx]=3
                         ny+=dy
                         nx+=dx
-                        if g[ny][nx]==8:break
             return min(cands,key=lambda t:t[0])[1]
