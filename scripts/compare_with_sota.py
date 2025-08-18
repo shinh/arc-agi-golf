@@ -13,6 +13,7 @@ assert len(ours) == 400, str(len(ours))
 
 theirs = sota.read_sota()
 
+total = 0
 for i in range(400):
     o = ours[i]
     t = theirs[i]
@@ -22,4 +23,7 @@ for i in range(400):
     elif o == t:
         print(prefix, f"Tie. {o}")
     else:
+        total += o - t
         print(prefix, f"{o-t} bytes from theirs: {o} vs {t}")
+
+print("Total", total, "bytes")
