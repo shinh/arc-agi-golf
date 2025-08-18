@@ -1,8 +1,7 @@
 def p(g):
-    # map colors by period and crop blank box
-    py=next(p for p in range(1,99)if all(a==b or a*b<1 for r,s in zip(g,g[p:])for a,b in zip(r,s)))
-    px=next(p for p in range(1,99)if all(a==b or a*b<1 for r in g for a,b in zip(r,r[p:])))
+    # detect repeat and fill zero box
+    f=lambda a:next(p for p in range(1,len(a)+1)if all(x==y or x*y<1 for r,s in zip(a,a[p:])for x,y in zip(r,s)))
+    py=f(g);px=f(list(zip(*g)))
     d={(y%py,x%px):v for y,r in enumerate(g)for x,v in enumerate(r)if v}
-    ys=[i for i,r in enumerate(g)if 0 in r];xs=[i for i,c in enumerate(zip(*g))if 0 in c]
-    y0,y1=ys[0],ys[-1];x0,x1=xs[0],xs[-1]
-    return [[d[y%py,x%px]for x in range(x0,x1+1)]for y in range(y0,y1+1)]
+    ys,xs=[[i for i,r in enumerate(a)if 0 in r]for a in(g,zip(*g))]
+    return [[d[y%py,x%px]for x in range(xs[0],xs[-1]+1)]for y in range(ys[0],ys[-1]+1)]
