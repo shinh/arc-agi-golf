@@ -1,4 +1,5 @@
-def p(g):#paint8snear6
+#paint8snear6
+def p(g):
     for y in range(15):
         for x in range(15):
             if g[y][x]==6:
