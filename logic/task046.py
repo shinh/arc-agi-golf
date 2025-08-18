@@ -1,25 +1,17 @@
 def p(g):
-    grays=[];colors=[0];seps=[-1];r=range(3)
-    for x in range(len(g[0])):
-        l=[g[y][x]for y in r]
-        if not any(l):colors+=[0];seps+=[x]
-        for y in r:
-            if g[y][x]==5:grays+=[y]
-            elif g[y][x]>0:colors[-1]=g[y][x]
-    seps+=[x+1];grays+=[0]
-
-    #show(g, "c")
-    #print(grays)
-
-    out=[[]for _ in g];prev_offset=0
-    for i in range(len(colors)-(colors[-1]==0)):
-        #print(i)
-        offset=i>0 and grays[i*2-1]
-
-        for y in r:
-            fy=y+offset-prev_offset
-            out[y]+=[0]*(seps[i+1]-seps[i]-1)if fy<0 or fy>2 else[[c,colors[i]][c==5]for c in g[fy][seps[i]+1:seps[i+1]]]
-        prev_offset+=grays[i*2]-offset
-
-    #show(out, "out")
-    return out
+    # glue blocks together by matching gray pins
+    o=[[]for _ in g];v=0;s=[]
+    for col in (*zip(*g),0):
+        if col==(0,0,0) or col==0:
+            if s:
+                b=list(zip(*s))
+                c=max(n for r in b for n in r if n%5)
+                t=[r[0]for r in b];l=5 in t and t.index(5)
+                t=[r[-1]for r in b];r=5 in t and t.index(5)
+                d=l-v;w=len(b[0])
+                for y in range(3):
+                    f=y+d
+                    o[y]+=[c if n==5 else n for n in b[f]] if 0<=f<3 else [0]*w
+                v+=r-l;s=[]
+        else:s.append(col)
+    return o

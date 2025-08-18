@@ -1,20 +1,16 @@
 def p(g):
     # extend from 2s
     o=[r[:]for r in g]
-    for y in range(9):
-        for x in range(9):
-            if g[y][x]:
-                s=[(y,x)];obj=[];tw=[];my=mx=9;c=0
-                for Y,X in s:
-                    if v:=g[Y][X]:
-                        obj+=[(Y,X)];g[Y][X]=0;c=c or v-2 and v;tw+=[(Y,X)]*(v==2);my=min(my,Y);mx=min(mx,X)
-                        for a,b in((1,0),(-1,0),(0,1),(0,-1)):
-                            ny,nx=Y+a,X+b
-                            if 9>ny>=0<=nx<9:s+=[(ny,nx)]
-                for a,b in tw:
-                    dy=1-2*(a==my);dx=1-2*(b==mx)
-                    for a,b in obj:
-                        Y,X=a,b
-                        while 9>Y>=0<=X<9:o[Y][X]=c;Y+=dy;X+=dx
+    z=[(y,x)for y,r in enumerate(g)for x,v in enumerate(r)if v]
+    c=[g[y][x]for y,x in z if g[y][x]-2][0]
+    my=min(y for y,_ in z);mx=min(x for _,x in z)
+    for y,x in z:o[y][x]=c
+    for y,x in z:
+        if g[y][x]==2:
+            dy=1-2*(y==my);dx=1-2*(x==mx)
+            t=z
+            while t:
+                t=[(Y+dy,X+dx)for Y,X in t if 0<=Y+dy<9 and 0<=X+dx<9]
+                for Y,X in t:o[Y][X]=c
     return o
 
