@@ -55,3 +55,8 @@ Unlike crop in https://www.kaggle.com/code/jazivxt/oh-barnacles , for these task
 * https://shinh.skr.jp/t/arc-agi-dashboard/238.html
 
 Current solution uses crop for 238
+
+# expand ripple
+
+* https://shinh.skr.jp/t/arc-agi-dashboard/123.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/137.html
