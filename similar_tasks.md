@@ -29,7 +29,9 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 
 * https://shinh.skr.jp/t/arc-agi-dashboard/029.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/096.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/120.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/125.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/156.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/204.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/233.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/238.html
@@ -42,6 +44,7 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 ## crop
 
 * https://shinh.skr.jp/t/arc-agi-dashboard/031.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/036.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/138.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/185.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/195.html
