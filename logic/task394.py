@@ -1,10 +1,7 @@
 def p(g):
-    # find tile period and crop around blanks
-    py=px=1
-    while py<len(g) and any(a-b and a*b for r,s in zip(g,g[py:])for a,b in zip(r,s)):py+=1
-    while px<len(g[0]) and any(a-b and a*b for r in g for a,b in zip(r,r[px:])):px+=1
-    ys=[i for i,r in enumerate(g)if 0 in r];xs=[i for i,c in enumerate(zip(*g))if 0 in c]
-    y0=ys[0];x0=xs[0];y1=ys[-1];x1=xs[-1]
-    t=[[0]*px for _ in[0]*py]
-    [v and t[y%py].__setitem__(x%px,v)for y,r in enumerate(g)for x,v in enumerate(r)]
-    return [[t[y%py][x%px]for x in range(x0,x1+1)]for y in range(y0,y1+1)]
+    # detect repeat and fill zero box
+    f=lambda a:next(p for p in range(1,len(a)+1)if all(x==y or x*y<1 for r,s in zip(a,a[p:])for x,y in zip(r,s)))
+    py=f(g);px=f(list(zip(*g)))
+    d={(y%py,x%px):v for y,r in enumerate(g)for x,v in enumerate(r)if v}
+    ys,xs=[[i for i,r in enumerate(a)if 0 in r]for a in(g,zip(*g))]
+    return [[d[y%py,x%px]for x in range(xs[0],xs[-1]+1)]for y in range(ys[0],ys[-1]+1)]
