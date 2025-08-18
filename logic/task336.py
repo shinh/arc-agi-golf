@@ -1,13 +1,20 @@
 def p(g):
- # box fill then extend line
- a,c=divmod((s:=sum(g,[])).index(5),10);b,d=divmod(99-s[::-1].index(5),10);dx=dy=0
- for r in g[a+1:b]:r[c+1:d]=[8]*(d-c-1)
- for x in range(c,d+1):
-  if g[a][x]<1:y=a;dy=-1;break
-  if g[b][x]<1:y=b;dy=1;break
- else:
-  for y in range(a,b+1):
-   if g[y][c]<1:x=c;dx=-1;break
-   if g[y][d]<1:x=d;dx=1;break
- while 0<=y<10 and 0<=x<10:g[y][x]=8;y+=dy;x+=dx
- return g
+    for o in range(4):
+        for y in range(10):
+            for x in range(10):
+                if g[y][x]==5:
+                    ey,ex=y,x
+                    while ey<10and g[ey][x]==5:ey+=1
+                    while ex<10and g[y][ex]==5:ex+=1
+                    ey-=1
+                    for fy in range(y+1,ey):
+                        for fx in range(x+1,ex-1):
+                            g[fy][fx]=8
+                    if g[ey][x:ex].count(0)==1:
+                        #print('zzz',g[ey][x:ex])
+                        x=g[ey].index(0,x)
+                        for fy in range(ey,10):
+                            g[fy][x]=8
+
+        g=[*map(list,zip(*g[::-1]))]
+    return g
