@@ -1,13 +1,8 @@
 def p(g):
-	# surround non-unique colors with a frame including the lone cell
-	h=len(g);w=len(g[0]);f=sum(g,[])
-	for i,v in enumerate(f):
-		if v and f.count(v)<2:u=v;uy,ux=divmod(i,w);break
-	t=h;l=w;b=r=0
-	for i,v in enumerate(f):
-		if v*(v!=u):y,x=divmod(i,w);t=min(t,y);b=max(b,y);l=min(l,x);r=max(r,x)
-	B,C=g[t][l],g[t+1][l+1];t=min(t,uy);l=min(l,ux);b=max(b,uy);r=max(r,ux)
-	o=create(h,w)
-	for y in range(t,b+1):
-		for x in range(l,r+1):o[y][x]=[C,B][y in(t,b)or x in(l,r)]
-	return o
+        # surround non-unique colors with a frame including the lone cell
+        h=len(g);w=len(g[0]);f=sum(g,[])
+        i=[i for i,v in enumerate(f) if v and f.count(v)<2][0];u=f[i];uy,ux=divmod(i,w)
+        Y,X=zip(*[divmod(i,w)for i,v in enumerate(f) if v and v!=u])
+        t=min(Y);b=max(Y);l=min(X);r=max(X);B,C=g[t][l],g[t+1][l+1]
+        t=min(t,uy);b=max(b,uy);l=min(l,ux);r=max(r,ux)
+        return [[0 if y<t or y>b or x<l or x>r else B if y in(t,b) or x in(l,r) else C for x in range(w)]for y in range(h)]
