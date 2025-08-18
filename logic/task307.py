@@ -1,6 +1,2 @@
-def p(g):
-    o=[]
-    for r in g:
-        r=[c for c in r for _ in(0,1)]
-        o+=r,r
-    return o
+p=lambda g:eval("[[g "+"for g in g for _ in[0,1]]"*2)
+#p=lambda g:[[g for g in g for _ in[0,1]]for g in g for _ in[0,1]]
