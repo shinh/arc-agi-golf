@@ -1,16 +1,14 @@
 def p(g):
-    # bfs rectangles; fill interiors
-    v=set();r=[];R=range(10)
-    for y in R:
-        for x in R:
-            if(y,x)in v:continue
-            t=g[y][x];q=[(y,x)];v|={(y,x)};a=b=y;c=d=x
-            for i,j in q:
-                a=min(a,i);b=max(b,i);c=min(c,j);d=max(d,j)
-                for ny,nx in((i+1,j),(i-1,j),(i,j+1),(i,j-1)):
-                    if 0<=ny<10>nx>=0 and g[ny][nx]==t and(ny,nx)not in v:v|={(ny,nx)};q+=[(ny,nx)]
-            l=len(q);r+=[(l,a,b,c,d)]*(l==(b-a+1)*(d-c+1))
-    if r:
-        for(a,b,c,d),k in((min(r)[1:],1),(max(r)[1:],2)):
-            for y in range(a+1,b):g[y][c+1:d]=[k]*(d-c-1)
+    # paint interior of smallest and largest rectangles of 4
+    r=[]
+    for y in range(10):
+        for x in range(10):
+            if g[y][x]==4 and (y<1 or g[y-1][x]-4) and (x<1 or g[y][x-1]-4):
+                h=w=1
+                while y+h<10 and g[y+h][x]==4:h+=1
+                while x+w<10 and g[y][x+w]==4:w+=1
+                r+=[(h*w,y,x,h,w)]
+    for k,(a,y,x,h,w) in enumerate((min(r),max(r)),1):
+        for i in range(y+1,y+h-1):
+            g[i][x+1:x+w-1]=[k]*(w-2)
     return g
