@@ -1,4 +1,4 @@
-# 240
+# 237
 def p(g):
     # detect repeat and fill zero box
     p=1
@@ -10,4 +10,4 @@ def p(g):
                         break
                 break
         g=[*map(list,zip(*g))]
-    return[[g[y%p][x%p]or g[y%p+p][x%p+p]for x,c in enumerate(r)if c<1]for y,r in enumerate(g)if 0in r]
+    return[[g[y%p][x%p]or g[y%p][x%p+p]for x,c in enumerate(r)if c<1]for y,r in enumerate(g)if 0in r]
