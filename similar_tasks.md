@@ -7,6 +7,7 @@
 * https://shinh.skr.jp/t/arc-agi-dashboard/251.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/279.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/286.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/294.html
 
 not sure flood fill is the best for 048, though
 
@@ -28,7 +29,10 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 ## find rectangles
 
 * https://shinh.skr.jp/t/arc-agi-dashboard/029.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/044.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/096.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/098.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/102.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/120.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/125.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/156.html
@@ -36,6 +40,7 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 * https://shinh.skr.jp/t/arc-agi-dashboard/233.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/238.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/273.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/294.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/310.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/336.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/338.html
