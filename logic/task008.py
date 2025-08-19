@@ -1,9 +1,9 @@
+import re
 def p(g):
-    # gは二次元配列で、0-9の値が入っています。gは二次元配列で、0-9の値が入っています。
-    # 2の図形を8に接続される方向に動かしてください
-    a=[];b=[];[(a,b)[v>2].append((y,x))for y,r in enumerate(g)for x,v in enumerate(r)if v%6==2]
-    y1,x1=map(min,zip(*a));y2,x2=map(max,zip(*a));Y1,X1=map(min,zip(*b));Y2,X2=map(max,zip(*b))
-    dx=(X1-x2>0)*(X1-x2-1)-(x1-X2>0)*(x1-X2-1);dy=(not dx)*((Y1-y2>0)*(Y1-y2-1)-(y1-Y2>0)*(y1-Y2-1))
-    for y,x in a:g[y][x]=0
-    for y,x in a:g[y+dy][x+dx]=2
+    for o in range(40):
+        #print(g,"2, 8"not in str(g),re.(r"2, 0[,0 ]+8",str(g)))
+        if re.search(r"2, 0[,0 ]+8",str(g))and"2, 8"not in str(g):
+            g=[[[0,8,2,8][(c>7)+(p==2)*2]for c,p in zip(r,[0]+r)]for r in g]
+
+        g=[*map(list,zip(*g[::-1]))]
     return g
