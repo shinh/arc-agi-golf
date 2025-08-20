@@ -23,8 +23,11 @@ https://shinh.skr.jp/t/arc-agi-dashboard/394.html is similar, but hard?
 
 ## complement
 
+* https://shinh.skr.jp/t/arc-agi-dashboard/061.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/110.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/175.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/287.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/394.html
 
 ## find rectangles
 
