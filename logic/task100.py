@@ -1,7 +1,6 @@
-#max bbox color
+#bbox
 def p(g):
- s=''.join(map(str,sum(g,[])));w=len(g[0]);m=k=0
- for c in'123456789':
-  a=s.find(c);b=s.rfind(c);a+1 and(t:=(b%w-a%w+1)*(b//w-a//w+1))>m and(m:=t,k:=int(c))
- return [[k]*2]*2
+ s=str(sum(g,[]))[1::3];w=len(g[0])
+ k=max(s,key=lambda c:c>'0'and~(a:=s.find(c))and((l:=s.rfind(c)-a)%w+1)*(l//w+1))
+ return [[int(k)]*2]*2
 
