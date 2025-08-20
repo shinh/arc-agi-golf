@@ -6,5 +6,5 @@ def p(g):
     out=[[0]*w for _ in range(10)]
     for i,j,v in fg:
         y=i;x=j
-        while 0<=y<10 and 0<=x<w:out[y][x]=v;y+=dy;x+=dx
+        while 10>y>-1<x<w:out[y][x]=v;y+=dy;x+=dx
     return out

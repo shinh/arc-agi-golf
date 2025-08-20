@@ -11,7 +11,7 @@ def p(g):
     b=9;B=g
     for dy,dx in(dy,dx),(-dy,-dx):
         ny,nx=sy,sx;o=[r*1for r in g];q=0
-        while q<9 and h>ny>=0<=nx<w:
+        while q<9 and h>ny>-1<nx<w:
             t=g[ny][nx]
             if t==2:
                 if q<b:b=q;B=o

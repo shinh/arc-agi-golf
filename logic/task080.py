@@ -10,7 +10,7 @@ def p(g):
     for y,x in q:
      for k in R(4):
       Y,X=y+d[k],x+d[k+1]
-      if 0<=Y<h and 0<=X<w and B[Y][X]and(Y,X)not in q:q+=[(Y,X)];l+=B[Y][X],
+      if h>Y>-1<X<w and B[Y][X]and(Y,X)not in q:q+=[(Y,X)];l+=B[Y][X],
     if len({*l})>1:break
   else:continue
   break
@@ -22,6 +22,6 @@ def p(g):
    if B[y][x]==c and(y<1 or B[y-1][x]-c)and(x<1 or B[y][x-1]-c):
     for k,dy,dx in P:
      Y,X=y+dy,x+dx
-     if 0<=Y<h and 0<=X<w:B[Y][X]=k
+     if h>Y>-1<X<w:B[Y][X]=k
  return[[B[i//a][j//b]if(-~i%a)*(-~j%b) else g[i][j]for j in R(n)]for i in R(m)]
 

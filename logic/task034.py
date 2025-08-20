@@ -10,7 +10,7 @@ def p(g):
             dy=1-2*(y==my);dx=1-2*(x==mx)
             t=z
             while t:
-                t=[(Y+dy,X+dx)for Y,X in t if 0<=Y+dy<9 and 0<=X+dx<9]
+                t=[(Y+dy,X+dx)for Y,X in t if 9>Y+dy>-1<X+dx<9]
                 for Y,X in t:o[Y][X]=c
     return o
 

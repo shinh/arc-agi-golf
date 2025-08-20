@@ -25,10 +25,10 @@ def p(g):
     for r in 3,2,1:
         for y in R(-7,len(g)-ly*r+1):
             for x in R(-7,len(g[0])-lx*r+1):
-                if not((sy<=y<ey and sx<=x<ex)|(x>1and g[y][x-1])|(y>1and g[y-1][x]))and all(((y+dy>=0<=x+dx)and g[y+dy][x+dx])==[0,0,2][g[sy+dy//r][sx+dx//r]]for dy in R(ly*r)for dx in R(lx*r)):
+                if not((sy<=y<ey and sx<=x<ex)|(x>1and g[y][x-1])|(y>1and g[y-1][x]))and all(((y+dy>-1<x+dx)and g[y+dy][x+dx])==[0,0,2][g[sy+dy//r][sx+dx//r]]for dy in R(ly*r)for dx in R(lx*r)):
                     #print(f"OK {r=} {y=} {x=} {sy=} {sx=}")
                     for dy in R(ly*r):
                         for dx in R(lx*r):
-                            if y+dy>=0<=x+dx:
+                            if y+dy>-1<x+dx:
                                 g[y+dy][x+dx]=g[sy+dy//r][sx+dx//r]
     return g
