@@ -1,8 +1,8 @@
-def p(g):# draw spiral of 3s
-    n=len(g);o=create(n,n);x=y=d=0;l=m=n-1;o[0][0]=3;D=1,0,-1,0
+def p(g):# spiral of 3s
+    x=y=j=0;i=1;l=m=len(g)-1;g[y][x]=3
     while l>0:
-        for s in(l,m):
-            for _ in[0]*s:x+=D[d];y+=D[d-1];o[y][x]=3
-            d=-~d&3
-        l,m=m,m-2
-    return o
+        for s in l,m:
+            for _ in[0]*s:g[y:=y+j][x:=x+i]=3
+            i,j=-j,i
+        l=m;m-=2
+    return g
