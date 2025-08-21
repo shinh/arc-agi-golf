@@ -1,25 +1,13 @@
 def p(g):
  # repeat biggest 3x3 block indicated by hints
- e=max(g[0]);B=[];m=0
- for y in range(19):
-  for x in range(19):
-   t=[]
-   for i in range(3):
-    for j in range(3):
-     if g[y+i][x+j]!=e:t.append((y+i,x+j))
-   if len(t)>m:m=len(t);B=t
- for dy in -1,0,1:
-  for dx in -1,0,1:
-   if dy|dx:
-    sy=4*dy;sx=4*dx;c=e
+ e=max(g[0]);R=range(19);B=max(([(y+i,x+j)for i in(0,1,2)for j in(0,1,2)if g[y+i][x+j]-e]for y in R for x in R),key=len)
+ for s in -4,0,4:
+  for t in -4,0,4:
+   if s|t:
     for y,x in B:
-     u=y+sy;v=x+sx
-     if 0<=u<21 and 0<=v<21 and g[u][v]!=e:c=g[u][v];break
-    k=0
-    while c!=e:
-     k+=1;f=0
+     if-1<(u:=y+s)<21 and -1<(v:=x+t)<21 and (c:=g[u][v])-e:break
+    else:continue
+    for k in 1,2,3,4,5:
      for y,x in B:
-      u=y+sy*k;v=x+sx*k
-      if 0<=u<21 and 0<=v<21:g[u][v]=c;f=1
-     if f<1:break
+      if-1<(u:=y+s*k)<21 and -1<(v:=x+t*k)<21:g[u][v]=c
  return g
