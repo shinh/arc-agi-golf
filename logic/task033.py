@@ -1,5 +1,4 @@
 def p(g):
  # copy pattern blocks
- c=g[5][0];r=range(len(g))
- [g[i].__setitem__(j,c)for i in r for j in r if g[i%6][j%6]and g[i][j]<1]
- return g
+ r=range(len(g))
+ return[[g[i][j]or g[5][0]*(g[i%6][j%6]>0)for j in r]for i in r]
