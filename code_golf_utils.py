@@ -233,7 +233,7 @@ def verify_program(task_num, examples, task_path=None, quiet=False):
     for example in example_subset:
       example_copy = copy.deepcopy(example)
       try:
-        if program(example_copy["input"]) == example_copy["output"]:
+        if json.loads(json.dumps(program(example_copy["input"]))) == example_copy["output"]:
           right += 1
         else:
           expected = copy.deepcopy(example)
