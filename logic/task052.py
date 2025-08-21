@@ -1,2 +1,1 @@
-def p(g):
-    return[[[0]*3,[5]*3][len({*r})<2]for r in g]
+p=lambda g:[[(r==r[:1]*3)*5]*3 for r in g]# uniform row -> 5 else 0
