@@ -1,6 +1,3 @@
-def p(g):
-    d={}
-    for r in g:
-        for i,v in enumerate(r):
-            if v==5:r[i]=d.setdefault(i,len(d)+1)
-    return g
+# number columns with 5
+p=lambda g:(d:={})or[[v>4and d.setdefault(i,-~len(d))or v for i,v in enumerate(r)]for r in g]
+
