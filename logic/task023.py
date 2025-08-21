@@ -4,7 +4,7 @@ def p(g):
     for _ in'0'*8:
         for i in range(len(a)-3):
             for j in range(len(a[0])-3):
-                if sum(a[i+1][j+1:j+3]+a[i+2][j+1:j+3])>19 and not sum(a[i][j:j+4]+[a[i+1][j],a[i+1][j+3]]):
+                if sum(a[i+1][j+1:j+3]+a[i+2][j+1:j+3])>19 and not sum(a[i][j:j+4]+a[i+1][j:j+4:3]):
                     for d in 1,2:b[i+d][j+1:j+3]=8,8;a[i+d][j+1:j+3]=0,0
         for i in range(1,len(a)-2):
             for j in range(1,len(a[0])-1):
