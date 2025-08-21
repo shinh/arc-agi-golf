@@ -1,8 +1,7 @@
 # move patterns from one half onto the other
 def p(g):
  h=len(g);w=len(g[0])
- if sum(len({*r})<2 for r in g)>sum(len({*c})<2 for c in zip(*g)):B,O=g[:h//2],g[(h+1)//2:]
- else:B,O=[r[:w//2]for r in g],[r[(w+1)//2:]for r in g]
+ B,O=[[[r[:w//2]for r in g],[r[(w+1)//2:]for r in g]],[g[:h//2],g[(h+1)//2:]]][h>w]
  F=sum(B,[]);G=sum(O,[])
  if len({*F})>len({*G}):B,O,F,G=O,B,G,F
  d=max(F,key=F.count);e=max(G,key=G.count)
