@@ -3,37 +3,35 @@ def p(g):
     #print(f"{len(g)=} {len(g[0])=}")
     #show(g,"input")
     f=sum(g,[])
-    s=sorted({*f},key=f.count)
-    bc=s[-3]
-    fg=s[:-2]
+    sc=sorted({*f},key=f.count)
+    fg=sc[:-2]
     #print(f'kkk {s=} {fg=} {bg=}')
 
     g,o=[[[r[:len(g[0])//2]for r in g],[r[len(g[0])//2:]for r in g]],[g[:len(g)//2],g[len(g)//2:]]][len(g)>len(g[0])]
 
-    if(bg:=s[-1])in g[0]:g,o=o,g
+    if(bg:=sc[-1])in g[0]:g,o=o,g
 
     #show(g,"from")
     #show(o,"to")
 
-    s={0}
+    s=[]
     blocks=[]
     for sy in range(len(g)):
         for sx in range(len(g[0])):
-            if g[sy][sx]in fg and(sy,sx)not in s:
-                ey,ex=sy,sx
-                while ey+1<len(g)and g[ey+1][sx]in fg:ey+=1
-                while ex+1<len(g[0])and g[sy][ex+1]in fg:ex+=1
-                ly,lx=ey-sy+1,ex-sx+1
+            if(sy,sx)not in s:
+                ly=lx=0
+                while(g+[[0]*99])[sy+ly+1][sx]in fg:ly+=1
+                while(g[sy]+[0])[sx+lx+1]in fg:lx+=1
 
-                if sy<ey and sx<ex:
+                if ly*lx:
                     #print(f'found block {sy=} {sx=} {ey=} {ex=} {ly=} {lx=} {pc=} {bc=}')
                     for dy in range(ly):
                         for dx in range(lx):
-                            s.add((sy+dy,sx+dx))
-                    blocks+=(ly,lx,sy,sx),
+                            s+=(sy+dy,sx+dx),
+                    blocks+=(ly+1,lx+1,sy,sx),
 
     for ly,lx,sy,sx in sorted(blocks)[::-1]:
-        pc=[*{g[sy+dy][sx+dx]for dy in range(ly)for dx in range(lx)}-{bc}][0]
+        pc=[*{g[sy+dy][sx+dx]for dy in range(ly)for dx in range(lx)}-{sc[-3]}][0]
 
         for ty in range(len(g)-ly+1):
             for tx in range(len(g[0])-lx+1):
