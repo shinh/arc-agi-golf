@@ -1,2 +1,3 @@
-# optimal is 61 (10 shorter)
-p=lambda g,X=range(9):[[g[r//3][c//3]&g[r%3][c%3]for c in X]for r in X]
+# 61 - pairwise AND of rows/cols
+p=lambda g:[[a&b for a in r for b in s]for r in g for s in g]
+
