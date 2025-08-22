@@ -1,5 +1,4 @@
 def p(g):# draw diagonals from cell
- e=enumerate
- y,x,c=[(y,x,v)for y,r in e(g)for x,v in e(r)if v][0]
- return[[c*(Y in (X+y-x,y+x-X))for X,_ in e(g)]for Y,_ in e(g)]
+ b=sum(g,[]);y,x=divmod(b.index(c:=max(b)),n:=len(g));r=range(n)# flatten grid, find colored cell
+ return[[c*(Y in (X+y-x,y+x-X))for X in r]for Y in r]# fill diagonals with color
 
