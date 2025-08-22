@@ -1,6 +1,3 @@
-# expand each center row into solid 3x3 blocks
-def p(g):
- for i in range(1,len(g),4):
-  g[i-1:i+2]=[sum(([c+5]*3+[5]for c in g[i][1::4]),[])[:-1]]*3
- return g
+# mids->3x3
+p=lambda g:[(sum(([c+5]*3+[5]for c in g[i-i%4+1][1::4]),[])[:-1],g[i])[i%4>2]for i in range(len(g))]
 
