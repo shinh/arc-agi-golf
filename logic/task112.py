@@ -7,5 +7,5 @@ def p(g):
         if c:
             for Y in i//w,S-i//w:
                 for X in i%w,T-i%w:
-                    if h>Y>-1 and w>X>-1:g[Y][X]=c
+                    if h>Y>=0<=X<w:g[Y][X]=c
     return g
