@@ -1,2 +1,2 @@
 # left if halves equal else top half
-def p(g):w=len(g[0])//2;return(l:=[r[:w]for r in g])*(l==[r[-w:]for r in g])or g[:len(g)//2]
+p=lambda g:(g[:len(g)//2],l:=[r[:len(r)//2]for r in g])[g==[r*2 for r in l]]
