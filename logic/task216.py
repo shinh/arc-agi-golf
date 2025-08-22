@@ -1,13 +1,14 @@
 def p(g):
-    o=[]
+    m=0,0,0,0
     #show(g,"in")
     for y in range(20):
         for x in range(20):
             if g[y][x]:
-                ey,ex=y,x
+                ey=y
                 while ey<20 and g[ey][x]:ey+=1
+                ex=x
                 while ex<20 and g[y][ex]:ex+=1
-                b=[[g[fy][fx]for fx in range(x,ex)]for fy in range(y,ey)]
-                o+=(sum([c>1 for c in sum(b,[])]),len(b),len(b[0]),b),
-    #show(max(o)[3],"out")
-    return max(o)[3]
+                b=[r[x:ex]for r in g[y:ey]]
+                m=max(m,(sum(c>1for r in b for c in r),ey-y,ex-x,b))
+    #show(m[3],"out")
+    return m[3]
