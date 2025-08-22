@@ -1,11 +1,6 @@
 def p(g):
     # mirror pattern and overlay symmetrically
-    a={(y,x)for y,r in enumerate(g)for x,v in enumerate(r)if v==1}
-    r={(9-x,y)for y,x in a}
-    m=-1
-    for dy in range(-9,10):
-        b={(y+dy,x)for y,x in r}
-        if all(-1<y<10 for y,_ in b)and(k:=len(a&b))>m:m=k;sh=b
+    r=range(10);a={(y,x)for y in r for x in r if g[y][x]}
+    sh=max((len(a&b),b)for d in range(19)if len(b:={(d-x,y)for y,x in a})==len(a))[1]
     for y,x in sh-a:g[y][x]=2
     return g
-
