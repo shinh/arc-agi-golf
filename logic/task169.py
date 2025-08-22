@@ -1,15 +1,12 @@
 def p(g):
-    m={4:1,3:2,2:3}
+    # recolor 5-blocks by size
     for y in range(10):
         for x in range(10):
             if g[y][x]==5:
-                q=[(y,x)];g[y][x]=0;p=[]
+                q=[(y,x)];g[y][x]=0
                 for i,j in q:
-                    p+=(i,j),
-                    for a,b in (1,0),(-1,0),(0,1),(0,-1):
-                        A=i+a;B=j+b
+                    for A,B in(i+1,j),(i-1,j),(i,j+1),(i,j-1):
                         if 0<=A<10 and 0<=B<10 and g[A][B]==5:
                             g[A][B]=0;q+=(A,B),
-                c=m[len(p)]
-                for i,j in p:g[i][j]=c
+                for i,j in q:g[i][j]=5-len(q)
     return g
