@@ -1,9 +1,10 @@
 def p(g):
     h=len(g);w=len(g[0])
     for c in range(1,10):# move tiles toward full row/column else erase
-        z=[*zip(*g)];r=k=-1
-        if (t:=[c]*w)in g:r=g.index(t)
-        elif (t:=(c,)*h)in z:k=z.index(t)
+        try:r=g.index([c]*w)
+        except:r=-1
+        try:k=(*zip(*g),).index((c,)*h)
+        except:k=-1
         for y in range(h):
             for x in range(w):
                 if g[y][x]==c:
