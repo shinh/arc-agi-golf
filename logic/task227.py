@@ -1,1 +1,2 @@
-p=lambda g:[[2*(g[i][j]==0==g[i+4][j])for j in range(4)]for i in range(4)]
+# compare halves
+p=lambda g:[[(a+b<1)*2for a,b in q]for q in map(zip,g,g[4:])]
