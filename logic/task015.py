@@ -3,7 +3,7 @@ E=enumerate
 def p(g):
  for r,row in E(g):
   for c,v in E(row):
-   for t in 1,-1:
-    if v==2:g[r+t][c+t]=g[r+t][c-t]=4
-    if v==1:g[r][c+t]=g[r+t][c]=7
+   if 0<v<3:
+    b=v>1
+    for t in-1,1:g[r+b*t][c+t]=g[r+t][c-b*t]=7-3*b
  return g
