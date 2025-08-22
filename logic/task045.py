@@ -1,4 +1,2 @@
-def p(g):
- for r in g:
-  if r[0]==r[-1]>0:r[:]=[r[0]]*len(r)
- return g
+# fill row if ends match
+p=lambda g:[r[:1]*10*(r[0]==r[9]>0)or r for r in g]
