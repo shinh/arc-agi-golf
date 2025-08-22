@@ -1,5 +1,5 @@
 def p(g):# clone 3 blob & mirror 2 blob
- d=[(a,b)for a in(-1,0,1)for b in(-1,0,1)if a|b];R=range(13)
+ R=range(13)
  v=[];o2=o3=l2=l3=0
  for y in R:
   for x in R:
@@ -7,9 +7,10 @@ def p(g):# clone 3 blob & mirror 2 blob
     q=o=[(y,x,c:=g[y][x])];s={c}
     for y,x,c in q:
      v+=[(y,x)];s|={c}
-     for a,b in d:
-      Y=y+a;X=x+b
-      if 13>Y>-1<X<13 and g[Y][X]and(Y,X)not in v:q+=[(Y,X,g[Y][X])]
+     for a in-1,0,1:
+      for b in-1,0,1:
+       Y=y+a;X=x+b
+       if a|b and 13>Y>-1<X<13 and g[Y][X]and(Y,X)not in v:q+=[(Y,X,g[Y][X])]
     t=len(s);3 in s and t>l3 and(o3:=o,l3:=t);2 in s and t>l2 and(o2:=o,l2:=t)
  def app(k,o,orig=()):
   ay=min(y for y,x,c in o if c==k);ax=min(x for y,x,c in o if c==k)
