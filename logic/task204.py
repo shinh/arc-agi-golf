@@ -1,16 +1,9 @@
-# flood fill using rot90 so we only flow to the right
+# fill square interiors by size parity
 def p(g):
-    for _ in[0]*80:
-        g=[[[a,2][a<1<b]for a,b in zip(r,[*r[1:],2])]for r in zip(*g[::-1])]
-    for r in g:
-        s=-1
-        for x,c in enumerate(r):
-            if c==0:
-                if s<0:
-                    r[s:=x]=2
-                r[s:x+1]=[9-r[s]]*(x+1-s)
-            if c==1:
-                s=-1
-            if c==2:
-                r[x]=0
-    return g
+ for i in range(len(g)-1):
+  a,b=g[i:i+2]
+  for j in range(len(a)-1):
+   if a[j]==b[j]==a[j+1]==1>b[j+1]:
+    s=[(n:=(a+[0])[j:].index(0))%2*5+2]*(n-2)
+    for m in range(n-2):g[i+m+1][j+1:j+n-1]=s
+ return g
