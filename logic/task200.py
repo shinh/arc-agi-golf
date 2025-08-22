@@ -1,7 +1,7 @@
 def p(g):#stripe
- i,j,v=next((k//10,k%10,v)for k,v in enumerate(sum(g,[]))if v%5);t=0
+ j,v=next((k%10,v)for k,v in enumerate(sum(g,[]))if v);t=0
  for j in range(j,10,2):
-  for a in g[:i+1]:a[j]=v
+  for r in g:r[j]=v
   if j-9:g[t][j+1]=5;t^=9
  return g
 
