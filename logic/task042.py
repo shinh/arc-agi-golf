@@ -1,19 +1,20 @@
 def p(g):#mirror&expand blobs
- # flood fill each 3-region and mirror it horizontally with scale2, skipping rows/cols of original
- R=range;H=10
- for y in R(H):
-  for x in R(H):
+ # flood fill 3-blobs; mirror horizontally doubled avoiding their rows/cols
+ R=range(10)
+ for y in R:
+  for x in R:
    if g[y][x]==3:
-    q=[(y,x)];rs={y};cs={x}
+    q=[(y,x)]
     for i,j in q:
-     for Y in R(i-1,i+2):
-      for X in R(j-1,j+2):
-       if-1<Y<H and-1<X<H and g[Y][X]==3 and(Y,X)not in q:q+=[(Y,X)];rs|={Y};cs|={X}
-    my,my2=min(rs),max(rs);mx,mx2=min(cs),max(cs);h=my2-my+1;w=mx2-mx+1
+     for Y in i-1,i,i+1:
+      for X in j-1,j,j+1:
+       if-1<Y<10>-1<X<10 and g[Y][X]==3 and(Y,X)not in q:q+=[(Y,X)]
+    a,b=zip(*q)
+    m,M=min(a),max(a);n,N=min(b),max(b)
+    c=m+M+1>>1;d=2*N+n-(N-n+1>>1)
     for i,j in q:
-     I=2*i-my-h//2;J=2*mx2-2*j+mx-w//2
-     for Y in I,I+1:
-      for X in J,J+1:
-       if-1<Y<H and-1<X<H and Y not in rs and X not in cs:g[Y][X]=8
+     i=2*i-c;j=d-2*j
+     for Y in i,i+1:
+      for X in j,j+1:
+       if-1<Y<10>-1<X<10 and Y not in a and X not in b:g[Y][X]=8
  return g
-
