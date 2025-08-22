@@ -1,4 +1,6 @@
 def p(g):
- h=len(g)
- for c in range(1,len(g[0])):g[h-1][c]=4;g[h-c-1][c]=2
+# fill bottom row with 4s and draw diagonal of 2s
+ i=1
+ while i<len(g):g[-1][i]=4;g[~i][i]=2;i+=1
  return g
+
