@@ -1,3 +1,3 @@
-def p(g):
-    # count 2x2 blocks of color 1
-    return [[1]*(c:=sum((1,)*4==y for a,b in zip(g,g[1:])for y in zip(a,a[1:],b,b[1:])))+[0]*(5-c)]
+# count 2x2 blocks of color 1
+p=lambda g:(((1,)*sum({*y}=={1}for a,b in zip(g,g[1:])for y in zip(a,b,a[1:],b[1:]))+5*(0,))[:5],)
+
