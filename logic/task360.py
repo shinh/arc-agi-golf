@@ -1,2 +1,3 @@
-def p(g):
-    return [[max(r[i],r[8-i])for i in range(4)]for r in g]
+# take max with mirrored pixel
+p=lambda g:[[*map(max,r,r[:4:-1])]for r in g]
+
