@@ -1,1 +1,1 @@
-def p(g,D=divmod):n=len(g[0]);i=sum(g,[]).index;a,b=D(i(3),n);c,d=D(i(4),n);e=a+(a<c-1)-(a>c+1);f=b+(b<d-1)-(b>d+1);g[a][b]=0;g[e][f]=3;return g
+def p(g,D=divmod):i=sum(g,[]).index;a,b=D(i(3),l:=len(g[0]));c,d=D(i(4),l);g[a][b],g[a+(c-a>1)-(a-c>1)][b+(d-b>1)-(b-d>1)]=0,3;return g# move 3 toward 4
