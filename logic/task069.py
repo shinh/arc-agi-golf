@@ -1,15 +1,12 @@
+# paste cropped pattern over 8s
 def p(g):
-    a=b=10;c=d=0
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v and v-8:
-                if x<a:a=x
-                if x>c:c=x
-                if y<b:b=y
-                if y>d:d=y
-    p=[r[a:c+1] for r in g[b:d+1]];h=len(p);w=len(p[0]);o=create(10,10)
-    for y in range(10-h+1):
-        for x in range(10-w+1):
-            if all((g[y+i][x+j]==8)==(p[i][j]>0) for i in range(h) for j in range(w)):
-                for i in range(h):o[y+i][x:x+w]=p[i]
+    a=b=9;c=d=0;R=range
+    for y in R(10):
+        for x in R(10):
+            if g[y][x]%8:a=min(a,x);b=min(b,y);c=max(c,x);d=max(d,y)
+    h=d-b+1;w=c-a+1;p=[r[a:c+1]for r in g[b:d+1]];o=create(10,10)
+    for y in R(11-h):
+        for x in R(11-w):
+            if all((g[y+i][x+j]==8)==(p[i][j]>0)for i in R(h)for j in R(w)):
+                for i in R(h):o[y+i][x:x+w]=p[i]
     return o
