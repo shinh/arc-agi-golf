@@ -1,20 +1,15 @@
 def p(g):
-    h=15;w=10;R=range
-    P=[];pr=-9
-    for i,r in enumerate(g):
-        if 8 in r:P+=[set()]*(i-pr>1);P[-1]|={(i,j)for j,v in enumerate(r)if v==8};pr=i
-    if not P:return g
-    T=max(P,key=lambda p:max(j for _,j in p)-min(j for _,j in p));P.remove(T)
-    a=min(i for i,_ in T);b0=min(j for _,j in T)
-    T=[(i-a,j-b0)for i,j in T]
-    for p in P:
-        b=(-1,0,0);rm=max(j for _,j in p);best=set()
-        for dx in R(-h,h):
-            for dy in R(-w,w+w):
-                S={(i+dx,j+dy)for i,j in T if -1<i+dx<h and -1<j+dy<w}
-                D=S-p
-                if D and min(j for _,j in D)>rm:
-                    t=len(p&S),dy,dx
-                    if t>b:b=t;best=D
-        for i,j in best:g[i][j]=1
-    return g
+ #copybig8
+ q=[];b=-9
+ for y,r in enumerate(g):
+  if 8 in r:q+=[set()]*(y-b>1);q[-1]|={(y,x)for x,v in enumerate(r)if v==8};b=y
+ T=max(q,key=lambda s:max(x for _,x in s)-min(x for _,x in s));q.remove(T)
+ a=min(y for y,_ in T);b=min(x for _,x in T);T={(y-a,x-b)for y,x in T}
+ for s in q:
+  m=max(x for _,x in s);b=set();t=-1,0,0
+  for i in range(-15,15):
+   for j in range(-10,20):
+    S={(y+i,x+j)for y,x in T if 15>y+i>-1<x+j<10}
+    if (D:=S-s) and min(x for _,x in D)>m and (k:=(len(s&S),j,i))>t:t=k;b=D
+  for y,x in b:g[y][x]=1
+ return g
