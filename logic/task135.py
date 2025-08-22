@@ -1,2 +1,2 @@
-def p(g):
-    return [r[-3:]for r in g[:3]]
+# crop top-right 3x3
+p=lambda g:[r[6:]for r in g][:3]
