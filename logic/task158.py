@@ -15,7 +15,7 @@ def p(g):# BFS region then copy scaled
    for s in R(1,5):
     U=[(c,i*s+di,j*s+dj)for c,i,j in P for di in R(s)for dj in R(s)];H=h0*s;W=w0*s
     for t in R(5):
-     q=[(v,(i,j,j,i,W-1-j,H-1-i,H-1-i,j,i,W-1-j)[t*2:][:2])for v,i,j in U];d={(i,j):v for v,(i,j)in q if v!=m}
+     q=[(v,((i,j),(j,i),(W-1-j,H-1-i),(H-1-i,j),(i,W-1-j))[t])for v,i,j in U];d={(i,j):v for v,(i,j)in q if v!=m}
      hh,ww=[(H,W),(W,H)][t==1]
      for a in R(h-hh+1):
       for b in R(w-ww+1):
