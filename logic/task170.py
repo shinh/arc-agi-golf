@@ -12,7 +12,6 @@ def p(g):
            g[r][c]=0;R+=(r,c,k),;P|={k};I=min(I,r);K=max(K,r);J=min(J,c);L=max(L,c)
        if(l:=len(P))>S:S=l;p=R;a,c=I,J;b=K-I+1;d=L-J+1
        if l<T:T=l;s=R;u,v=I,J;U=K-I+1;V=L-J+1
-    S={(x-u,y-v)for x,y,_ in s}
-    o=[[((i*U//b,j*V//d)in S)for j in range(d)]for i in range(b)]
+    o=[[(i*U//b,j*V//d)in{(x-u,y-v)for x,y,_ in s}for j in range(d)]for i in range(b)]
     for x,y,k in p:o[x-a][y-c]*=k
     return o
