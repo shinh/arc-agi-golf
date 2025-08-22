@@ -9,7 +9,7 @@ def p(g):
                 for b in-1,0,1:
                     if a|b and(p:=(x+a,y+b))in s:s.remove(p);q+=p,
         m=max(m,q,key=len)
-    C={v for i in range(h)for j in range(w)if(v:=g[i][j])and(i,j)not in m}
+    C={g[i][j]for i in range(h)for j in range(w)if g[i][j]and(i,j)not in m}
     rs,cs=zip(*m);a=min(rs);b=min(cs);H=max(rs)-a+1;W=max(cs)-b+1
     B=[(r-a,c-b,g[r][c])for r,c in m]
     G=[r[:]for r in g]
