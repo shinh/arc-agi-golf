@@ -1,3 +1,1 @@
-def p(g,i=0):
-    pce=g[i:i+3]
-    return pce==[[*r]for r in zip(*pce)]and p(g,i+3)or pce
+p=lambda g:(h:=g[:3])==[*map(list,zip(*h))]and p(g[3:])or h # find first non symmetric 3x3
