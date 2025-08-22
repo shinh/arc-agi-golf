@@ -1,1 +1,2 @@
-p=lambda g,R=range(4):[[g[x][y+4]or g[x+4][y]or g[x+4][y+4]or g[x][y]for y in R]for x in R]
+# merge quadrants taking colors in priority order
+p=lambda g:[[max(z,key=bool)for z in zip(r[4:],s,s[4:],r)]for r,s in zip(g,g[4:])]
