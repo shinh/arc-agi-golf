@@ -1,3 +1,2 @@
-def p(g):
- r=[l+l[::-1]for l in g]
- return r+r[::-1]
+def p(g):# mirror both axes
+ return[r+r[::-1]for r in g+g[::-1]]
