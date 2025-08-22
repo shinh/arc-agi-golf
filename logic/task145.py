@@ -1,18 +1,18 @@
 def p(g):
- h=len(g);w=len(g[0]);C=[]
- for y in range(h):
-  for x in range(w):
+ # paint max area 1 and min area 8
+ h=len(g);w=len(g[0]);R=range;s=[]
+ def f(y,x,k):
+  if-1<y<h and-1<x<w and g[y][x]<1:
+   g[y][x]=k;return 1+f(y+1,x,k)+f(y-1,x,k)+f(y,x+1,k)+f(y,x-1,k)
+  return 0
+ k=9
+ for y in R(h):
+  for x in R(w):
    if g[y][x]<1:
-    q=[(y,x)];g[y][x]=2;c=[]
-    for i,j in q:
-     c+=[(i,j)]
-     for a,b in(1,0),(-1,0),(0,1),(0,-1):
-      A=i+a;B=j+b
-      if 0<=A<h and 0<=B<w and g[A][B]<1:
-       g[A][B]=2;q+=[(A,B)]
-    C+=[c]
- m=max(len(c)for c in C);n=min(len(c)for c in C)
- for c in C:
-  v=1 if len(c)==m else 8 if len(c)==n else 0
-  for y,x in c:g[y][x]=v
+    k+=1;s+=[f(y,x,k)]
+ m=max(s);n=min(s)
+ for y in R(h):
+  for x in R(w):
+   v=g[y][x];g[y][x]=v>9 and(s[v-10]==m or(s[v-10]==n)*8)or v*(v<10)
  return g
+
