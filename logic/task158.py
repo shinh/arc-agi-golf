@@ -1,24 +1,41 @@
-def p(g):# BFS region then copy scaled
+def p(g):# BFS region then copy scaled with rot90
+    #show(g,"input")
+    #print(f'start {len(g)=} {len(g[0])=}')
     B=g[-1][0];h=len(g);w=len(g[0]);R=range
     for y in R(h):
         for x in R(w):
             if g[y][x]==B:continue
             q=[(y,x)]
+            c=[]
             for a,b in q:
                 for dy in-1,0,1:
                     for dx in-1,0,1:
                         if dy|dx and-1<(ny:=a+dy)<h>-1<(nx:=b+dx)<w and g[ny][nx]!=B and(ny,nx)not in q:
                             q+=[(ny,nx)]
-            if len({g[i][j]for i,j in q})<2:continue
-            y,x=map(min,zip(*q));P=[(g[i][j],i-y,j-x)for i,j in q]
-            c,I,J=zip(*P);m=max(c,key=c.count);h0=max(I)+1;w0=max(J)+1
-            for s in R(1,5):
-                U=[(c,i*s+di,j*s+dj)for c,i,j in P for di in R(s)for dj in R(s)];H=h0*s;W=w0*s
-                for t in R(5):
-                    q=[(v,((i,j),(j,i),(W-1-j,H-1-i),(H-1-i,j),(i,W-1-j))[t])for v,i,j in U];d={(i,j):v for v,(i,j)in q if v!=m}
-                    hh,ww=[(H,W),(W,H)][t==1]
-                    for a in R(h-hh+1):
-                        for b in R(w-ww+1):
-                            if all(g[a+i][b+j]==d.get((i,j),B)for i in R(hh)for j in R(ww)):
-                                for v,(i,j)in q:g[a+i][b+j]=v
-            return g
+                            c+=g[ny][nx],
+            if len({*c})<2:continue
+
+            my,mx=zip(*q)
+            ly=max(my)-min(my)+1
+            lx=max(mx)-min(mx)+1
+
+            #y=min(my)
+            x=min(mx)
+
+            bc=max(c,key=c.count)
+
+            #print(f'box {y=} {x=} {ly=} {lx=} {bc=} {B=}')
+
+            o=[r*1 for r in g]
+            for t in R(4):
+                for s in R(1,5):
+                    for ty in R(len(o)-s*ly+1):
+                        for tx in R(len(o[0])-s*lx+1):
+                            if all(o[ty+dy][tx+dx]==[q:=g[y+dy//s][x+dx//s],B][q==bc]for dy in R(s*ly)for dx in R(s*lx)):
+                                #print(f"found {ty=} {tx=} {s=}")
+                                #show(o,"found",(ty,tx))
+                                for dy in R(s*ly):
+                                    for dx in R(s*lx):
+                                        o[ty+dy][tx+dx]=g[y+dy//s][x+dx//s]
+                o=[*map(list,zip(*o[::-1]))]
+            return o
