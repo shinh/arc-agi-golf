@@ -1,1 +1,3 @@
-p=lambda g:[[3if g[i][j]+g[i+7][j]==2else 0for j in range(5)]for i in range(6)]
+# XOR top and bottom halves separated by a wall row
+p=lambda g:[[(x!=y)*3for x,y in t]for t in map(zip,g,g[7:])]
+
