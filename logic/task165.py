@@ -1,14 +1,9 @@
-def p(g):
-    # locate anchor shape and pour colors downward from it
-    for y in range(3,20):
-        for x in range(6,20):
-            c=g[y][x]
-            if c and all(g[y+u][x+v]==c for u,v in [(0,0),(0,-6),(-1,-1),(-1,-2),(-1,-4),(-1,-5),(-2,-2),(-2,-3),(-2,-4),(-3,-3)]):
-                for i,d in enumerate([1,0,0,-1,0,0,1]):
-                    X=x-i;Y=y+d
-                    for k in range(Y,20):
-                        t=g[k][X]
-                        if t:
-                            for k in range(Y,20):g[k][X]=t
-                            break
-                return g
+def p(g):# anchor then pour down
+ r=range;a=3,3,2,2,2,2,1,1,1,0;b=6,0,5,4,2,1,4,3,2,3;d=1,0,0,-1,0,0,1
+ for y in r(17):
+  for x in r(14):
+   if(c:=g[y+3][x+6])and all(g[y+a[i]][x+b[i]]==c for i in r(10)):
+    for i in r(7):
+     X=x+6-i;Y=y+3+d[i];t=next((R[X]for R in g[Y:]if R[X]),0)
+     for R in g[Y:]:R[X]=t
+    return g
