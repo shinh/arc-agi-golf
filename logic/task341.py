@@ -1,7 +1,7 @@
 def p(g):
     # bridge shapes with 8
     for _ in 0,1:
-        y1=99;y2=A=B=0
+        y1=99;y2=0
         for y,r in enumerate(g):
             s=''.join('10'[c<1]for c in r)
             x=s.find('10')+1
