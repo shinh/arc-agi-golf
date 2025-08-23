@@ -1,8 +1,8 @@
 # Not golfed yet.
 # Note this is almost identical to task390.
 def p(g):
- for o in[0]*4:
+ for _ in"r"*4:
   g=[*map(list,zip(*g[::-1]))]
   for r in g:
-   if 2in r:s=r.index(2);l=r.index(2,s+1)-s+1>>1;r[s-l+1:s-1],r[s+2:s+l]=r[s+2:s+l][::-1],[0]*(l-2)
+   if 2in r:c=r.index;s=c(2);m=c(2,s+1)-s-3>>1;r[s-m-1:s-1],r[s+2:s+m+2]=r[s+2:s+m+2][::-1],[0]*m
  return g
