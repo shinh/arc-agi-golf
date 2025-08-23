@@ -1,1 +1,1 @@
-p=lambda g,r=range(16):[[(x+y)%max(map(max,g))+1 for x in r]for y in r]
+p=lambda g,r=range(16):[[(x+y)%max(g[0])+1for x in r]for y in r]# fill diagonal pattern cycling over max color
