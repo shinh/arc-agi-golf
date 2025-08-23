@@ -1,3 +1,3 @@
-# rotate the image 90 degrees 4x times with zip(*g[::-1]) instead of applying logic at 4 different directions
-p=lambda g,n=63:-n*g or p([[[a or b==1,a^1-(a>1)][n<1]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)
+# rotate to flood-fill loops with a left sentinel and repeated rotation
+p=lambda g,n=63:-n*g or p([[(b or a&1,b^1^b//2)[n<1]for a,b in zip((1,)+r,r)]for r in zip(*g[::-1])],n-1)
 
