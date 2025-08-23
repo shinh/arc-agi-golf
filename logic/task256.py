@@ -1,7 +1,6 @@
-# grow triangles above and below the 2 row
-def p(g,R=range):
- a=sum(g[i:=next(zip(*g)).index(2)])>>1
- for x in R(a+i):
-  t=a+i-x;g[x][:t]=[2+(i>x)-(x>i)]*t
+# triangles at 2
+def p(g):
+ i=g.index(max(g));a=g[i].index(0)+i;t=a
+ while t:y=a-t;g[y][:t]=[2+(i>y)-(y>i)]*t;t-=1
  return g
 
