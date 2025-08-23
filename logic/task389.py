@@ -1,3 +1,2 @@
-# 66. Still 9B behind?
-def p(g):
-    return[[({*sum(g,[])}-{5}).pop()*(x==5)for x in r] for r in g]
+# 62B
+p=lambda g:[[(x==5)*sum({-5,*sum(g,[])})for x in r]for r in g]
