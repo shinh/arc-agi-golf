@@ -1,1 +1,2 @@
-def p(j):return[[3 if j[r][c]or j[r+5][c]else 0 for c in range(4)]for r in range(4)]
+# merge top and bottom halves
+p=lambda j:[[3*any(c)for c in zip(*z)]for z in zip(j,j[5:])]
