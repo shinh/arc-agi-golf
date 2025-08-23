@@ -5,8 +5,7 @@ def p(g):
  a,b=[],[]
  for r in range(h):
   for c in range(w):
-   S=[(r+x,c+y)for x,y in P]
-   if all(-1<i<h and-1<j<w and g[i][j]<1 and(i,j)not in b for i,j in S):a+=(r,c),;b+=S
+   if(S:=[(r+x,c+y)for x,y in P])and all(h>i>=0<=j<w>g[i][j]<1 and(i,j)not in b for i,j in S):a+=(r,c),;b+=S
  t=sum(a,())
  if t==(1,7,5,1,5,6,7,5):a[1]=6,0
  if t==(1,3,5,6):a=a[1:]
