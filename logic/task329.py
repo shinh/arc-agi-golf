@@ -1,4 +1,2 @@
-def p(g):
- m=len(g[0])//2
- for r in g:r[:]=[0]*m+[r[m]]+[0]*m
- return g
+# keep center col
+def p(g):return[[0]*(m:=len(r)//2)+[r[m]]+[0]*m for r in g]
