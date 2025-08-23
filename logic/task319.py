@@ -6,8 +6,7 @@ def p(g):
  (c1,S1),(c2,S2)=[(next(iter(s))[0],[p[1]for p in s])for s in O-{E}]
  E=[p[1]for p in E]
  def m(S,c):
-  R,C=zip(*S);mi,Ma=min(R),max(R);mj,Mb=min(C),max(C);a=[[B]*(Mb-mj+1)for _ in range(Ma-mi+1)]
-  for i,j in S:a[i-mi][j-mj]=c
-  return a
+  R,C=zip(*S);mi,Ma=min(R),max(R);mj,Mb=min(C),max(C);S=set(S)
+  return [[B+(c-B)*((i,j)in S)for j in range(mj,Mb+1)]for i in range(mi,Ma+1)]
  g1,g2,e=m(S1,c1),m(S2,c2),m(E,c1)
  return g1 if any(all(g1[(i+a)//2][(j+b)//2]==e[a][b]for a in range(len(e))for b in range(len(e[0])))for i in range(len(g1)*2-len(e)+1)for j in range(len(g1[0])*2-len(e[0])+1))else g2
