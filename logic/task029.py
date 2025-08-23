@@ -47,4 +47,24 @@
 
 # Finally found a good approach. Crop 10 times.
 # recursively try colors
-p=lambda g,c=0:(f:=lambda g:[*zip(*(r for r in g if c in r))],n:=[[*r[1:-1]]for r in f(f(g))[1:-1]],n*(c not in sum(n,[]))or p(g,-~c))[2]
+# p=lambda g,c=0:(f:=lambda g:[*zip(*(r for r in g if c in r))],n:=[[*r[1:-1]]for r in f(f(g))[1:-1]],n*0**(c in sum(n,[]))or p(g,-~c))[2]
+
+# Transpose first.
+# p=lambda g,c=0:(f:=lambda g:[r for r in zip(*g)if c in r],n:=[[*r[1:-1]]for r in f(f(g))[1:-1]],n*0**(c in sum(n,[]))or p(g,-~c))[2]
+
+# Normal func is actually shorter.
+# def p(g,c=0):
+#     f=lambda g:[r for r in zip(*g)if c in r]
+#     n=[[*r[1:-1]]for r in f(f(g))[1:-1]]
+#     return n*0**(c in sum(n,[]))or p(g,c+1)
+
+# Use tuple return
+def p(g,c=0):
+    f=lambda g:[r for r in zip(*g)if c in r]
+    n=[r[1:-1]for r in f(f(g))[1:-1]]
+    return n*0**(c in sum(n,()))or p(g,c+1)
+
+# Another idea. Need some more twists to make it work actually.
+# import re
+# p=lambda g,c=0:(o:=[eval(f"[{r}]")for r,_ in re.findall(f"{c}, (([^{c}], )+){c}",str(g))])*all(len(r)==len(o[0])for r in o)or p(g,c+1)
+
