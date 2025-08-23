@@ -1,1 +1,2 @@
-p=lambda g:[*map(list,zip(*g))][::-1]
+# rotate 90deg counterclockwise
+p=lambda g:[*zip(*g)][::-1]
