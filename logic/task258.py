@@ -1,5 +1,2 @@
-def p(g):
- for r in g:
-  for j in range(len(r)-2):
-   if r[j]&r[j+2]:r[j+1]=2
- return g
+# fill middle between nonzero neighbors
+p=lambda g:[r[:1]+[a&c and 2or b for a,b,c in zip(r,r[1:],r[2:])]+r[-1:]for r in g]
