@@ -1,6 +1,5 @@
 def p(g):
- # fill corners from quadrants
- s=sum(g,[]);o=create(10,10);r,c=divmod(s.index(8),10)
- for i,v in enumerate(s):
-  if v%8*(y:=i//10-r)*(y-1)*(x:=i%10-c)*(x-1):o[r+(y>1)][c+(x>0)]=v
+ # copy quads
+ s=sum(g,[]);f=s.index;r,c=divmod(f(8),10);o=create(10,10)
+ for v in {*s}-{0,8}:o[r+((i:=f(v))//10>r)][c+(i%10>c)]=v
  return o
