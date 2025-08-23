@@ -1,4 +1,4 @@
-def p(g):
+def p(g):# copy tiles depending on non-5 positions
  o=[[0]*9for _ in[0]*9]
  k=10,15,14,21,0,27,22,33,26
  for y in range(len(g)-2):
@@ -7,7 +7,7 @@ def p(g):
    for d in range(9):
     c=g[y+d//3][x+d%3]
     if c<1:break
-    v+=(d+2)*(c!=5)
+    v+=c%5 and d+2
    else:
     c=k.index(v)
     for d in range(9):
