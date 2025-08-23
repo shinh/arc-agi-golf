@@ -1,9 +1,7 @@
-# crop box around least common color
+# box rare color
 def p(m):
- b=sum(m,[]);w=len(m[0]);s={*b}-{0}
- if s:
-  l=min(s,key=b.count)
-  y,x=divmod(b.index(l),w);Y,X=divmod(len(b)+~b[::-1].index(l),w)
-  return[r[x:X+1]for r in m[y:Y+1]]
+ b=sum(m,[])
+ if s:={*b}-{0}:
+  w=len(m[0]);i=b.index(l:=min(s,key=b.count));j=len(b)+~b[::-1].index(l);return[r[i%w:j%w+1]for r in m[i//w:j//w+1]]
  return[]
 
