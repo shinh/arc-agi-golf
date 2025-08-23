@@ -1,9 +1,25 @@
 def p(g):
     # bridge shapes with 8
-    f=sum(g,[])
-    a,b=[(i:=f.index(c),j:=len(f)-1-f[::-1].index(c))and(i//10,j//10,i%10,j%10)for c in{*f}-{0}]
-    c=a[3]<b[2]or b[3]<a[2]
-    if a[c*2]>b[c*2]:a,b=b,a
-    s,t,u,v=[(a[1]+1,b[0],max(a[2],b[2])+1,min(a[3],b[3])),(max(a[0],b[0])+1,min(a[1],b[1]),a[3]+1,b[2])][c]
-    for r in g[s:t]:r[u:v]=[8]*(v-u)
+    for k in 0,1:
+        sy=99
+        sx=ex=ey=0
+        for y,r in enumerate(g):
+            n=0
+            for x,c in enumerate(r):
+                if c and n%2<1:
+                    if n>1:
+                        ex=x
+                    n+=1
+                if c<1==n%2:
+                    if ex<1:
+                        sx=x
+                    n+=1
+            if n>2:
+                sy=min(sy,y)
+                ey=max(ey,y)
+
+        for r in g[sy+1:ey]:
+            r[sx:ex]=[8]*(ex-sx)
+
+        g=[*map(list,zip(*g))]
     return g
