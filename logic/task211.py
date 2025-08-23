@@ -1,1 +1,2 @@
-def p(g):g=[R[::-1]+R for R in g];E=[g[2],g[1],g[0]];return E+g+E
+# mirror rows horizontally and vertically
+p=lambda g:[r[::-1]+r for r in g[::-1]+g+g[::-1]]
