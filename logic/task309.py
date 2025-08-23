@@ -1,1 +1,3 @@
-p=lambda g:[[x-2*(x==7)for x in r]for r in g]
+# replace 7 with 5 via string eval
+p=lambda g:eval(str(g).replace(*'75'))
+
