@@ -1,4 +1,4 @@
+# fill rows >=2 with cycling colors from the top row
 def p(g):
- m=len(g[0])
- for i in range(2,len(g)):g[i]=[g[0][(i-2)%m]]*m
+ for r,c in zip(g[2:],g[0]*len(g)):r[:]=[c]*len(r)
  return g
