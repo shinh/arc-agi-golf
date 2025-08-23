@@ -46,9 +46,5 @@
 # another idea, possibly use itertools.combinations to avoid double loops for each dimension
 
 # Finally found a good approach. Crop 10 times.
-def p(g):
-    for c in range(10):
-        f=lambda g:[*map(list,zip(*[r for r in g if c in r]))]
-        n=[r[1:-1]for r in f(f(g))[1:-1]]
-        if c not in sum(n,[])and n:
-            return n
+# recursively try colors
+p=lambda g,c=0:(f:=lambda g:[*zip(*[r for r in g if c in r])],n:=[[*r[1:-1]]for r in f(f(g))[1:-1]],n if c not in sum(n,[])and n else p(g,-~c))[2]
