@@ -3,52 +3,37 @@ def p(g):
     #print(f"{len(g)=} {len(g[0])=}")
     #show(g,"input")
     f=sum(g,[])
-    sc=sorted({*f},key=f.count)
-    fg=sc[:-2]
-    #print(f'kkk {s=} {fg=} {bg=}')
-
+    c=sorted({*f},key=f.count)
+    F=c[:-2]
     g,o=[[[r[:len(g[0])//2]for r in g],[r[len(g[0])//2:]for r in g]],[g[:len(g)//2],g[len(g)//2:]]][len(g)>len(g[0])]
-
-    if(bg:=sc[-1])in g[0]:g,o=o,g
-
+    if(b:=c[-1])in g[0]:g,o=o,g
     #show(g,"from")
     #show(o,"to")
-
     s=[]
-    blocks=[]
-    for sy in range(len(g)):
-        for sx in range(len(g[0])):
-            if(sy,sx)not in s:
-                ly=lx=0
-                while(g+[[0]*99])[sy+ly+1][sx]in fg:ly+=1
-                while(g[sy]+[0])[sx+lx+1]in fg:lx+=1
-
-                if ly*lx:
+    B=[]
+    z=[[0]*99]
+    for y in range(len(g)):
+        for x in range(len(g[0])):
+            if(y,x)not in s:
+                Y=X=0
+                while(g+z)[y+Y+1][x]in F:Y+=1
+                while(g[y]+[0])[x+X+1]in F:X+=1
+                if Y*X:
                     #print(f'found block {sy=} {sx=} {ey=} {ex=} {ly=} {lx=} {pc=} {bc=}')
-                    for dy in range(ly):
-                        for dx in range(lx):
-                            s+=(sy+dy,sx+dx),
-                    blocks+=(ly+1,lx+1,sy,sx),
-
-    for ly,lx,sy,sx in sorted(blocks)[::-1]:
-        pc=[*{g[sy+dy][sx+dx]for dy in range(ly)for dx in range(lx)}-{sc[-3]}][0]
-
-        for ty in range(len(g)-ly+1):
-            for tx in range(len(g[0])-lx+1):
-                ok=1
-
-                for dy in range(-1,ly+1):
-                    for dx in range(-1,lx+1):
-                        if o[ty+dy][tx+dx]!=[bg,pc][g[sy+dy][sx+dx]==pc]if ly>dy>-1<dx<lx else((o+[[0]*99])[ty+dy]+[0])[tx+dx]==pc:
-                            ok=0
-
-                if ok:
+                    for dy in range(Y):
+                        for dx in range(X):
+                            s+=(y+dy,x+dx),
+                    B+=(Y+1,X+1,y,x),
+    for Y,X,y,x in sorted(B)[::-1]:
+        p=[*{g[y+dy][x+dx]for dy in range(Y)for dx in range(X)}-{c[-3]}][0]
+        for ty in range(len(g)-Y+1):
+            for tx in range(len(g[0])-X+1):
+                if all(o[ty+dy][tx+dx]==[b,p][g[y+dy][x+dx]==p] if Y>dy>-1<dx<X else((o+z)[ty+dy]+[0])[tx+dx]!=p for dy in range(-1,Y+1) for dx in range(-1,X+1)):
                     #print(f'found dest! {ty=} {tx=}')
-                    for dy in range(ly):
-                        for dx in range(lx):
-                            o[ty+dy][tx+dx]=g[sy+dy][sx+dx]
+                    for dy in range(Y):
+                        for dx in range(X):
+                            o[ty+dy][tx+dx]=g[y+dy][x+dx]
                     #show(o,"fill")
-
     return o
 
 # The original, AI authored code
