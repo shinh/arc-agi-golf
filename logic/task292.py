@@ -1,3 +1,3 @@
-def p(g):
- for r in g:r[::3]=[6 if v==4 else v for v in r[::3]]
- return g
+# 4->6 every 3rd cell
+p=lambda g:[[v+2*(v==4)*(i%3<1)for i,v in enumerate(r)]for r in g]
+
