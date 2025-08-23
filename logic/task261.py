@@ -1,1 +1,2 @@
-def p(g):g=[g[-1]]+g[:len(g)-1];g=[[2 if C==8 else C for C in R]for R in g];return g
+# move last row to top and replace 8 with 2
+p=lambda g:eval(str(g[-1:]+g[:-1]).replace('8','2'))
