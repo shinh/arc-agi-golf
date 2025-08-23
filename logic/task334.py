@@ -1,4 +1,3 @@
-def p(g):
- # choose pattern based on highest color in grid
- a=[0,5,0];h=[5]*3
- return{2:[h,a,a],1:[a,h,a],3:[[0,0,5]]*2+[h]}[max(sum(g,[]))]
+# choose pattern based on highest color in grid
+a=0,5,0;h=5,5,5;b=0,0,5
+p=lambda g:[0,(a,h,a),(h,a,a),(b,b,h)][max(sum(g,[]))]
