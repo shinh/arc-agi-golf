@@ -1,3 +1,3 @@
 # cross row of 2 and column of 8
-# better formula?
-p=lambda g:[[x+(2in r)*(2-6*x//8)for x in g[0]]for r in g]
+# x%6-x+2 is +2 for 0 and -4 for 8
+p=lambda g:[[x+(2in r)*(x%6-x+2)for x in g[0]]for r in g]
