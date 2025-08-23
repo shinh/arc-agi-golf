@@ -1,4 +1,4 @@
 def p(g):# grow block
- r=g[0];l=r.index(0);o=[r]
- for i in range(len(r)//2-1):r=r[:];r[l+i]=r[0];o+=r,
- return o
+ r=g[0]
+ for _ in r[2::2]:r=r[:];r[r.index(0)]=r[0];g+=r,
+ return g
