@@ -1,25 +1,14 @@
 def p(g):
     # bridge shapes with 8
-    for k in 0,1:
-        sy=99
-        sx=ex=ey=0
+    for _ in 0,1:
+        y1=99;y2=A=B=0
         for y,r in enumerate(g):
-            n=0
-            for x,c in enumerate(r):
-                if c and n%2<1:
-                    if n>1:
-                        ex=x
-                    n+=1
-                if c<1==n%2:
-                    if ex<1:
-                        sx=x
-                    n+=1
-            if n>2:
-                sy=min(sy,y)
-                ey=max(ey,y)
-
-        for r in g[sy+1:ey]:
-            r[sx:ex]=[8]*(ex-sx)
-
+            s=''.join('10'[c<1]for c in r)
+            x=s.find('10')+1
+            X=s.find('1',x)
+            if 0<x<X:
+                A,B=x,X;y1=min(y1,y);y2=y
+        for r in g[y1+1:y2]:
+            r[A:B]=[8]*(B-A)
         g=[*map(list,zip(*g))]
     return g
