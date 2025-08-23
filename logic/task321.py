@@ -1,4 +1,3 @@
-def p(g):
- # prefer left then mid else keep
- return[[r[c]or r[c+5]or r[c-4]for c in range(4)]for r in g]
+# prefer left then mid else keep
+p=lambda g:[[max(r[c::5],key=bool)for c in(0,1,2,3)]for r in g]
 
