@@ -1,7 +1,5 @@
 def p(g):
-    # connect 2 to 3 with 8s
-    f=sum(g,[])
-    y,x=divmod(f.index(2),w:=len(g[0]));Y,X=divmod(f.index(3),w)
-    while x!=X:g[y][x:=x+(X>x)-(X<x)]=8
-    while y!=Y:g[y:=y+(Y>y)-(Y<y)][x]=8
-    g[Y][X]=3;return g
+    # connect2-3 w8s
+    f=sum(g,[]);w=len(g[0]);(y,x),(Y,X)=[divmod(f.index(i),w)for i in(2,3)]
+    while y-Y or x-X:x+=(X>x)-(X<x);g[y][x]=8;y+=(x==X)*((Y>y)-(Y<y))
+    return g
