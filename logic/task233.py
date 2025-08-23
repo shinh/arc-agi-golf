@@ -1,23 +1,23 @@
 def p(g):
     # move each 3x3 block without 0 to matching hole ignoring color 2
-    r=range(3);O=[]
-    for x in range(len(g[0])-2):
-        for y in range(len(g)-2):
-            o=[g[y+i][x:x+3]for i in r];s={*sum(o,[])}
-            if len(s)>1 and 0 not in s:
+    R=range;z=zip;f=filter;r=R(3);O=()
+    for x in R(len(g[0])-2):
+        for y in R(len(g)-2):
+            o=[g[y+i][x:x+3]for i in r]
+            if min(s:={*sum(o,[])})*(len(s)-1):
                 O+=o,
                 for i in r:g[y+i][x:x+3]=0,0,0
-    g=[*map(list,zip(*filter(any,zip(*filter(any,g)))))]
+    g=[*map(list,z(*f(any,z(*f(any,g)))))]
     for o in O:
-        for _ in 0,1,2,3:
-            for y in range(len(g)-2):
-                for x in range(len(g[0])-2):
-                    if all((v!=2)==(g[y+i][x+j]>0)for i in r for j,v in enumerate(o[i])):
+        for _ in R(4):
+            for y in R(len(g)-2):
+                for x in R(len(g[0])-2):
+                    if all((o[i][j]!=2)==(g[y+i][x+j]>0)for i in r for j in r):
                         for i in r:g[y+i][x:x+3]=o[i]
                         break
                 else:continue
                 break
-            else:o=[*zip(*o[::-1])];continue
+            else:o=[*z(*o[::-1])];continue
             break
     return g
 
