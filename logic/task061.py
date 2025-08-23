@@ -6,7 +6,6 @@ def p(g,p=1):
     # Complement the first square.
     for y,r in enumerate(g):
         for x,c in enumerate(r):
-            if c:
-                g[y%p][x%p]=c
+            g[y%p][x%p]|=c
     # Complement the rest.
     return[[g[y%p][x%p]for x,c in enumerate(r)]for y,r in enumerate(g)]
