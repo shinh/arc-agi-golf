@@ -47,4 +47,4 @@
 
 # Finally found a good approach. Crop 10 times.
 # recursively try colors
-p=lambda g,c=0:(f:=lambda g:[*zip(*[r for r in g if c in r])],n:=[[*r[1:-1]]for r in f(f(g))[1:-1]],n if c not in sum(n,[])and n else p(g,-~c))[2]
+p=lambda g,c=0:(f:=lambda g:[*zip(*(r for r in g if c in r))],n:=[[*r[1:-1]]for r in f(f(g))[1:-1]],n*(c not in sum(n,[]))or p(g,-~c))[2]
