@@ -1,1 +1,1 @@
-p=lambda g:sorted(map(sorted,g))# sort rows then grid
+s=sorted;p=lambda g:s(map(s,g))# sort rows then grid
