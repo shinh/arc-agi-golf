@@ -8,9 +8,9 @@
 #
 # and and another task contains both the above pattern and a larger pattern.
 # this is 203B after minifiy and zlib
-def p(g):
-    # brute-force scan for the largest framed rectangle
-    return max(([r[sx:ex+1]for r in g[sy:ey+1]]for sy in range(1,len(g)-1)for sx in range(1,len(g[0])-1)for ey in range(sy,len(g)-1)for ex in range(sx,len(g[0])-1)if{*g[sy-1][sx-1:ex+2],*g[ey+1][sx-1:ex+2],g[sy][ex+1],*[r[sx-1]for r in g[sy-1:ey+2]]}<={g[sy][sx-1]}),key=len)
+# def p(g):
+#     # brute-force scan for the largest framed rectangle
+#     return max(([r[sx:ex+1]for r in g[sy:ey+1]]for sy in range(1,len(g)-1)for sx in range(1,len(g[0])-1)for ey in range(sy,len(g)-1)for ex in range(sx,len(g[0])-1)if{*g[sy-1][sx-1:ex+2],*g[ey+1][sx-1:ex+2],g[sy][ex+1],*[r[sx-1]for r in g[sy-1:ey+2]]}<={g[sy][sx-1]}),key=len)
 
 # idea for another approach, that I don't think would be shorter
 # return the stuff enclosed in a rectangle if the border is a rectangle (all same color), otherwise empty list.
@@ -44,3 +44,11 @@ def p(g):
 #     return a
 
 # another idea, possibly use itertools.combinations to avoid double loops for each dimension
+
+# Finally found a good approach. Crop 10 times.
+def p(g):
+    for c in range(10):
+        f=lambda g:[*map(list,zip(*[r for r in g if c in r]))]
+        n=[r[1:-1]for r in f(f(g))[1:-1]]
+        if c not in sum(n,[])and n:
+            return n
