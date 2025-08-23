@@ -1,1 +1,2 @@
-p=lambda g:[[x for x in sum(g,[])if x]]
+# non-zero tiles
+p=lambda g:[[*filter(int,sum(g,[]))]]
