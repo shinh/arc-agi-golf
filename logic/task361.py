@@ -1,16 +1,15 @@
 def p(g):
- h=w=10
- for k in range(min(h,w),0,-1):
-  for i in range(h-k+1):
-   for j in range(w-k+1):
-    if all(g[i+y][j+x] for y in range(k) for x in range(k)):
-     c=i+(k-1)/2;d=j+(k-1)/2;o=[r for r in g]
-     for y,r in enumerate(g):
-      for x,v in enumerate(r):
-       if v and (y<i or y>=i+k or x<j or x>=j+k):
+ # rotate non-square cells around center of largest solid square
+ for k in range(10,0,-1):
+  for i in range(11-k):
+   for j in range(11-k):
+    if all(min(g[i+y][j:j+k])for y in range(k)):
+     c=i+k/2-.5;d=j+k/2-.5
+     for y in range(10):
+      for x in range(10):
+       if (v:=g[y][x])*(i<=y<i+k)*(j<=x<j+k)<v:
         a=y-c;b=x-d
-        for a,b in(-b,a),(-a,-b),(b,-a):
-         y2=round(c+a);x2=round(d+b)
-         if 0<=y2<h and 0<=x2<w:o[y2][x2]=v
-     return o
- return g
+        for _ in'000':
+         a,b=-b,a;y2=round(c+a);x2=round(d+b)
+         if 0<=y2<10>x2>=0:g[y2][x2]=v
+     return g
