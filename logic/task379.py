@@ -1,14 +1,18 @@
 # extend lines from 2 toward 8, painting around the 8
 def p(g):
- h=len(g);w=len(g[0])
- for y,x in[(y,x)for y in range(h)for x in range(w)if g[y][x]==2]:
-  for dy,dx in(1,0),(-1,0),(0,1),(0,-1):
-   ny=y+dy;nx=x+dx;d=0
-   while h>ny>=0<w>nx>=0 and g[ny][nx]<1:ny+=dy;nx+=dx;d+=1
-   if h>ny>=0<w>nx>=0 and g[ny][nx]==8:
-    while d:g[y+dy*d][x+dx*d]=2;d-=1
-    for Y in ny-1,ny,ny+1:
-     for X in nx-1,nx,nx+1:
-      if h>Y>=0<w>X>=0:g[Y][X]=8
-    g[ny][nx]=2
- return g
+    #show(g,"input")
+    for o in range(4):
+        for y,r in enumerate(g):
+            s=99
+            if 8 in r and r[0]!=8:
+                for x in range(len(r)):
+                    if r[x]==2:s=x
+                    if r[x]==8 and x-s>1:
+                        #r[s:x+1]=[2]*(x+1-s)
+                        r[s:x+1]=[2]*(x+1-s)
+                        g[y][x-1]=g[y][x+1]=g[y-1][x-1]=g[y-1][x+1]=g[y+1][x-1]=g[y+1][x+1]=8
+                        s=99
+
+        #show(g,"o")
+        g=[*map(list,zip(*g[::-1]))]
+    return g
