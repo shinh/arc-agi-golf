@@ -1,3 +1,3 @@
-def p(g):
-    return [[2 if c==6 else c for c in r] for r in g]
+# replace 6s with 2s via string eval
+p=lambda g:eval(str(g).replace(*'62'))
 
