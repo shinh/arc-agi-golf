@@ -1,1 +1,2 @@
-p=lambda g:[*map(list,zip(*g))]
+# transpose
+p=lambda g:[*zip(*g)]
