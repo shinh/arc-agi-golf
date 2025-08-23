@@ -1,1 +1,2 @@
-p=lambda g:[[g[i][j]or g[i+6][j]for j in range(11)]for i in range(5)]
+# merge halves
+p=lambda g:[[*map(max,*rs)]for rs in zip(g,g[6:])]

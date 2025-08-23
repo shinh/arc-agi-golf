@@ -1,1 +1,3 @@
-p=lambda g:[[r for j,r in enumerate(g)if sum(r)and j%3==i%3][0]for i in range(len(g))]
+# copy row per mod-3 group
+p=lambda g:[max(g[i%3::3])for i in range(len(g))]
+

@@ -1,1 +1,3 @@
-p=lambda g:[[k]for k,_ in __import__('collections').Counter(i for r in g for i in r).most_common(5)[2:]]
+# colors ranked 3-5 by frequency
+p=lambda g:(*zip(sorted({*(a:=sum(g,[]))},key=a.count)[-3:-6:-1]),)
+

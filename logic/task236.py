@@ -1,3 +1,2 @@
-def p(g):
-    t=g[:4];b=g[5:]
-    return [[3*((t[y][x]>0)^(b[y][x]>0))for x in range(4)]for y in range(4)]
+# compare top with bottom ignoring middle row
+p=lambda g:[[3*((a>0)^(b>0))for a,b in zip(*s)]for s in zip(g,g[5:])]

@@ -1,1 +1,2 @@
-p=lambda g:g[9:4:-1]+g[5:]
+# mirror bottom half
+p=lambda g:g[:4:-1]+g[5:]

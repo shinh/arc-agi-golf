@@ -1,7 +1,2 @@
-def p(g):
-    q=[]
-    for i in range(4):
-        y=i//2*3
-        x=i%2*3
-        q+=[g[y][x:x+2],g[y+1][x:x+2]],
-    return min(q,key=q.count)
+# pick rare 2x2 quadrant
+p=lambda g:min(a:=[(g[y][x:x+2],g[y+1][x:x+2])for y in(0,3)for x in(0,3)],key=a.count)
