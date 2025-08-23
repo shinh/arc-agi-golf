@@ -1,3 +1,3 @@
 # rotate flood-fill to erode 5-pixels
-p=lambda g:(m:=g,[m:=[[*map(int.__and__,r,r[1:]),0]for r in zip(*m[::-1])]for _ in[0]*4])and[[c-d/5*3 for c,d in zip(*t)]for t in zip(g,m)]
+p=lambda g,f=lambda m:[[*map(min,r,r[1:]),0]for r in zip(*m[::-1])]:[[c-d*.6 for c,d in zip(*t)]for t in zip(g,f(f(f(f(g)))))]
 
