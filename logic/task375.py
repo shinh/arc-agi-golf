@@ -1,3 +1,5 @@
+# zero both diagonals
 def p(g):
- for i in range(len(g)):g[i][i]=g[-i-1][i]=0
+ i=-1
+ for r in g:r[i:=i+1]=r[~i]=0
  return g
