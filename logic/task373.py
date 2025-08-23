@@ -1,1 +1,2 @@
-p=lambda g:[[[g[i][j],g[1-i][j]][j%2]for j in range(6)]for i in range(2)]
+# repeat pattern of first column
+p=lambda g:(c:=next(zip(*g)))and(c*3,c[::-1]*3)
