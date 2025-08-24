@@ -625,8 +625,9 @@ def minify(code):
     # minification steps. This reduces noise and may expose further
     # simplification opportunities.
     expandable = find_expandable_variables(code)
-    if expandable:
-        code = expand_variables(code, expandable)
+    # Disabled as this introduces failures.
+    # if expandable:
+    #     code = expand_variables(code, expandable)
 
     code = replace_unpacking_funcs(code)
     code = merge_indented_blocks(code)
