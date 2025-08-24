@@ -86,3 +86,26 @@ def test_replace_unpacking_funcs_skips_strings():
         assert f("list(')')")=="list(')')"
     with pytest.warns(UserWarning):
         assert f("set('(')")=="set('(')"
+
+
+def test_find_expandable_variables():
+    # r is used twice, u is assigned but never used
+    code = "r=range;r(1);r(2);u=range"
+    result = myminifier.find_expandable_variables(code)
+    assert result == {"r": 2, "u": 0}
+
+
+def test_expand_variable_replaces_usage():
+    code = "r=range;r(3);r(4)"
+    assert myminifier.expand_variable(code, "r") == "range(3);range(4)"
+
+
+def test_expand_variable_removes_unused_assignment():
+    code = "a=1;r=range;c=2"
+    assert myminifier.expand_variable(code, "r") == "a=1;c=2"
+
+
+def test_expand_variable_inside_function():
+    src = "def f():\n r=range\n return r(1)"
+    expected = "def f():\n return range(1)"
+    assert myminifier.expand_variable(src, "r") == expected
