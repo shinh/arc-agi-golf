@@ -157,6 +157,88 @@ def combine_adjacent_lines(source_code):
     return "\n".join(result_lines)
 
 
+def _split_top_level_commas(text):
+    """Split *text* on commas not nested in brackets or strings."""
+    parts = []
+    cur = []
+    depth = 0
+    quote = None
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            cur.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                cur.append(text[i + 1])
+                i += 1
+            elif ch == quote:
+                quote = None
+        else:
+            if ch in "'\"":
+                quote = ch
+                cur.append(ch)
+            elif ch in "([{":
+                depth += 1
+                cur.append(ch)
+            elif ch in ")]}":
+                depth -= 1
+                cur.append(ch)
+            elif ch == "," and depth == 0:
+                parts.append("".join(cur))
+                cur = []
+            else:
+                cur.append(ch)
+        i += 1
+    parts.append("".join(cur))
+    return [p.strip() for p in parts]
+
+
+def bundle_assignments(code):
+    """Bundle consecutive simple assignments into a tuple assignment."""
+    lines = code.splitlines()
+    out = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r"(\s*)([A-Za-z_]\w*)=(.+)", line)
+        if m and "#" not in line and ";" not in line:
+            indent, name, value = m.groups()
+            names = [name.strip()]
+            values = [value.strip()]
+            j = i + 1
+            while j < len(lines):
+                m2 = re.match(r"(\s*)([A-Za-z_]\w*)=(.+)", lines[j])
+                if not (m2 and m2.group(1) == indent and "#" not in lines[j] and ";" not in lines[j]):
+                    break
+                names.append(m2.group(2).strip())
+                values.append(m2.group(3).strip())
+                j += 1
+            if len(names) > 1:
+                out.append(indent + ",".join(names) + "=" + ",".join(values))
+                i = j
+                continue
+        out.append(line)
+        i += 1
+    return "\n".join(out)
+
+
+def expand_assignments(code):
+    """Expand tuple assignments into multiple lines with the same indent."""
+    lines = code.splitlines()
+    out = []
+    for line in lines:
+        m = re.match(r"(\s*)((?:[A-Za-z_]\w*\s*,\s*)+[A-Za-z_]\w*)=(.+)", line)
+        if m and "#" not in line and ";" not in line:
+            indent, names_part, values_part = m.groups()
+            names = [n.strip() for n in names_part.split(",")]
+            values = _split_top_level_commas(values_part)
+            if len(names) == len(values) and all(re.match(r"[A-Za-z_]\w*$", n) for n in names):
+                out.extend(f"{indent}{n}={v.strip()}" for n, v in zip(names, values))
+                continue
+        out.append(line)
+    return "\n".join(out)
+
+
 def replce_fixed_range(code):
     code = code.replace("in range(2):", "in 0,1:")
     code = code.replace("in range(3):", "in 0,1,2:")
@@ -197,6 +279,147 @@ def remove_parens_with_ast(code):
 def remove_parens(code):
     while new_code := remove_parens_with_ast(code):
         code = new_code
+    return code
+
+
+def find_expandable_variables(code):
+    """Return a mapping of variables that can be expanded and their usage counts.
+
+    A variable is considered expandable when it is assigned exactly once in the
+    provided code. The returned dictionary maps such variable names to the
+    number of times they are read afterwards. Variables that are assigned but
+    never used will therefore appear with a count of ``0``.
+    """
+
+    tree = ast.parse(code)
+
+    # Count assignments for each variable. Variables assigned more than once
+    # are not safe to expand.
+    assigns = {}
+
+    class AssignCounter(ast.NodeVisitor):
+        def visit_Assign(self, node):
+            if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+                name = node.targets[0].id
+                assigns[name] = assigns.get(name, 0) + 1
+            self.generic_visit(node)
+
+        def visit_AugAssign(self, node):
+            if isinstance(node.target, ast.Name):
+                name = node.target.id
+                assigns[name] = assigns.get(name, 0) + 1
+            self.generic_visit(node)
+
+        def visit_AnnAssign(self, node):
+            if isinstance(node.target, ast.Name):
+                name = node.target.id
+                assigns[name] = assigns.get(name, 0) + 1
+            self.generic_visit(node)
+
+    AssignCounter().visit(tree)
+
+    # Count how many times each variable is read.
+    loads = {}
+
+    class LoadCounter(ast.NodeVisitor):
+        def visit_Name(self, node):
+            if isinstance(node.ctx, ast.Load) and assigns.get(node.id) == 1:
+                loads[node.id] = loads.get(node.id, 0) + 1
+            self.generic_visit(node)
+
+    LoadCounter().visit(tree)
+
+    # Include variables assigned once but never used (default to zero).
+    return {name: loads.get(name, 0) for name, c in assigns.items() if c == 1}
+
+
+def expand_variable(code, name):
+    """Expand the variable ``name`` by inlining its assigned value.
+
+    If the variable is never used, the assignment statement is simply removed.
+    """
+
+    tree = ast.parse(code)
+    assign = None
+
+    # Locate the assignment to the target variable.
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == name
+        ):
+            assign = node
+            break
+
+    if assign is None:
+        return code
+
+    value_src = ast.get_source_segment(code, assign.value)
+
+    # Compute string offsets from line/column pairs.
+    lines = code.splitlines(keepends=True)
+    starts = []
+    idx = 0
+    for line in lines:
+        starts.append(idx)
+        idx += len(line)
+
+    def offset(line, col):
+        return starts[line - 1] + col
+
+    # Remove the assignment statement.
+    # Determine where to start removing. If the assignment appears after a
+    # semicolon on the same line, remove everything following that semicolon.
+    line_start = offset(assign.lineno, 0)
+    assign_start = offset(assign.lineno, assign.col_offset)
+    prev_semicolon = code.rfind(';', line_start, assign_start)
+    if prev_semicolon >= 0:
+        start = prev_semicolon + 1
+        while start < len(code) and code[start] == ' ':
+            start += 1
+    else:
+        start = line_start
+    end = offset(assign.end_lineno, assign.end_col_offset)
+    while end < len(code) and code[end] in " \t":
+        end += 1
+    if end < len(code) and code[end] == ';':
+        end += 1
+        while end < len(code) and code[end] == ' ':
+            end += 1
+    if end < len(code) and code[end] == '\n':
+        end += 1
+    code = code[:start] + code[end:]
+
+    # Parse the code without the assignment to locate usages of the variable.
+    tree = ast.parse(code)
+    lines = code.splitlines(keepends=True)
+    starts = []
+    idx = 0
+    for line in lines:
+        starts.append(idx)
+        idx += len(line)
+
+    def offset2(line, col):
+        return starts[line - 1] + col
+
+    positions = []
+
+    class UseFinder(ast.NodeVisitor):
+        def visit_Name(self, node):
+            if node.id == name and isinstance(node.ctx, ast.Load):
+                s = offset2(node.lineno, node.col_offset)
+                e = offset2(node.end_lineno, node.end_col_offset)
+                positions.append((s, e))
+            self.generic_visit(node)
+
+    UseFinder().visit(tree)
+
+    # Replace each occurrence from the end to preserve offsets.
+    for s, e in sorted(positions, reverse=True):
+        code = code[:s] + value_src + code[e:]
+
     return code
 
 
