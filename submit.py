@@ -395,13 +395,22 @@ def submit(task_id, args, verbose):
     return ok
 
 
-def report():
+def report(task_ids=None):
+    """Collect and report results for the given task ids.
+
+    If *task_ids* is None, results for all 400 tasks are aggregated.
+    Otherwise only the specified ids are included in the totals.
+    """
+
+    if task_ids is None:
+        task_ids = range(1, 401)
+
     score = 0
     fail_tests = []
     error_tests = []
     todo_tests = []
     negative_tests = []
-    for task_id in range(1, 401):
+    for task_id in task_ids:
         result = open(f"reports/task{task_id:03d}.txt").read()
         result = result.split()[0]
         if result == "FAIL":
@@ -442,6 +451,14 @@ def main():
         for future in futures:
             future.result()
         report()
+    elif "-" in args.task_id:
+        # Run a consecutive range of tasks such as "1-10".
+        start, end = args.task_id.split("-", 1)
+        start_id = int(start)
+        end_id = int(end)
+        for task_id in range(start_id, end_id + 1):
+            submit(task_id, args, args.verbose)
+        report(range(start_id, end_id + 1))
     else:
         if not submit(int(args.task_id), args, True):
             print("FAIL!!")
