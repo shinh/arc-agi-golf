@@ -3,6 +3,12 @@ import re
 import warnings
 
 
+def ast_parse(code):
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=SyntaxWarning)
+        return ast.parse(code)
+
+
 def reindent(code):
     lines = []
     cur_indent = 0
@@ -253,9 +259,7 @@ def remove_trivial_parens(code):
 
 
 def remove_parens_with_ast(code):
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", category=SyntaxWarning)
-        orig_canonical_code = ast.unparse(ast.parse(code))
+    orig_canonical_code = ast.unparse(ast_parse(code))
     start_parens = []
     for idx in range(len(code)):
         if code[idx] == "(":
@@ -265,9 +269,7 @@ def remove_parens_with_ast(code):
             new_code = code[:start_idx] + code[start_idx+1:idx] + code[idx+1:]
             new_ast = None
             try:
-                with warnings.catch_warnings():
-                    warnings.filterwarnings("ignore", category=SyntaxWarning)
-                    new_ast = ast.parse(new_code)
+                new_ast = ast_parse(new_code)
             except:
                 pass
             if new_ast is not None:
@@ -291,7 +293,7 @@ def find_expandable_variables(code):
     never used will therefore appear with a count of ``0``.
     """
 
-    tree = ast.parse(code)
+    tree = ast_parse(code)
 
     # Count assignments for each variable. Variables assigned more than once
     # are not safe to expand.
@@ -401,7 +403,7 @@ def expand_variable(code, name):
     If the variable is never used, the assignment statement is simply removed.
     """
 
-    tree = ast.parse(code)
+    tree = ast_parse(code)
     assign = None
 
     # Locate the assignment to the target variable.
@@ -475,7 +477,7 @@ def expand_variable(code, name):
     code = code[:start] + code[end:]
 
     # Parse the code without the assignment to locate usages of the variable.
-    tree = ast.parse(code)
+    tree = ast_parse(code)
     lines = code.splitlines(keepends=True)
     starts = []
     idx = 0
@@ -534,7 +536,7 @@ def expand_variables(code, counts):
         original = code
         try:
             new_code = expand_variable(code, name)
-            ast.parse(new_code)
+            ast_parse(new_code)
             code = new_code
         except SyntaxError:
             code = original
