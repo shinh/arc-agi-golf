@@ -297,40 +297,102 @@ def find_expandable_variables(code):
     # are not safe to expand.
     assigns = {}
 
+    def record(target):
+        """Recursively record assignments to ``ast.Name`` targets."""
+        if isinstance(target, ast.Name):
+            assigns[target.id] = assigns.get(target.id, 0) + 1
+        else:
+            for child in ast.iter_child_nodes(target):
+                record(child)
+
     class AssignCounter(ast.NodeVisitor):
         def visit_Assign(self, node):
-            if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
-                name = node.targets[0].id
-                assigns[name] = assigns.get(name, 0) + 1
+            for t in node.targets:
+                record(t)
             self.generic_visit(node)
 
         def visit_AugAssign(self, node):
-            if isinstance(node.target, ast.Name):
-                name = node.target.id
-                assigns[name] = assigns.get(name, 0) + 1
+            record(node.target)
             self.generic_visit(node)
 
         def visit_AnnAssign(self, node):
-            if isinstance(node.target, ast.Name):
-                name = node.target.id
-                assigns[name] = assigns.get(name, 0) + 1
+            record(node.target)
+            self.generic_visit(node)
+
+        def visit_For(self, node):
+            record(node.target)
+            self.generic_visit(node)
+
+        def visit_AsyncFor(self, node):
+            record(node.target)
+            self.generic_visit(node)
+
+        def visit_With(self, node):
+            for item in node.items:
+                if item.optional_vars:
+                    record(item.optional_vars)
+            self.generic_visit(node)
+
+        def visit_comprehension(self, node):
+            record(node.target)
+            self.generic_visit(node)
+
+        def visit_ExceptHandler(self, node):
+            if node.name:
+                assigns[node.name] = assigns.get(node.name, 0) + 1
             self.generic_visit(node)
 
     AssignCounter().visit(tree)
+
+    # Track contexts where inlining would be unsafe, such as using the variable
+    # as an attribute base, a subscription target, or an iterable in loops.
+    unsafe = set()
+
+    class SafetyChecker(ast.NodeVisitor):
+        def visit_Attribute(self, node):
+            if isinstance(node.value, ast.Name):
+                unsafe.add(node.value.id)
+            self.generic_visit(node)
+
+        def visit_Subscript(self, node):
+            if isinstance(node.value, ast.Name):
+                unsafe.add(node.value.id)
+            self.generic_visit(node)
+
+        def visit_For(self, node):
+            if isinstance(node.iter, ast.Name):
+                unsafe.add(node.iter.id)
+            self.generic_visit(node)
+
+        def visit_comprehension(self, node):
+            if isinstance(node.iter, ast.Name):
+                unsafe.add(node.iter.id)
+            self.generic_visit(node)
+
+    SafetyChecker().visit(tree)
 
     # Count how many times each variable is read.
     loads = {}
 
     class LoadCounter(ast.NodeVisitor):
         def visit_Name(self, node):
-            if isinstance(node.ctx, ast.Load) and assigns.get(node.id) == 1:
+            if (
+                isinstance(node.ctx, ast.Load)
+                and assigns.get(node.id) == 1
+                and node.id not in unsafe
+            ):
                 loads[node.id] = loads.get(node.id, 0) + 1
             self.generic_visit(node)
 
     LoadCounter().visit(tree)
 
-    # Include variables assigned once but never used (default to zero).
-    return {name: loads.get(name, 0) for name, c in assigns.items() if c == 1}
+    # Include variables assigned once but never used (default to zero),
+    # excluding any marked as unsafe.
+    return {
+        name: loads.get(name, 0)
+        for name, c in assigns.items()
+        if c == 1 and name not in unsafe
+    }
 
 
 def expand_variable(code, name):
@@ -356,7 +418,16 @@ def expand_variable(code, name):
     if assign is None:
         return code
 
+    # Expanding containers like lists or dicts would create a new object at each
+    # use, breaking semantics when the original is meant to accumulate state.
+    if isinstance(assign.value, (ast.Dict, ast.List, ast.Set)):
+        return code
+
     value_src = ast.get_source_segment(code, assign.value)
+    # Parenthesize complex expressions so text substitution does not alter
+    # operator precedence when the value is inlined elsewhere.
+    if not isinstance(assign.value, (ast.Name, ast.Constant)):
+        value_src = f"({value_src})"
 
     # Compute string offsets from line/column pairs.
     lines = code.splitlines(keepends=True)
@@ -375,12 +446,18 @@ def expand_variable(code, name):
     line_start = offset(assign.lineno, 0)
     assign_start = offset(assign.lineno, assign.col_offset)
     prev_semicolon = code.rfind(';', line_start, assign_start)
+
+    # Decide where removal should begin. If there is code before the assignment
+    # on the same line (e.g. a function header), start at the assignment itself
+    # so the preceding code is preserved. Otherwise, remove from the beginning
+    # of the line or just after a previous semicolon.
     if prev_semicolon >= 0:
         start = prev_semicolon + 1
-        while start < len(code) and code[start] == ' ':
+        while start < assign_start and code[start] == ' ':
             start += 1
     else:
-        start = line_start
+        start = line_start if not code[line_start:assign_start].strip() else assign_start
+
     end = offset(assign.end_lineno, assign.end_col_offset)
     while end < len(code) and code[end] in " \t":
         end += 1
@@ -388,6 +465,11 @@ def expand_variable(code, name):
         end += 1
         while end < len(code) and code[end] == ' ':
             end += 1
+    # If the assignment shared its line with a following statement and there was
+    # no preceding semicolon, keep the line's indentation by starting from the
+    # assignment itself.
+    if prev_semicolon < 0 and end < len(code) and code[end] != '\n':
+        start = assign_start
     if end < len(code) and code[end] == '\n':
         end += 1
     code = code[:start] + code[end:]
@@ -420,6 +502,42 @@ def expand_variable(code, name):
     for s, e in sorted(positions, reverse=True):
         code = code[:s] + value_src + code[e:]
 
+    return code
+
+
+def expand_variables(code, counts):
+    """Inline assignments for variables produced by ``find_expandable_variables``.
+
+    The *counts* mapping associates each variable with how often it is read,
+    but those numbers are ignored here. Every variable except the entry point
+    ``p`` is expanded using :func:`expand_variable`. If expansion fails due to a
+    syntax error, the original code is preserved.
+
+    Parameters
+    ----------
+    code: str
+        Original source code.
+    counts: Dict[str, int]
+        Mapping of variable names to their usage counts.
+
+    Returns
+    -------
+    str
+        Source code with the given variables expanded.
+    """
+
+    for name, count in counts.items():
+        # Expanding variables read multiple times risks re-evaluating expensive or
+        # stateful expressions. Only inline names that are used at most once.
+        if name == "p" or count > 1:
+            continue
+        original = code
+        try:
+            new_code = expand_variable(code, name)
+            ast.parse(new_code)
+            code = new_code
+        except SyntaxError:
+            code = original
     return code
 
 
@@ -483,12 +601,31 @@ def replace_unpacking_funcs(code):
     return code
 
 def replace_def_p(code):
-    code = re.sub(r"^def p\((\w+)\):return\s*(.*)$", r"p=lambda \1:\2", code)
+    """Convert ``def p(x):return expr`` to ``p=lambda x:expr``.
+
+    When the return expression starts with ``*`` (an unpacking expression), the
+    replacement wraps it in parentheses to keep the resulting lambda valid.
+    """
+
+    m = re.match(r"^def p\((\w+)\):return\s*(.*)$", code)
+    if m:
+        name, expr = m.groups()
+        if expr.startswith("*"):
+            expr = f"({expr})"
+        code = f"p=lambda {name}:{expr}"
     return code
 
 
 def minify(code):
     code = reindent(code)
+
+    # Expand variables assigned exactly once before performing any structural
+    # minification steps. This reduces noise and may expose further
+    # simplification opportunities.
+    expandable = find_expandable_variables(code)
+    if expandable:
+        code = expand_variables(code, expandable)
+
     code = replace_unpacking_funcs(code)
     code = merge_indented_blocks(code)
     code = remove_spaces(code)
