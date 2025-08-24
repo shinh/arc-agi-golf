@@ -157,6 +157,88 @@ def combine_adjacent_lines(source_code):
     return "\n".join(result_lines)
 
 
+def _split_top_level_commas(text):
+    """Split *text* on commas not nested in brackets or strings."""
+    parts = []
+    cur = []
+    depth = 0
+    quote = None
+    i = 0
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            cur.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                cur.append(text[i + 1])
+                i += 1
+            elif ch == quote:
+                quote = None
+        else:
+            if ch in "'\"":
+                quote = ch
+                cur.append(ch)
+            elif ch in "([{":
+                depth += 1
+                cur.append(ch)
+            elif ch in ")]}":
+                depth -= 1
+                cur.append(ch)
+            elif ch == "," and depth == 0:
+                parts.append("".join(cur))
+                cur = []
+            else:
+                cur.append(ch)
+        i += 1
+    parts.append("".join(cur))
+    return [p.strip() for p in parts]
+
+
+def bundle_assignments(code):
+    """Bundle consecutive simple assignments into a tuple assignment."""
+    lines = code.splitlines()
+    out = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r"(\s*)([A-Za-z_]\w*)=(.+)", line)
+        if m and "#" not in line and ";" not in line:
+            indent, name, value = m.groups()
+            names = [name.strip()]
+            values = [value.strip()]
+            j = i + 1
+            while j < len(lines):
+                m2 = re.match(r"(\s*)([A-Za-z_]\w*)=(.+)", lines[j])
+                if not (m2 and m2.group(1) == indent and "#" not in lines[j] and ";" not in lines[j]):
+                    break
+                names.append(m2.group(2).strip())
+                values.append(m2.group(3).strip())
+                j += 1
+            if len(names) > 1:
+                out.append(indent + ",".join(names) + "=" + ",".join(values))
+                i = j
+                continue
+        out.append(line)
+        i += 1
+    return "\n".join(out)
+
+
+def expand_assignments(code):
+    """Expand tuple assignments into multiple lines with the same indent."""
+    lines = code.splitlines()
+    out = []
+    for line in lines:
+        m = re.match(r"(\s*)((?:[A-Za-z_]\w*\s*,\s*)+[A-Za-z_]\w*)=(.+)", line)
+        if m and "#" not in line and ";" not in line:
+            indent, names_part, values_part = m.groups()
+            names = [n.strip() for n in names_part.split(",")]
+            values = _split_top_level_commas(values_part)
+            if len(names) == len(values) and all(re.match(r"[A-Za-z_]\w*$", n) for n in names):
+                out.extend(f"{indent}{n}={v.strip()}" for n, v in zip(names, values))
+                continue
+        out.append(line)
+    return "\n".join(out)
+
+
 def replce_fixed_range(code):
     code = code.replace("in range(2):", "in 0,1:")
     code = code.replace("in range(3):", "in 0,1,2:")

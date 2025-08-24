@@ -86,3 +86,30 @@ def test_replace_unpacking_funcs_skips_strings():
         assert f("list(')')")=="list(')')"
     with pytest.warns(UserWarning):
         assert f("set('(')")=="set('(')"
+
+
+def test_bundle_and_expand_assignments():
+    """Bundling should combine lines and expansion should restore them."""
+    src = (
+        "a=1\n"
+        "b=2\n"
+        "if 1:\n"
+        "    x=3\n"
+        "    y=4\n"
+        "    z=5\n"
+        "c=6"
+    )
+    bundled = myminifier.bundle_assignments(src)
+    assert bundled == (
+        "a,b=1,2\n"
+        "if 1:\n"
+        "    x,y,z=3,4,5\n"
+        "c=6"
+    )
+    assert myminifier.expand_assignments(bundled) == src
+
+
+def test_expand_assignments_handles_internal_commas():
+    # values containing commas inside brackets should be preserved
+    src = "a,b=[1,2],[3,4]"
+    assert myminifier.expand_assignments(src) == "a=[1,2]\nb=[3,4]"
