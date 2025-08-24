@@ -122,6 +122,12 @@ def test_find_expandable_variables():
     assert result == {"r": 2, "u": 0}
 
 
+def test_find_expandable_variables_skips_reassignments():
+    code = "a=b=1;a+=1;b=2;c=3"
+    # a and b are assigned multiple times, only c qualifies
+    assert myminifier.find_expandable_variables(code) == {"c": 0}
+
+
 def test_expand_variable_replaces_usage():
     code = "r=range;r(3);r(4)"
     assert myminifier.expand_variable(code, "r") == "range(3);range(4)"
@@ -136,4 +142,19 @@ def test_expand_variable_inside_function():
     src = "def f():\n r=range\n return r(1)"
     expected = "def f():\n return range(1)"
     assert myminifier.expand_variable(src, "r") == expected
+
+
+def test_expand_variable_parenthesizes_expression():
+    code = "a=1+2;b=a*3"
+    assert myminifier.expand_variable(code, "a") == "b=(1+2)*3"
+
+
+def test_expand_variable_keeps_indentation_with_semicolon():
+    src = "def f():\n a=1;return a+1"
+    assert myminifier.expand_variable(src, "a") == "def f():\n return 1+1"
+
+
+def test_minify_inlines_variables():
+    src = "def p():\n a=1+2\n return a*3"
+    assert myminifier.minify(src) == "def p():return(1+2)*3"
 
