@@ -59,10 +59,22 @@
 #     return n*0**(c in sum(n,[]))or p(g,c+1)
 
 # Use tuple return
-def p(g,c=0):
-    f=lambda g:[r for r in zip(*g)if c in r]
-    n=[r[1:-1]for r in f(f(g))[1:-1]]
-    return n*0**(c in sum(n,()))or p(g,c+1)
+# def p(g,c=0):
+#     f=lambda g:[r for r in zip(*g)if c in r]
+#     n=[r[1:-1]for r in f(f(g))[1:-1]]
+#     return n*0**(c in sum(n,()))or p(g,c+1)
+
+# take advantage of the fact that calling f again with the rectangle removed will be empty rather than check if no more of that color in the box
+# def p(g,c=0):
+#     f=lambda g:[r for r in zip(*g)if c in r]
+#     n=[r[1:-1]for r in f(f(g))[1:-1]]
+#     return[]==f(n)and n or p(g,c+1)
+
+# this also makes it so that f can be used outside the list comprehension and used with := allow for the whole thing to be a lambda
+p=lambda g,c=0:[]==(f:=lambda g:[r for r in zip(*g)if c in r])(n:=[r[1:-1]for r in f(f(g))[1:-1]])and n or p(g,c+1)
+
+# another idea would be for f to return the [1:-1] so that we don't need to do that in a loop, but the problem is that once we remove the edges in one direction they are filtered out when it is applied again.
+
 
 # Another idea. Need some more twists to make it work actually.
 # import re
