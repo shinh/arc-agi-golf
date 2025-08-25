@@ -70,9 +70,19 @@
 #     return g
 
 
+# def p(g):
+#     for z in range(64):
+#         y,x=z//8,z%8
+#         # 2,5 or 5,5 -> 3 else e.g. 5,0 -> any number > 5
+#         g[y+1][x+1]%=6/(g[y+2][x+2]*g[y][x]%3+1)
+# #         g[y+1][x+1]-=sum(g[y+a][x+a]for a in r(3))//11*3
+#     return g
+
 def p(g):
     for z in range(64):
-        y,x=z//8,z%8
-        # 2,5 or 5,5 -> 3 else e.g. 5,0 -> any number > 5
-        g[y+1][x+1]%=6/(g[y+2][x+2]*g[y][x]%3+1)
+        if g[y:=z//8][x:=z%8]*g[y+2][x+2]:g[y+1][x+1]%=3
     return g
+
+# def p(g,z=0):
+#     if g[y:=z//8][x:=z%8]*g[y+2][x+2]:g[y+1][x+1]%=3
+#     return z<63 and p(g,z+1)or g
