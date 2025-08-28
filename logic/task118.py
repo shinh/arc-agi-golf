@@ -29,16 +29,24 @@
 #     return g
 
 # golfed, 262
-def p(g,ds=[3,4],been={1},*a):
-    # could use a list comprehension for a, but python weird about using := inside it so not sure if possible
-    for y in range(len(g)):
-        for x in range(len(g[0])):
-            for l in ds:
-                points = ({(z,x) for z in range(y-l+1,y+l) if 0<=z<len(g)}|{(y,z) for z in range(x-l+1,x+l) if 0<=z<len(g[0])})-been
+# def p(g,ds=[3,4],been={1},*a):
+#     # could use a list comprehension for a, but python weird about using := inside it so not sure if possible
+#     for y in range(len(g)):
+#         for x in range(len(g[0])):
+#             for l in ds:
+#                 points = ({(z,x) for z in range(y-l+1,y+l) if 0<=z<len(g)}|{(y,z) for z in range(x-l+1,x+l) if 0<=z<len(g[0])})-been
+#
+#                 colors = [g[yy][xx] for yy,xx in points]
+#                 a+=(-colors.count(2)*all(colors),l,points),
+#     count,*ds,points=min(a)
+#     for y,x in points: g[y][x]+=g[y][x]-2 # 5 -> 8, 2 -> 2
+#     points and p(g,ds,been|points)
+#     return g
 
-                colors = [g[yy][xx] for yy,xx in points]
-                a+=(-colors.count(2)*all(colors),l,points),
-    count,*ds,points=min(a)
+# golfed, 255
+# duplicate colors and points vars rather than use := to put them inside list comprehension (zlib reduces size)
+def p(g,ds=[3,4],been={1}):
+    count,*ds,points=min((-[g[yy][xx] for yy,xx in ({(z,x) for z in range(y-l+1,y+l) if 0<=z<len(g)}|{(y,z) for z in range(x-l+1,x+l) if 0<=z<len(g[0])})-been].count(2)*all([g[yy][xx] for yy,xx in ({(z,x) for z in range(y-l+1,y+l) if 0<=z<len(g)}|{(y,z) for z in range(x-l+1,x+l) if 0<=z<len(g[0])})-been]),l,({(z,x) for z in range(y-l+1,y+l) if 0<=z<len(g)}|{(y,z) for z in range(x-l+1,x+l) if 0<=z<len(g[0])})-been)for y in range(len(g))for x in range(len(g[0]))for l in ds)
     for y,x in points: g[y][x]+=g[y][x]-2 # 5 -> 8, 2 -> 2
     points and p(g,ds,been|points)
     return g
