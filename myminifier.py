@@ -284,6 +284,7 @@ def remove_parens(code):
     return code
 
 
+
 def find_expandable_variables(code):
     """Return a mapping of variables that can be expanded and their usage counts.
 
@@ -295,60 +296,104 @@ def find_expandable_variables(code):
 
     tree = ast_parse(code)
 
-    # Count assignments for each variable. Variables assigned more than once
-    # are not safe to expand.
+    # ``assigns`` counts assignments per variable. ``loop_assigned`` records
+    # names assigned inside loop bodies, since such assignments execute
+    # multiple times at runtime.
     assigns = {}
+    loop_assigned = set()
 
-    def record(target):
+    def record(target, in_loop):
         """Recursively record assignments to ``ast.Name`` targets."""
         if isinstance(target, ast.Name):
             assigns[target.id] = assigns.get(target.id, 0) + 1
+            if in_loop:
+                loop_assigned.add(target.id)
         else:
             for child in ast.iter_child_nodes(target):
-                record(child)
+                record(child, in_loop)
 
     class AssignCounter(ast.NodeVisitor):
+        """Populate ``assigns`` and ``loop_assigned`` by walking the tree."""
+
+        def __init__(self):
+            self.in_loop = False  # Are we currently inside a loop body?
+
         def visit_Assign(self, node):
             for t in node.targets:
-                record(t)
+                record(t, self.in_loop)
             self.generic_visit(node)
 
         def visit_AugAssign(self, node):
-            record(node.target)
+            record(node.target, self.in_loop)
             self.generic_visit(node)
 
         def visit_AnnAssign(self, node):
-            record(node.target)
+            record(node.target, self.in_loop)
             self.generic_visit(node)
 
         def visit_For(self, node):
-            record(node.target)
-            self.generic_visit(node)
+            # The iteration variable is assigned every loop cycle.
+            record(node.target, True)
+            # The iterable expression is evaluated once before looping.
+            self.visit(node.iter)
+            prev = self.in_loop
+            self.in_loop = True
+            for stmt in node.body:
+                self.visit(stmt)
+            self.in_loop = prev
+            for stmt in node.orelse:
+                self.visit(stmt)
 
         def visit_AsyncFor(self, node):
-            record(node.target)
-            self.generic_visit(node)
+            record(node.target, True)
+            self.visit(node.iter)
+            prev = self.in_loop
+            self.in_loop = True
+            for stmt in node.body:
+                self.visit(stmt)
+            self.in_loop = prev
+            for stmt in node.orelse:
+                self.visit(stmt)
+
+        def visit_While(self, node):
+            prev = self.in_loop
+            self.in_loop = True
+            self.visit(node.test)
+            for stmt in node.body:
+                self.visit(stmt)
+            self.in_loop = prev
+            for stmt in node.orelse:
+                self.visit(stmt)
 
         def visit_With(self, node):
             for item in node.items:
                 if item.optional_vars:
-                    record(item.optional_vars)
+                    record(item.optional_vars, self.in_loop)
             self.generic_visit(node)
 
         def visit_comprehension(self, node):
-            record(node.target)
-            self.generic_visit(node)
+            # Comprehension targets behave like loop variables.
+            record(node.target, True)
+            self.visit(node.iter)
+            prev = self.in_loop
+            self.in_loop = True
+            for cond in node.ifs:
+                self.visit(cond)
+            self.in_loop = prev
 
         def visit_ExceptHandler(self, node):
             if node.name:
                 assigns[node.name] = assigns.get(node.name, 0) + 1
+                if self.in_loop:
+                    loop_assigned.add(node.name)
             self.generic_visit(node)
 
     AssignCounter().visit(tree)
 
-    # Track contexts where inlining would be unsafe, such as using the variable
-    # as an attribute base, a subscription target, or an iterable in loops.
-    unsafe = set()
+    # Track contexts where inlining would be unsafe, including use as an
+    # attribute base, a subscription target, an iterable in loops, or any
+    # variable assigned inside a loop.
+    unsafe = set(loop_assigned)
 
     class SafetyChecker(ast.NodeVisitor):
         def visit_Attribute(self, node):
@@ -388,15 +433,13 @@ def find_expandable_variables(code):
 
     LoadCounter().visit(tree)
 
-    # Include variables assigned once but never used (default to zero),
-    # excluding any marked as unsafe.
+    # Include variables assigned once but never used (default to zero), excluding
+    # any marked as unsafe.
     return {
         name: loads.get(name, 0)
         for name, c in assigns.items()
         if c == 1 and name not in unsafe
     }
-
-
 def expand_variable(code, name):
     """Expand the variable ``name`` by inlining its assigned value.
 
