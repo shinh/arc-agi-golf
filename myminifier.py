@@ -690,14 +690,14 @@ def replace_def_p(code):
     return code
 
 
-def minify(code):
+def minify(code, expand_variables=False):
     code = reindent(code)
 
     # Expand variables assigned exactly once before performing any structural
     # minification steps. This reduces noise and may expose further
     # simplification opportunities.
     expandable = find_expandable_variables(code)
-    if expandable:
+    if expand_variables and expandable:
         code = expand_variables(code, expandable)
 
     code = replace_unpacking_funcs(code)

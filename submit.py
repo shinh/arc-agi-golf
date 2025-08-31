@@ -279,10 +279,10 @@ def jam(source_code):
     return "\n".join(result_lines)
 
 
-def minify(code, verbose, show_minify):
+def minify(code, verbose, show_minify, expand_variables):
     minified_codes = []
 
-    minified_codes.append(("myminifier", myminifier.minify(code)))
+    minified_codes.append(("myminifier", myminifier.minify(code, expand_variables=expand_variables)))
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=SyntaxWarning)
@@ -314,7 +314,7 @@ def minify(code, verbose, show_minify):
     return used_minifier, minified_code
 
 
-def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed, show_minify):
+def check_task(task_id, filename, verbose, args):
     if verbose:
         print(f"Checking === {filename} ===", flush=True)
 
@@ -335,9 +335,9 @@ def check_task(task_id, filename, verbose, use_lzma, use_bzip2, max_seed, show_m
 
     size_before_minify = len(code)
 
-    used_minifier, code = minify(code, verbose, show_minify)
+    used_minifier, code = minify(code, verbose, args.show_minify, args.expand_variables)
 
-    code, orig_code, info = compress_code(code, verbose, use_lzma, use_bzip2, max_seed)
+    code, orig_code, info = compress_code(code, verbose, args.use_lzma, args.use_bzip2, args.max_seed)
 
     info += f"+{used_minifier}"
 
@@ -375,7 +375,7 @@ def submit(task_id, args, verbose):
 
     # print("Submitting task", task_id)
 
-    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args.use_lzma, args.use_bzip2, args.max_seed, args.show_minify)
+    ok, result, code = check_task(task_id, f"{code_dir}/task{task_id:03d}.py", verbose, args)
 
     # dsl_filename = f"dsl/task{task_id:03d}.py"
     # if os.path.exists(dsl_filename) and os.path.getsize(dsl_filename) < 4000:
@@ -441,6 +441,7 @@ def main():
     parser.add_argument("--use_lzma", action="store_true")
     parser.add_argument("--use_bzip2", action="store_true")
     parser.add_argument("--max_seed", type=int, default=0)
+    parser.add_argument("--expand_variables", action="store_true")
     args = parser.parse_args()
 
     if args.task_id == "all":
