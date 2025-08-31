@@ -198,7 +198,10 @@ def replace_small_int_lists_with_bytes(code):
             else:  # All elements satisfied the conditions.
                 start = line_starts[node.lineno - 1] + node.col_offset
                 end = line_starts[node.end_lineno - 1] + node.end_col_offset
-                replacements.append((start, end, repr(bytes(values))))
+                byte_literal = "b'" + "".join(chr(v) if v else "\\0" for v in values) + "'"
+                if end - start > len(byte_literal):
+                    print(f"Replacing list at {values} with {repr(values)} ({end - start} -> {len(byte_literal)})")
+                    replacements.append((start, end, byte_literal))
 
     if not replacements:
         return code
@@ -794,5 +797,6 @@ def minify(code, expand_variables=False):
     if len(code) < 150:
         # Bad with LZ.
         code = replce_fixed_range(code)
+        code = replace_small_int_lists_with_bytes(code)
 
     return code
