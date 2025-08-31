@@ -163,6 +163,57 @@ def combine_adjacent_lines(source_code):
     return "\n".join(result_lines)
 
 
+def replace_small_int_lists_with_bytes(code):
+    """Replace certain integer lists with bytes literals.
+
+    Scans *code* for list literals that contain more than two elements where
+    each element is an ``int`` constant not exceeding ``127``. Such lists are
+    replaced with an equivalent ``bytes`` literal. The transformation uses
+    the AST location information to avoid unwanted side effects and does not
+    rely on ``ast.unparse``.
+    """
+
+    tree = ast_parse(code)
+
+    # Precompute the starting index of each line for mapping ``lineno`` and
+    # ``col_offset`` pairs to absolute string offsets.
+    line_starts = [0]
+    for idx, ch in enumerate(code):
+        if ch == "\n":
+            line_starts.append(idx + 1)
+
+    replacements = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.List) and len(node.elts) > 2:
+            values = []
+            for elt in node.elts:
+                if (
+                    isinstance(elt, ast.Constant)
+                    and isinstance(elt.value, int)
+                    and 0 <= elt.value <= 127
+                ):
+                    values.append(elt.value)
+                else:
+                    break
+            else:  # All elements satisfied the conditions.
+                start = line_starts[node.lineno - 1] + node.col_offset
+                end = line_starts[node.end_lineno - 1] + node.end_col_offset
+                replacements.append((start, end, repr(bytes(values))))
+
+    if not replacements:
+        return code
+
+    # Apply replacements from left to right while tracking the last index.
+    result = []
+    last = 0
+    for start, end, repl in sorted(replacements):
+        result.append(code[last:start])
+        result.append(repl)
+        last = end
+    result.append(code[last:])
+    return "".join(result)
+
+
 def _split_top_level_commas(text):
     """Split *text* on commas not nested in brackets or strings."""
     parts = []

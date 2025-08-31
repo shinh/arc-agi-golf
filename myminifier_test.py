@@ -65,6 +65,16 @@ def test_remove_spaces_ignores_strings():
     assert myminifier.remove_spaces(src) == "a='1 + 2';b+c"
 
 
+def test_replace_small_int_lists_with_bytes():
+    # Basic conversion of integer list to bytes literal
+    f = myminifier.replace_small_int_lists_with_bytes
+    assert f("[65,66,67]") == "b'ABC'"
+    # Lists with fewer than three elements should remain unchanged
+    assert f("[1,2]") == "[1,2]"
+    # Values exceeding 127 must not be converted
+    assert f("[1,128,3,4]") == "[1,128,3,4]"
+
+
 def test_replace_unpacking_funcs_handles_nested():
     # ensure list() and set() become unpacking
     f=myminifier.replace_unpacking_funcs
