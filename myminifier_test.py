@@ -138,6 +138,11 @@ return fn2(b)
     assert myminifier.find_expandable_variables(code) == {}
 
 
+def test_find_expandable_variables_skips_dependent_reassignment():
+    code = "g=1\nac=g+1\ng=2\nprint(ac)"
+    assert myminifier.find_expandable_variables(code) == {}
+
+
 def test_expand_variable_replaces_usage():
     code = "r=range;r(3);r(4)"
     assert myminifier.expand_variable(code, "r") == "range(3);range(4)"

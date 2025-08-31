@@ -301,16 +301,23 @@ def find_expandable_variables(code):
     # multiple times at runtime.
     assigns = {}
     loop_assigned = set()
+    assign_lines = {}
+    assign_nodes = {}
 
-    def record(target, in_loop):
+    def record(target, in_loop, node):
         """Recursively record assignments to ``ast.Name`` targets."""
         if isinstance(target, ast.Name):
-            assigns[target.id] = assigns.get(target.id, 0) + 1
+            name = target.id
+            assigns[name] = assigns.get(name, 0) + 1
+            if hasattr(node, "lineno"):
+                assign_lines.setdefault(name, []).append(node.lineno)
+            if hasattr(node, "value"):
+                assign_nodes.setdefault(name, []).append(node)
             if in_loop:
-                loop_assigned.add(target.id)
+                loop_assigned.add(name)
         else:
             for child in ast.iter_child_nodes(target):
-                record(child, in_loop)
+                record(child, in_loop, node)
 
     class AssignCounter(ast.NodeVisitor):
         """Populate ``assigns`` and ``loop_assigned`` by walking the tree."""
@@ -320,20 +327,20 @@ def find_expandable_variables(code):
 
         def visit_Assign(self, node):
             for t in node.targets:
-                record(t, self.in_loop)
+                record(t, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_AugAssign(self, node):
-            record(node.target, self.in_loop)
+            record(node.target, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_AnnAssign(self, node):
-            record(node.target, self.in_loop)
+            record(node.target, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_For(self, node):
             # The iteration variable is assigned every loop cycle.
-            record(node.target, True)
+            record(node.target, True, node)
             # The iterable expression is evaluated once before looping.
             self.visit(node.iter)
             prev = self.in_loop
@@ -345,7 +352,7 @@ def find_expandable_variables(code):
                 self.visit(stmt)
 
         def visit_AsyncFor(self, node):
-            record(node.target, True)
+            record(node.target, True, node)
             self.visit(node.iter)
             prev = self.in_loop
             self.in_loop = True
@@ -368,12 +375,12 @@ def find_expandable_variables(code):
         def visit_With(self, node):
             for item in node.items:
                 if item.optional_vars:
-                    record(item.optional_vars, self.in_loop)
+                    record(item.optional_vars, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_comprehension(self, node):
             # Comprehension targets behave like loop variables.
-            record(node.target, True)
+            record(node.target, True, node)
             self.visit(node.iter)
             prev = self.in_loop
             self.in_loop = True
@@ -383,9 +390,12 @@ def find_expandable_variables(code):
 
         def visit_ExceptHandler(self, node):
             if node.name:
-                assigns[node.name] = assigns.get(node.name, 0) + 1
+                name = node.name
+                assigns[name] = assigns.get(name, 0) + 1
+                assign_lines.setdefault(name, []).append(node.lineno)
+                assign_nodes.setdefault(name, []).append(node)
                 if self.in_loop:
-                    loop_assigned.add(node.name)
+                    loop_assigned.add(name)
             self.generic_visit(node)
 
     AssignCounter().visit(tree)
@@ -417,6 +427,25 @@ def find_expandable_variables(code):
             self.generic_visit(node)
 
     SafetyChecker().visit(tree)
+
+    # Skip variables whose assigned value references another variable that gets
+    # reassigned later. Inlining such variables would use the updated value
+    # rather than the original one captured at assignment time.
+    for name, nodes in assign_nodes.items():
+        if assigns.get(name) != 1:
+            continue
+        node = nodes[0]
+        line = assign_lines[name][0]
+        deps = {
+            n.id
+            for n in ast.walk(node.value)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)
+        }
+        deps.discard(name)
+        for dep in deps:
+            if any(l > line for l in assign_lines.get(dep, [])):
+                unsafe.add(name)
+                break
 
     # Count how many times each variable is read.
     loads = {}
@@ -668,9 +697,8 @@ def minify(code):
     # minification steps. This reduces noise and may expose further
     # simplification opportunities.
     expandable = find_expandable_variables(code)
-    # Disabled as this introduces failures.
-    # if expandable:
-    #     code = expand_variables(code, expandable)
+    if expandable:
+        code = expand_variables(code, expandable)
 
     code = replace_unpacking_funcs(code)
     code = merge_indented_blocks(code)
