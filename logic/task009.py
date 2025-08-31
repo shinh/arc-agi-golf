@@ -1,10 +1,6 @@
-def p(g,E=enumerate):
- # connect same-colored dots
- C=g[0][2];o=[[0]*len(r)for r in g]
- for _ in 0,1:
-  for y,r in E(g):
-   for x,v in E(r):
-    if v==C:o[y][x]=v
-    elif v in r[x+1:]and v:X=r.index(v,x+1)+1;o[y][x:X]=[v]*(X-x)
-  g=[*zip(*g)];o=[*map(list,zip(*o))]
- return o
+def p(g,n=0):
+    # connect same-colored dots
+    for t in 0,1:
+        g=[[[n:=[n,[0,-v][v in r[x+1:]]][v and v!=g[0][2]],v][v!=0]for x,v in enumerate(r)]for r in zip(*g)]
+    g=[[abs(c)for c in r]for r in g]
+    return g
