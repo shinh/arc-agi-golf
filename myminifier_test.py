@@ -143,6 +143,24 @@ def test_find_expandable_variables_skips_dependent_reassignment():
     assert myminifier.find_expandable_variables(code) == {}
 
 
+def test_find_expandable_variables_counts_namedexpr_assignment():
+    # Variables assigned via the walrus operator should count as assignments
+    code = "(c:=1)\nprint(c)"
+    assert myminifier.find_expandable_variables(code) == {"c": 1}
+
+
+def test_find_expandable_variables_skips_namedexpr_reassignment():
+    # A second assignment using := must prevent expansion
+    code = "c=0\n(c:=1)\nprint(c)"
+    assert myminifier.find_expandable_variables(code) == {}
+
+
+def test_find_expandable_variables_skips_namedexpr_in_value():
+    # If the assigned expression contains :=, the variable is unsafe
+    code = "b=(c:=1)\nprint(b,c)"
+    assert myminifier.find_expandable_variables(code) == {"c": 1}
+
+
 def test_expand_variable_replaces_usage():
     code = "r=range;r(3);r(4)"
     assert myminifier.expand_variable(code, "r") == "range(3);range(4)"

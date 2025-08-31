@@ -338,6 +338,12 @@ def find_expandable_variables(code):
             record(node.target, self.in_loop, node)
             self.generic_visit(node)
 
+        def visit_NamedExpr(self, node):
+            # Assignment expressions ``x := y`` should count as assignments. The
+            # ``NamedExpr`` node itself acts as the assignment site.
+            record(node.target, self.in_loop, node)
+            self.generic_visit(node)
+
         def visit_For(self, node):
             # The iteration variable is assigned every loop cycle.
             record(node.target, True, node)
@@ -436,6 +442,12 @@ def find_expandable_variables(code):
             continue
         node = nodes[0]
         line = assign_lines[name][0]
+        # Assignments whose value contains a ``NamedExpr`` introduce side effects
+        # when duplicated. Expanding such variables could reevaluate the
+        # assignment expression and is therefore unsafe.
+        if any(isinstance(n, ast.NamedExpr) for n in ast.walk(node.value)):
+            unsafe.add(name)
+            continue
         deps = {
             n.id
             for n in ast.walk(node.value)
@@ -614,6 +626,10 @@ def expand_variables(code, counts):
             code = original
     return code
 
+# Preserve a reference to the helper before ``minify`` defines a parameter of the
+# same name. This avoids shadowing the function object.
+_expand_variables = expand_variables
+
 
 def remove_semicolons(code):
     res=[]
@@ -691,6 +707,20 @@ def replace_def_p(code):
 
 
 def minify(code, expand_variables=False):
+    """Return a minified version of *code*.
+
+    Parameters
+    ----------
+    code: str
+        The source to minify.
+    expand_variables: bool
+        When ``True`` try to inline variables that are assigned exactly once.
+
+    The parameter name matches the helper :func:`expand_variables` but refers to
+    a boolean flag. The actual helper is accessed via ``_expand_variables`` to
+    avoid the name clash.
+    """
+
     code = reindent(code)
 
     # Expand variables assigned exactly once before performing any structural
@@ -698,7 +728,7 @@ def minify(code, expand_variables=False):
     # simplification opportunities.
     expandable = find_expandable_variables(code)
     if expand_variables and expandable:
-        code = expand_variables(code, expandable)
+        code = _expand_variables(code, expandable)
 
     code = replace_unpacking_funcs(code)
     code = merge_indented_blocks(code)
