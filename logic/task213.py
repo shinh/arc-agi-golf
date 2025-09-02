@@ -1,4 +1,13 @@
 def p(g):
-    # orient then palette
-    c=next(v for r in g for v in r if v%5);o=sum(c in r for r in g)>sum(c in r for r in zip(*g));d=[*dict.fromkeys(v for r in(zip(*g)if o else g)for v in r if v%5)];l=len(d)
-    return (d,)*l if o else[[v]*l for v in d]
+    o=[]
+    for r in g:
+        s={*r}-{0,5}
+        l=len(s)
+        if l>1:
+            return[*zip(*p([*zip(*g)]))]
+        if l:
+            o+=[[*s][0]],
+    o=[r*len(o)for r in o]
+    return o
+
+
