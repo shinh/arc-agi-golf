@@ -1,12 +1,2 @@
 # extend colors to 3
-def p(g):
- for _ in[0]*4:
-  for r in g:
-   for j in range(9):
-    if 0<r[j]!=3:
-     k=j+1
-     while k<9>=r[k]<1:k+=1
-     if k<10>r[k]==3:r[j+1:k]=[r[j]]*(k+~j)
-  g=[*map(list,zip(*g[::-1]))]
- return g
-
+p=lambda g,n=3,u=0:-n*g or p([[[c,u:=[u,c,0][((e:=3 in r[x:])*(c>0))+(c==3)]][c<1and e]for x,c in enumerate(r)]for r in zip(*g[::-1])],n-1)
