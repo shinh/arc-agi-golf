@@ -1,13 +1,2 @@
-def p(g):
-    o=[]
-    for r in g:
-        s={*r}-{0,5}
-        l=len(s)
-        if l>1:
-            return[*zip(*p([*zip(*g)]))]
-        if l:
-            o+=[[*s][0]],
-    o=[r*len(o)for r in o]
-    return o
-
+p=lambda g:len(o:=[[*s]for r in g if len(s:={*r}-{0,5})])==len(g)and[*zip(*p([*zip(*g)]))]or[r*len(o)for r in o]
 
