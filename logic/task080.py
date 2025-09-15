@@ -1,26 +1,11 @@
 def p(g):
- m=len(g);n=len(g[0]);R=range
- a=next(i+1 for i in R(1,m)if len({*g[i]})<2)
- b=next(j+1 for j in R(1,n)if len({r[j]for r in g})<2)
- B=[r[::b]for r in g[::a]];h=len(B);w=len(B[0])
- for y in R(h):
-  for x in R(w):
-   if B[y][x]:
-    q=[(y,x)];l=B[y][x],
-    for y,x in q:
-     for Y,X in((y+1,x),(y-1,x),(y,x+1),(y,x-1)):
-      if h>Y>-1<X<w and B[Y][X]and(Y,X)not in q:q+=[(Y,X)];l+=B[Y][X],
-    if len({*l})>1:break
-  else:continue
-  break
- c=min(l,key=l.count)
- ay,ax=min((y,x)for y,x in q if B[y][x]==c)
- P=[(B[y][x],y-ay,x-ax)for y,x in q]
- for y in R(h):
-  for x in R(w):
-   if B[y][x]==c and(y<1 or B[y-1][x]-c)and(x<1 or B[y][x-1]-c):
-    for k,dy,dx in P:
-     Y,X=y+dy,x+dx
-     if h>Y>-1<X<w:B[Y][X]=k
- return[[B[i//a][j//b]if(~i%a)*(~j%b)else g[i][j]for j in R(n)]for i in R(m)]
-
+    l,b=[(n,c)for c in range(1,10)for n in range(2,9)if{c}=={*g[0][n-1::n]}][0]
+    pc,py,px=[(g[y+l][x+l],y+l,x+l)for y in range(0,len(g)-l,l)for x in range(0,len(g[0])-l,l)if(g[y][x]or g[y+l][x])and(g[y][x]or g[y][x+l])and g[y+l][x+l]][0]
+    for y in range(0,len(g),l):
+        for x in range(0,len(g[0]),l):
+            if g[y][x]==pc:
+                for ny in range(y-l,y+l*2-1):
+                    for nx in range(x-l,x+l*2-1):
+                        if 0<=ny<len(g)and 0<=nx<len(g[0]):
+                            g[ny][nx]=g[py+ny-y][px+nx-x]
+    return g
