@@ -163,6 +163,60 @@ def combine_adjacent_lines(source_code):
     return "\n".join(result_lines)
 
 
+def replace_small_int_lists_with_bytes(code):
+    """Replace certain integer lists with bytes literals.
+
+    Scans *code* for list literals that contain more than two elements where
+    each element is an ``int`` constant not exceeding ``127``. Such lists are
+    replaced with an equivalent ``bytes`` literal. The transformation uses
+    the AST location information to avoid unwanted side effects and does not
+    rely on ``ast.unparse``.
+    """
+
+    tree = ast_parse(code)
+
+    # Precompute the starting index of each line for mapping ``lineno`` and
+    # ``col_offset`` pairs to absolute string offsets.
+    line_starts = [0]
+    for idx, ch in enumerate(code):
+        if ch == "\n":
+            line_starts.append(idx + 1)
+
+    replacements = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.List) and len(node.elts) > 2:
+            values = []
+            for elt in node.elts:
+                if (
+                    isinstance(elt, ast.Constant)
+                    and isinstance(elt.value, int)
+                    and 0 <= elt.value <= 127
+                ):
+                    values.append(elt.value)
+                else:
+                    break
+            else:  # All elements satisfied the conditions.
+                start = line_starts[node.lineno - 1] + node.col_offset
+                end = line_starts[node.end_lineno - 1] + node.end_col_offset
+                byte_literal = "b'" + "".join(chr(v) if v else "\\0" for v in values) + "'"
+                if end - start > len(byte_literal):
+                    print(f"Replacing list at {values} with {repr(values)} ({end - start} -> {len(byte_literal)})")
+                    replacements.append((start, end, byte_literal))
+
+    if not replacements:
+        return code
+
+    # Apply replacements from left to right while tracking the last index.
+    result = []
+    last = 0
+    for start, end, repl in sorted(replacements):
+        result.append(code[last:start])
+        result.append(repl)
+        last = end
+    result.append(code[last:])
+    return "".join(result)
+
+
 def _split_top_level_commas(text):
     """Split *text* on commas not nested in brackets or strings."""
     parts = []
@@ -284,6 +338,7 @@ def remove_parens(code):
     return code
 
 
+
 def find_expandable_variables(code):
     """Return a mapping of variables that can be expanded and their usage counts.
 
@@ -295,60 +350,120 @@ def find_expandable_variables(code):
 
     tree = ast_parse(code)
 
-    # Count assignments for each variable. Variables assigned more than once
-    # are not safe to expand.
+    # ``assigns`` counts assignments per variable. ``loop_assigned`` records
+    # names assigned inside loop bodies, since such assignments execute
+    # multiple times at runtime.
     assigns = {}
+    loop_assigned = set()
+    assign_lines = {}
+    assign_nodes = {}
 
-    def record(target):
+    def record(target, in_loop, node):
         """Recursively record assignments to ``ast.Name`` targets."""
         if isinstance(target, ast.Name):
-            assigns[target.id] = assigns.get(target.id, 0) + 1
+            name = target.id
+            assigns[name] = assigns.get(name, 0) + 1
+            if hasattr(node, "lineno"):
+                assign_lines.setdefault(name, []).append(node.lineno)
+            if hasattr(node, "value"):
+                assign_nodes.setdefault(name, []).append(node)
+            if in_loop:
+                loop_assigned.add(name)
         else:
             for child in ast.iter_child_nodes(target):
-                record(child)
+                record(child, in_loop, node)
 
     class AssignCounter(ast.NodeVisitor):
+        """Populate ``assigns`` and ``loop_assigned`` by walking the tree."""
+
+        def __init__(self):
+            self.in_loop = False  # Are we currently inside a loop body?
+
         def visit_Assign(self, node):
             for t in node.targets:
-                record(t)
+                record(t, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_AugAssign(self, node):
-            record(node.target)
+            record(node.target, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_AnnAssign(self, node):
-            record(node.target)
+            record(node.target, self.in_loop, node)
+            self.generic_visit(node)
+
+        def visit_NamedExpr(self, node):
+            # Assignment expressions ``x := y`` should count as assignments. The
+            # ``NamedExpr`` node itself acts as the assignment site.
+            record(node.target, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_For(self, node):
-            record(node.target)
-            self.generic_visit(node)
+            # The iteration variable is assigned every loop cycle.
+            record(node.target, True, node)
+            # The iterable expression is evaluated once before looping.
+            self.visit(node.iter)
+            prev = self.in_loop
+            self.in_loop = True
+            for stmt in node.body:
+                self.visit(stmt)
+            self.in_loop = prev
+            for stmt in node.orelse:
+                self.visit(stmt)
 
         def visit_AsyncFor(self, node):
-            record(node.target)
-            self.generic_visit(node)
+            record(node.target, True, node)
+            self.visit(node.iter)
+            prev = self.in_loop
+            self.in_loop = True
+            for stmt in node.body:
+                self.visit(stmt)
+            self.in_loop = prev
+            for stmt in node.orelse:
+                self.visit(stmt)
+
+        def visit_While(self, node):
+            prev = self.in_loop
+            self.in_loop = True
+            self.visit(node.test)
+            for stmt in node.body:
+                self.visit(stmt)
+            self.in_loop = prev
+            for stmt in node.orelse:
+                self.visit(stmt)
 
         def visit_With(self, node):
             for item in node.items:
                 if item.optional_vars:
-                    record(item.optional_vars)
+                    record(item.optional_vars, self.in_loop, node)
             self.generic_visit(node)
 
         def visit_comprehension(self, node):
-            record(node.target)
-            self.generic_visit(node)
+            # Comprehension targets behave like loop variables.
+            record(node.target, True, node)
+            self.visit(node.iter)
+            prev = self.in_loop
+            self.in_loop = True
+            for cond in node.ifs:
+                self.visit(cond)
+            self.in_loop = prev
 
         def visit_ExceptHandler(self, node):
             if node.name:
-                assigns[node.name] = assigns.get(node.name, 0) + 1
+                name = node.name
+                assigns[name] = assigns.get(name, 0) + 1
+                assign_lines.setdefault(name, []).append(node.lineno)
+                assign_nodes.setdefault(name, []).append(node)
+                if self.in_loop:
+                    loop_assigned.add(name)
             self.generic_visit(node)
 
     AssignCounter().visit(tree)
 
-    # Track contexts where inlining would be unsafe, such as using the variable
-    # as an attribute base, a subscription target, or an iterable in loops.
-    unsafe = set()
+    # Track contexts where inlining would be unsafe, including use as an
+    # attribute base, a subscription target, an iterable in loops, or any
+    # variable assigned inside a loop.
+    unsafe = set(loop_assigned)
 
     class SafetyChecker(ast.NodeVisitor):
         def visit_Attribute(self, node):
@@ -373,6 +488,31 @@ def find_expandable_variables(code):
 
     SafetyChecker().visit(tree)
 
+    # Skip variables whose assigned value references another variable that gets
+    # reassigned later. Inlining such variables would use the updated value
+    # rather than the original one captured at assignment time.
+    for name, nodes in assign_nodes.items():
+        if assigns.get(name) != 1:
+            continue
+        node = nodes[0]
+        line = assign_lines[name][0]
+        # Assignments whose value contains a ``NamedExpr`` introduce side effects
+        # when duplicated. Expanding such variables could reevaluate the
+        # assignment expression and is therefore unsafe.
+        if any(isinstance(n, ast.NamedExpr) for n in ast.walk(node.value)):
+            unsafe.add(name)
+            continue
+        deps = {
+            n.id
+            for n in ast.walk(node.value)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)
+        }
+        deps.discard(name)
+        for dep in deps:
+            if any(l > line for l in assign_lines.get(dep, [])):
+                unsafe.add(name)
+                break
+
     # Count how many times each variable is read.
     loads = {}
 
@@ -388,15 +528,13 @@ def find_expandable_variables(code):
 
     LoadCounter().visit(tree)
 
-    # Include variables assigned once but never used (default to zero),
-    # excluding any marked as unsafe.
+    # Include variables assigned once but never used (default to zero), excluding
+    # any marked as unsafe.
     return {
         name: loads.get(name, 0)
         for name, c in assigns.items()
         if c == 1 and name not in unsafe
     }
-
-
 def expand_variable(code, name):
     """Expand the variable ``name`` by inlining its assigned value.
 
@@ -542,6 +680,10 @@ def expand_variables(code, counts):
             code = original
     return code
 
+# Preserve a reference to the helper before ``minify`` defines a parameter of the
+# same name. This avoids shadowing the function object.
+_expand_variables = expand_variables
+
 
 def remove_semicolons(code):
     res=[]
@@ -618,16 +760,29 @@ def replace_def_p(code):
     return code
 
 
-def minify(code):
+def minify(code, expand_variables=False):
+    """Return a minified version of *code*.
+
+    Parameters
+    ----------
+    code: str
+        The source to minify.
+    expand_variables: bool
+        When ``True`` try to inline variables that are assigned exactly once.
+
+    The parameter name matches the helper :func:`expand_variables` but refers to
+    a boolean flag. The actual helper is accessed via ``_expand_variables`` to
+    avoid the name clash.
+    """
+
     code = reindent(code)
 
     # Expand variables assigned exactly once before performing any structural
     # minification steps. This reduces noise and may expose further
     # simplification opportunities.
     expandable = find_expandable_variables(code)
-    # Disabled as this introduces failures.
-    # if expandable:
-    #     code = expand_variables(code, expandable)
+    if expand_variables and expandable:
+        code = _expand_variables(code, expandable)
 
     code = replace_unpacking_funcs(code)
     code = merge_indented_blocks(code)
@@ -642,5 +797,6 @@ def minify(code):
     if len(code) < 150:
         # Bad with LZ.
         code = replce_fixed_range(code)
+        code = replace_small_int_lists_with_bytes(code)
 
     return code

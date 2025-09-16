@@ -90,7 +90,7 @@
 
 def p(g,z=0):
     exec("if g[y:=z//8][x:=z%8]*g[y+2][x+2]:g[y+1][x+1]%=3\nz+=1\n"*64)
-#     return g
+    return g
 
 # idea for using zip (doesn't work yet
 # p=lambda g:[[d%e*f/3for d,e,f in zip(d[1:]+[0],e,[0]+f)]for a,b,c in zip(g,g[1:]+[[]],[[]]+g)]

@@ -2,6 +2,7 @@
 
 * https://shinh.skr.jp/t/arc-agi-dashboard/002.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/048.html
+* https://shinh.skr.jp/t/arc-agi-dashboard/196.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/198.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/243.html
 * https://shinh.skr.jp/t/arc-agi-dashboard/251.html

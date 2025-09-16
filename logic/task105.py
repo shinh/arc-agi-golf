@@ -1,6 +1,6 @@
 def p(g):
     # outline rare color region with 2 and fill lines
-    a=min(f:=sum(g,[]),key=f.count);P=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==a]
+    P=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==1]
     if P:
         I,J=zip(*P);t,B=min(I),max(I);l,R=min(J),max(J)
         h,v=range(l,R+1),range(t,B+1)
