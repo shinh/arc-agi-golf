@@ -1,2 +1,2 @@
-# fill row if ends match
-p=lambda g:[r[:1]*10*(r[0]==r[9]>0)or r for r in g]
+# equal ends fill
+p=lambda g:[[r[:1]*10,r][r[0]!=r[9]]for r in g]
