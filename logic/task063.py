@@ -1,8 +1,3 @@
 # fill rows/cols of zeros with 3
-def p(g):
- r=eval(str(g));q=range(1,len(g)-1)
- for i in q:
-  for j in q:
-   if any(g[i][1:-1])*any(g[k][j]for k in q)<1:r[i][j]=3
- return r
+def p(g):t=(*zip(*g),);return[[3if 0<i<len(g)-1>j>0 and any(r[1:-1])*any(t[j][1:-1])<1 else v for j,v in enumerate(r)]for i,r in enumerate(g)]
 
