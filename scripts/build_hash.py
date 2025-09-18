@@ -17,7 +17,10 @@ import code_golf_utils
 
 
 def graph_hash(seed: int, g) -> int:
-    return zlib.crc32(bytes(sum(g,[seed])))
+    s = [seed]
+    if g and isinstance(g[0], tuple):
+        s = tuple(s)
+    return zlib.crc32(bytes(sum(g,s)))
 
 
 def build_g(pairs, m=None, r=3, seed_bytes=4, max_tries=1000):
@@ -125,6 +128,26 @@ def escape_bytes(data):
     return escaped.decode("ascii")
 
 
+def build_cond_319(pairs):
+    npairs = []
+    for ib, ob in pairs:
+        F=sum(ib,[]);b=max(F,key=F.count)
+        for c in range(10):
+            f=lambda g:[*map(list,zip(*([[c,b][c!=d]for d in r]for r in g if c in r)))]
+
+            q=f(f(ib))
+            if not q:
+                continue
+            if q == ob:
+                npairs.append((q + ib, 1))
+                break
+            npairs.append((q + ib, 0))
+        else:
+            raise RuntimeError("solution not found")
+    print(len(pairs), '->', len(npairs))
+    return npairs
+
+
 def brute_force(task_id):
     task_id = "%03d" % int(task_id)
     js = json.load(gzip.open(os.path.join("tasks", "task" + task_id + ".json.gz")))
@@ -136,7 +159,12 @@ def brute_force(task_id):
     for d in data:
         ib = d["input"]
         ob = d["output"]
-        pairs.append((ib, int(ob[0][0] > 0)))
+        pairs.append((ib, ob))
+
+    if task_id == "319":
+        pairs = build_cond_319(pairs)
+    else:
+        pairs = [(ib, int(ob[0][0] > 0)) for ib, ob in pairs]
 
     r = build_g(pairs, r=3, seed_bytes=1, max_tries=1000)
     m = r['m']
