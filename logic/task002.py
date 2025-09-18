@@ -30,4 +30,4 @@
 #p=lambda g,n=64:n and p([[[a or b==1,4-4*a%11][n<2]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)or g
 
 # Better recursion
-p=lambda g,n=63:-n*g or p([[[a or b==1,4-4*a%11][n<1]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)
+p=lambda g,n=63:-n*g or p([[[a|b%3,4-4*a%11][n<1]for a,b in zip(r,r[1:]+(1,))]for r in zip(*g[::-1])],n-1)
