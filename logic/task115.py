@@ -1,3 +1,3 @@
 def p(g):
- # dedup first row or column
- f=dict.fromkeys;return[[*zip(f(next(zip(*g))))],[[*f(g[0])]]][len({*g[0]})>1]
+ # dedup row/col
+ return[[*zip((f:={}.fromkeys)(next(zip(*g))))],[[*f(r:=g[0])]]][len({*r})>1]
