@@ -1,3 +1,3 @@
 # center/corners decide color
-p=lambda g:(f:=sum(g,[]))and[[536968>>sum(map(bool,f[::2]+f[4:5]))*3&7]]
+p=lambda g:[[536968>>3*sum(map(bool,(g:=sum(g,[]))[::2]+g[4:5]))&7]]
 

@@ -1,5 +1,4 @@
-#bbox
+#bbox rows*cols
 def p(g):
- s=str(sum(g,[]))[1::3];w=len(g[0])
- return[[int(max(s,key=lambda c:(c>'0')*-~((l:=s.rfind(c)-s.find(c))%w)*-~(l//w)))]*2]*2
+ return[[max({*sum(g,[])}-{0},key=lambda c:sum(c in r for r in g)*sum(c in col for col in zip(*g)))]*2]*2
 

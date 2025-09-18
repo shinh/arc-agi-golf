@@ -1,8 +1,6 @@
-def p(g):# spiral of 3s
-    x=y=j=0;i=1;l=m=len(g)-1;g[y][x]=3
-    while l>0:
-        for s in l,m:
-            for _ in[0]*s:g[y:=y+j][x:=x+i]=3
-            i,j=-j,i
-        l=m;m-=2
+def p(g):# spiral3
+    x=y=j=0;i=1;n=len(g)-1
+    for k in range(n*2+1):
+        for _ in[0]+[1]*(n-((k-(k>1))&-2)):g[y:=y+j*_][x:=x+i*_]=3
+        i,j=-j,i
     return g
