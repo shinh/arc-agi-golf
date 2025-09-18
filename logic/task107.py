@@ -1,6 +1,7 @@
-def p(g):#scale&draw diagonals
+def p(g):#scale+diag
  n=len({*sum(g,[])})-1
- sy,sx=(g[0][1]<1)*n,(g[1][0]<1)*n
+ sy=n*(g[0][1]<1)
+ sx=n*(g[1][0]<1)
  g=[[c for c in r for _ in[0]*n]for r in g for _ in[0]*n]
  for i in range(n):
   for y in sy-i-1,sy+n+n+i:
