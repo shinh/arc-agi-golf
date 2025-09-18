@@ -123,7 +123,7 @@ def compress_with_algorithm(code, algorithm="zlib"):
 
 def _compress_single_variant(code, algorithm, seed):
     """Compress code for a specific algorithm and seed."""
-    if "eval" not in code and "exec" not in code:
+    if "eval" not in code and "exec" not in code and "zlib" not in code:
         code = myzlib.map_identifiers(code, ["p"], seed=seed)
 
     if algorithm == "asis":

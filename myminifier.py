@@ -9,6 +9,17 @@ def ast_parse(code):
         return ast.parse(code)
 
 
+def remove_comment(code):
+    lines = []
+    for line in code.split("\n"):
+        line = re.sub(r"^#.*", "", line)
+        line = line.rstrip()
+        if not line:
+            continue
+        lines.append(line)
+    return "\n".join(lines)
+
+
 def reindent(code):
     lines = []
     cur_indent = 0
@@ -774,6 +785,10 @@ def minify(code, expand_variables=False):
     a boolean flag. The actual helper is accessed via ``_expand_variables`` to
     avoid the name clash.
     """
+
+    if "zlib" in code:
+        code = remove_comment(code)
+        return code
 
     code = reindent(code)
 
