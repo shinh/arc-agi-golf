@@ -788,9 +788,8 @@ def minify(code, expand_variables=False):
 
     if "zlib" in code:
         code = remove_comment(code)
-        return code
-
-    code = reindent(code)
+    else:
+        code = reindent(code)
 
     # Expand variables assigned exactly once before performing any structural
     # minification steps. This reduces noise and may expose further
