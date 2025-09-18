@@ -132,21 +132,10 @@ def brute_force(task_id):
     for kind in ["train", "test", "arc-gen"]:
         data.extend(js[kind])
 
-    f = open("/tmp/inputs.txt", "w")
-
-    input_hashes = []
-    output_bits = []
     pairs = []
     for d in data:
         ib = d["input"]
         ob = d["output"]
-        f.write(f"{ib}\n")
-        #input_hashes.append(hash(f"{ib}"))
-        input_hashes.append(zlib.crc32(f"{ib}".encode()))
-        #input_hashes.append(int.from_bytes(hashlib.blake2b(f"{ib}".encode()).digest(), "big"))
-        #input_hashes.append(sum(i*13+c for i,c in enumerate(b"{ib}")))
-        output_bits.append(ob[0][0] > 0)
-
         pairs.append((ib, int(ob[0][0] > 0)))
 
     r = build_g(pairs, r=3, seed_bytes=1, max_tries=1000)
