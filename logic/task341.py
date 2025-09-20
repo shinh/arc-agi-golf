@@ -1,14 +1,12 @@
 def p(g):
-    # bridge shapes with 8
-    for _ in 0,1:
-        y1=99;y2=0
+    # bridge w/8
+    for _ in'00':
+        a=9;p=0
         for y,r in enumerate(g):
-            s=''.join('10'[c<1]for c in r)
-            x=s.find('10')+1
-            X=s.find('1',x)
-            if 0<x<X:
-                A,B=x,X;y1=min(y1,y);y2=y
-        for r in g[y1+1:y2]:
-            r[A:B]=[8]*(B-A)
+            f=''.join('01'[c>0]for c in r).find
+            if 0<(x:=f('10')+1)<(t:=f('1',x)):
+                A=x;B=t-x
+                a=min(a,p:=y)
+        for r in g[a+1:p]:r[A:A+B]=[8]*B
         g=[*map(list,zip(*g))]
     return g
