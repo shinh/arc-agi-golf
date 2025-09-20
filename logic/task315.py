@@ -1,2 +1,2 @@
 # expand pattern marked by 2
-p=lambda g,X=range(9):[[g[r//3][c//3]//2*g[r%3][c%3]for c in X]for r in X]
+p=lambda g:[[v//2*x for v in R for x in r]for R in g for r in g]
