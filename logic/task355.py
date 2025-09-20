@@ -1,3 +1,3 @@
 def p(g):# rare color's neighborhood majority color
     # majority colors around each rare cell, then majority of those
-    p=min(f:=sum(g,[]),key=f.count);return[[max(u:=[max(m:=[v for R in g[max(0,y-4):y+5]for v in R[max(0,x-4):x+5]if v^p],key=m.count)for y,R in enumerate(g)for x,v in enumerate(R)if v==p],key=u.count)]]
+    M=lambda q:max(q,key=q.count);E=enumerate;p=min(f:=sum(g,[]),key=f.count);return[[M([M([w for Y,R in E(g)for X,w in E(R)if-5<Y-y<5 and-5<X-x<5 and w^p])for y,R in E(g)for x,v in E(R)if v==p])]]
