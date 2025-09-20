@@ -1,5 +1,5 @@
-def p(m,K=range):# floodfill n*n diag8
+def p(m,K=range):# flood
  r,c=len(m),len(m[0])
  def f(y,x):
-  if m[y][x]:m[y][x]=0;[r>Y>-1<X<c and f(Y,X)for Y,X in((y+1,x),(y-1,x),(y,x+1),(y,x-1))];return 1
- n=sum(f(i,j)or 0 for i in K(r)for j in K(c));return[[8*(i==j)for j in K(n)]for i in K(n)]
+  if m[y][x]:m[y][x]=0;y+1<r and f(y+1,x);y and f(y-1,x);x+1<c and f(y,x+1);x and f(y,x-1);return 1
+ n=sum(m[i][j]and f(i,j)for i in K(r)for j in K(c));return[[8*(i==j)for j in K(n)]for i in K(n)]
