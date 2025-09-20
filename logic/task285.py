@@ -9,16 +9,14 @@ def p(g):
    while st:
     x,y=st.pop()
     if g[x][y]<1:continue
-    g[x][y]=0;c+=[(x,y,r[x][y])]
-    st+=[(u,v)for a in R for b in R if(a|b)and-1<(u:=x+a)<h and-1<(v:=y+b)<w]
-   m=max(cols:=[v for x,y,v in c],key=cols.count)
-   maj=[(x,y)for x,y,v in c if v==m];xs,ys=zip(*maj)
-   mi,mj=min(xs),min(ys);H=max(xs)-mi+1;W=max(ys)-mj+1;P=[(x-mi,y-mj)for x,y in maj]
-   for x,y,v in c:
-    if v!=m:
-     di,dj=(x-mi)//H,(y-mj)//W;oi,oj=mi+di*H,mj+dj*W
+    g[x][y]=0;c+=((x,y,r[x][y]),)
+    st+=[(x+a,y+b)for a in R for b in R if(a|b)and-1<x+a<h and-1<y+b<w]
+   m=max(t:=[V for x,y,V in c],key=t.count)
+   e=[(x,y)for x,y,V in c if V==m];xs,ys=zip(*e)
+   H=max(xs)-(mi:=min(xs))+1;W=max(ys)-(mj:=min(ys))+1;P=[(x-mi,y-mj)for x,y in e]
+   for x,y,V in c:
+    if V-m:
+     oi=mi+(di:=(x-mi)//H)*H;oj=mj+(dj:=(y-mj)//W)*W
      for p,q in P:
-      if di%2:p=H-1-p
-      if dj%2:q=W-1-q
-      if -1<oi+p<h and-1<oj+q<w:r[oi+p][oj+q]=v
+      if-1<(u:=oi+(H-1-p if di&1 else p))<h and-1<(v:=oj+(W-1-q if dj&1 else q))<w:r[u][v]=V
  return r
