@@ -6,7 +6,7 @@ def p(g):
  T=max(q,key=lambda s:max(x for _,x in s)-min(x for _,x in s));q.remove(T)
  a=min(y for y,_ in T);b=min(x for _,x in T);T={(y-a,x-b)for y,x in T}
  for s in q:
-  m=max(x for _,x in s);b=set();t=-1,0,0
+  m=max(x for _,x in s);b=set();t=()
   for i in range(-15,15):
    for j in range(-10,20):
     S={(y+i,x+j)for y,x in T if 15>y+i>-1<x+j<10}
