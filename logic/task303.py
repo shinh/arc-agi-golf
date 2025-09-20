@@ -1,3 +1,2 @@
-def p(g):
- # 0 rows/cols ->2
- return[[2 if sum(r)<1 or{*z}<={0,2}else v for v,z in zip(r,zip(*g))]for r in g]
+# 0 rows/cols ->2
+p=lambda g:[[[z[0],2][sum(r)<1 or{*z}<={0,2}]for z in zip(r,*g)]for r in g]
