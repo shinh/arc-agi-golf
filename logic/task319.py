@@ -1,18 +1,16 @@
 def p(g):
     # compare border mini to shapes
-    F=sum(g,[]);b=max(F,key=F.count);R=range;Y=len(g);X=len(g[0]);C=F.count
-    for c in R(10):
-        f=lambda t:[*zip(*([[b,c][q==c]for q in r]for r in t if c in r))]
-        o=f(f(g))
-        if c^b:
-            H=len(o)*2;W=len(o and o[0])*2
-            for y in R(-H,Y):
-                for x in R(-W,X):
-                    for q in R(10):
-                        ok=cnt=0
-                        for i in R(H):
-                            for j in R(W):
-                                if Y>y+i>=0<=x+j<X:
-                                    v=g[y+i][x+j];ok+=(o[i//2][j//2]==c)^(v==q);cnt+=v==q
-                        if ok<1 and cnt==C(q)>0 and q-c:return o
+    a=sum(g,[]);b=max(a,key=a.count);r=range;Y=len(g);X=len(g[0]);c=a.count;s={*a}-{b}
+    for d in s:
+        f=lambda t:[*zip(*([[b,d][q==d]for q in e]for e in t if d in e))]
+        o=f(f(g));H=len(o)*2;W=len(o[0])*2
+        for y in r(-H,Y):
+            for x in r(-W,X):
+                for q in s-{d}:
+                    k=n=0
+                    for i in r(H):
+                        for j in r(W):
+                            if Y>y+i>=0<=x+j<X:
+                                v=g[y+i][x+j];k+=(o[i//2][j//2]==d)^(v==q);n+=v==q
+                    if k<1 and n==c(q):return o
     return g
