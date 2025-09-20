@@ -1,2 +1,2 @@
-def p(g):
- return[[[c,r[0]][c==5]for c in r]for r in g]
+#map row 5s
+def p(g):return[[*map({5:r[0]}.get,r,r)]for r in g]
