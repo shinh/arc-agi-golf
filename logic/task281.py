@@ -1,12 +1,11 @@
 def p(g):
-    # spread color
+    #spread color
     for o in[0]*4:
-        if (e:=[r.index(8)for r in g if 8 in r]):
-            e=e[0]
+        for e in[r.index(8)for r in g if 8in r][:1]:
             for r in g:
                 f=n=0
-                for x,c in enumerate(r):
-                    if c:f<1and(f:=c)or n<1and(n:=c)
-                    elif n and x<e:r[x-1:e+1]=[n]*(e-x+1)+[f];n=0
+                for x in range(e):
+                    if(c:=r[x]):n or f and(n:=c)or(f:=c)
+                    elif n:r[x-1:e+1]=[n]*(e-x)+[n,f];n=0
         g=[*map(list,zip(*g[::-1]))]
     return g
