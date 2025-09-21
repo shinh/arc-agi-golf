@@ -1,3 +1,2 @@
-# mark 8 where cells 4 apart are empty
-p=lambda g:[[8*(a+b<1)for a,b in zip(r,r[4:])]for r in g]
-
+# 0/9 mask
+p=lambda g:[[~(a|b)&8for a,b in zip(r,r[4:])]for r in g]

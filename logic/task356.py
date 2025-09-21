@@ -1,10 +1,7 @@
 def p(g):
- # link
- h=[*map(list,g)]
- for _ in 0,1:
-  for r,H in zip(g,h):
-   t=[i for i,v in enumerate(r)if v]
-   if t[1:]:b=t[-1];H[t[0]:b+1]=[8]*-~(b-t[0])
-  g=[*zip(*g)]
-  h=[*map(list,zip(*h))]
- return h
+    # link
+    o=[*zip(*g)]
+    for _ in 0,1:
+        g=[r[:(s:=p.index(8))]+(8,)*((e:=len(r)-p[::-1].index(8))-s)+r[e:]if 8 in p else r for r,p in zip(zip(*g),o)]
+        o=zip(*o)
+    return g

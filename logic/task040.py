@@ -1,3 +1,1 @@
-def p(g,e=enumerate):
-    # pick colors from edges and paint 3s by row/col index
-    t=g[0];u=g[-1];n=0in t+u;return[[(v,(t[0],(u[0],t[-1])[n])[(y,x)[n]>4])[v==3]for x,v in e(r)]for y,r in e(g)]
+def p(g,e=enumerate):n=0in g[0]+g[-1];return[[(v,(g[0][0],g[n-1][-n])[(y,x)[n]>4])[v==3]for x,v in e(r)]for y,r in e(g)]# recolor 3s via edges

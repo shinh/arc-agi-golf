@@ -1,11 +1,5 @@
-def p(g):
-    # mirror each color around the center of the only 2x2 block
-    h=len(g);w=len(g[0]);f=sum(g,[])
-    for i,v in enumerate(f):
-        if v and f.count(v)==4:S=i//w*2+1;T=i%w*2+1;break
+def p(g):# mirror colors at 2x2 core
+    w=len(g[0]);f=sum(g,[]);s,t=next((i//w*2+1,i%w*2+1)for i,v in enumerate(f)if v and f.count(v)==4)
     for i,c in enumerate(f):
-        if c:
-            for Y in i//w,S-i//w:
-                for X in i%w,T-i%w:
-                    if h>Y>=0<=X<w:g[Y][X]=c
+        if c:y=i//w;i%=w;g[y][i]=g[y][t-i]=g[s-y][i]=g[s-y][t-i]=c
     return g
