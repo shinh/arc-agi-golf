@@ -77,33 +77,34 @@
 
 
 
-# 344
+# 327
 def p(g):#
-    objects=[]
+    mode=objects=[]
     for y in range(-20,20):
         for x in range(-20,20):
             q = [(y,x)]
-            obj = []
+            cs=obj = []
             for y,x in q:
-                if 0<=y<len(g) and 0<=x<len(g[0]) and g[y][x]:
+                if len(g[0])>x>-1<y<len(g)and g[y][x]:
                     obj += [(y,x,g[y][x])]
+                    if g[y][x] in cs:
+                        mode=g[y][x]
+                        objects += [obj] # creates extra copies in objects, slow, but doesn't matter
+                    cs=cs+[g[y][x]]
                     g[y][x] = 0
                     q+=[(y+1,x),(y-1,x),(y,x+1),(y,x-1)]
 
             if len(obj) < 4:
                 for y,x,c in obj:
                     g[y][x] = c
-            else: objects += [obj]
 
     for i in range(8):
-        g = [*map(list,zip(*g[::i%4//3*2-1]))]
+        g=[[*x]for x in zip(*g[::(i%4>2)*2-1])]
         for obj2 in objects:
             for dy in range(-20,20):
                 for dx in range(-20,20):
                     obj = [(y+dy,x+dx,c) for y,x,c in obj2]
-                    _,_,cs = zip(*obj)
-                    mode = max(cs,key=cs.count)
-                    if all(0<=y<len(g) and 0<=x<len(g[0]) and c in (mode,g[y][x]) for y,x,c in obj):
+                    if all(len(g[0])>x>-1<y<len(g)and c in (mode,g[y][x]) for y,x,c in obj):
                         for y,x,c in obj:
                             g[y][x] = c
 
