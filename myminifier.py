@@ -9,23 +9,12 @@ def ast_parse(code):
         return ast.parse(code)
 
 
-def remove_comment(code):
-    lines = []
-    for line in code.split("\n"):
-        line = re.sub(r"^#.*", "", line)
-        line = line.rstrip()
-        if not line:
-            continue
-        lines.append(line)
-    return "\n".join(lines)
-
-
 def reindent(code):
     lines = []
     cur_indent = 0
     prev_indent = 0
     indents = {}
-    for line in code.splitlines():
+    for line in code.split("\n"):
         line = re.sub(r"#.*", "", line)
         line = line.rstrip()
         if not line:
@@ -786,10 +775,7 @@ def minify(code, expand_variables=False):
     avoid the name clash.
     """
 
-    if "zlib" in code:
-        code = remove_comment(code)
-    else:
-        code = reindent(code)
+    code = reindent(code)
 
     # Expand variables assigned exactly once before performing any structural
     # minification steps. This reduces noise and may expose further
