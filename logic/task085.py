@@ -24,8 +24,16 @@
 #     return g
 
 # 86
-def p(g):
-    for a,b in zip(g,g[1:]):
-        if a==b:
+# def p(g):
+#     for a,b in zip(g,g[1:]):
+#         if a==b:
+#             b[b[::2]>b[1::2]::2]=g[0][::2]
+#     return g
+
+# 82
+def p(g,*v):
+    for b in g:
+        if b==v:
             b[b[::2]>b[1::2]::2]=g[0][::2]
+        v=b
     return g
