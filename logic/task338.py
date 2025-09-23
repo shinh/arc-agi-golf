@@ -57,8 +57,22 @@
 #     return g2
 
 # 86 (more improvement with magic formulas still possible probably)
-p=lambda g,q=0,c=0:[[((c:=(c^v)*0**(q*v))>(q:=v))*3for v in g[0]]]+(g[1:]and p(g[1:]))
+# p=lambda g,q=0,c=0:[[((c:=(c^v)*0**(q*v))>(q:=v))*3for v in g[0]]]+(g[1:]and p(g[1:]))
 
+# 85
+# def p(g):
+#     for r in g:
+#         p=c=0
+#         r[:]=[((c:=(c^v)*0**(p*v))>(p:=v))*3 for v in r]
+#     return g
+
+# 82
+# p=lambda g,q=0,c=0:[[((c:=(c^v)*0**(q*v))>(q:=v))*3 for v in r+[0]][:-1]for r in g]
+
+# 77
+# p=lambda g,c=0:[(q:=0)or[((c:=(c^v)*0**(q*v))>(q:=v))*3 for v in r]for r in g]
+
+p=lambda g,c=0:[[((c:=(c^v)*0**(q*v))>v)*3 for v,q in zip(r,[0]+r)]for r in g]
 
 # other (not working ideas):...
 
