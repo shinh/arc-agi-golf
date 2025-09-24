@@ -1,2 +1,2 @@
-# expand with repeating diagonal colors
-p=lambda g,R=range(10):[[g[(m:=max(y,x)%(4+(g[4][4]>0)))][m]for x in R]for y in R]
+# repeat diagonal colors
+p=lambda g,r=range(10):[[g[_:=max(y,x)%(4+any(g[4]))][_]for x in r]for y in r]

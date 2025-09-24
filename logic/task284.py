@@ -1,7 +1,7 @@
 # cross
 def p(g):
- [(a,b,c),(d,e,f)]=[(i,j,v)for i,r in enumerate(g)for j,v in enumerate(r)if v]
- t=abs(a-d)<abs(b-e)
+ a,b,c,d,e,f=sum(((i,j,v)for i,r in enumerate(g)for j,v in enumerate(r)if v),())
+ t=(a-d)**2<(b-e)**2
  if t:g=[*map(list,zip(*g))];a,b,d,e=b,a,e,d
  if a>d:a,b,c,d,e,f=d,e,f,a,b,c
  x,m=b,a+d>>1

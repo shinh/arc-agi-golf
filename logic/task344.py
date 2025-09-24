@@ -1,4 +1,4 @@
-# swap 2 next to 3 with 0 and 8
+# turn 23/32 into 08/80
 def p(g):
- for _ in 0,0:g=zip(*[map(int,str(r)[1::3].replace('23','08').replace('32','80'))for r in g])
- return[*g]
+ for _ in'00':g=[*zip(*eval(str(g).replace('2, 3','0,8').replace('3, 2','8,0')))]
+ return g

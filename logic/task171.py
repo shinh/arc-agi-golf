@@ -1,3 +1,2 @@
 def p(g):# border
-    h,w=len(g),len(g[0])
-    return[[8]*w,*[[8,*[0]*(w-2),8]]*(h-2),[8]*w]
+    return[(x:=[8]*(w:=len(g[0]))),*[[8,*[0]*(w-2),8]]*(len(g)-2),x]

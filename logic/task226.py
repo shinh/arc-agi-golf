@@ -1,4 +1,4 @@
-# rotate the grid so flood fill can flow from one side only
+# rotate the grid so flood fill flows from one side only
 def p(g):
  g[0][0]=1;g[9][9]=3
  for r in g[4:6]:r[4:6]=r[4]or 2,r[5]or 2

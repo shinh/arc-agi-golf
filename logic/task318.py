@@ -1,2 +1,2 @@
-# merge top and bottom halves
-p=lambda j:[[3*any(c)for c in zip(*z)]for z in zip(j,j[5:])]
+# merge halves
+p=lambda j:[[3*any(c)for c in z]for z in map(zip,j,j[5:])]

@@ -20,6 +20,18 @@ def test_merge_indented_blocks():
     assert myminifier.merge_indented_blocks(src) == expected
 
 
+def test_reindent_preserves_hash_inside_strings():
+    """A hash character inside a string literal must not be stripped."""
+    src = 'if True:\n    text = "value # not comment"\n    return text'
+    expected = 'if True:\n text = "value # not comment"\n return text'
+    assert myminifier.reindent(src) == expected
+
+
+def test_reindent_removes_trailing_comment():
+    """Regular comments should continue to be removed."""
+    assert myminifier.reindent('x = 1  # comment') == 'x = 1'
+
+
 def test_combine_adjacent_lines_simple():
     src = "a=1\nb=2\nc=3"
     assert myminifier.combine_adjacent_lines(src) == "a=1;b=2;c=3"

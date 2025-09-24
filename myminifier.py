@@ -9,13 +9,64 @@ def ast_parse(code):
         return ast.parse(code)
 
 
+def _strip_comment_from_line(line, state):
+    """Remove a trailing comment while tracking string literals.
+
+    ``state`` is a tuple ``(quote, triple)`` describing whether we are inside a
+    string that continues across lines. ``quote`` is either ``'"'``/``"'"`` or
+    ``None`` and ``triple`` indicates whether the string was opened by triple
+    quotes. The updated state is returned along with the processed line.
+    """
+
+    quote, triple = state
+    i = 0
+    while i < len(line):
+        ch = line[i]
+        if quote:
+            if triple:
+                if line.startswith(quote * 3, i):
+                    i += 3
+                    quote = None
+                    triple = False
+                else:
+                    i += 1
+            else:
+                if ch == "\\":
+                    i += 2
+                elif ch == quote:
+                    quote = None
+                    i += 1
+                else:
+                    i += 1
+            continue
+
+        if ch in "'\"":
+            if line.startswith(ch * 3, i):
+                quote = ch
+                triple = True
+                i += 3
+            else:
+                quote = ch
+                triple = False
+                i += 1
+            continue
+
+        if ch == "#":
+            return line[:i], (quote, triple)
+
+        i += 1
+
+    return line, (quote, triple)
+
+
 def reindent(code):
     lines = []
     cur_indent = 0
     prev_indent = 0
     indents = {}
-    for line in code.split("\n"):
-        line = re.sub(r"#.*", "", line)
+    state = (None, False)
+    for raw_line in code.split("\n"):
+        line, state = _strip_comment_from_line(raw_line, state)
         line = line.rstrip()
         if not line:
             continue
