@@ -1,1 +1,1 @@
-p=lambda g:[[*r[:4],*u,5,*t[2::-1]]for r,t,u in zip(g,g[::-1],zip(*g[::-1]))]#rot+mir
+p=lambda g:[[*r[:4],*u,*t[3::-1]]for r,u,t in zip(g,zip(*g[::-1]),g[::-1])]#rot+mir
