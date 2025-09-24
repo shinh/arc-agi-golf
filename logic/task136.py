@@ -1,6 +1,6 @@
 def p(g):# diagonals from first 1 & last 2
  r=sum(g,[])
- y,x,Y,X=divmod(r.index(1),10)+divmod(99-r[::-1].index(2),10)
- while ~x*~y:g[y][x]=1;x-=1;y-=1
- while X<9>Y:X+=1;Y+=1;g[Y][X]=2
+ for v,s,t in((1,-1,r.index(1)),(2,1,99-r[::-1].index(2))):
+  y,x=divmod(t,10)
+  while-1<x<10>y>-1:g[y][x]=v;x+=s;y+=s
  return g
