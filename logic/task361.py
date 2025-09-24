@@ -1,15 +1,15 @@
 def p(g):
- # rotate non-square cells around center of largest solid square
+ # rotate extra cells around biggest solid square
  for k in range(10,0,-1):
   for i in range(11-k):
    for j in range(11-k):
-    if all(min(g[i+y][j:j+k])for y in range(k)):
-     c=i+k/2-.5;d=j+k/2-.5
+    if min(min(r[j:j+k])for r in g[i:i+k]):
+     c=2*i+k-1;d=2*j+k-1
      for y in range(10):
       for x in range(10):
-       if (v:=g[y][x])*(i<=y<i+k)*(j<=x<j+k)<v:
-        a=y-c;b=x-d
+       if (v:=g[y][x])and(1-(i<=y<i+k)*(j<=x<j+k)):
+        a,b=2*y-c,2*x-d
         for _ in'000':
-         a,b=-b,a;y2=round(c+a);x2=round(d+b)
-         if 0<=y2<10>x2>=0:g[y2][x2]=v
+         a,b=-b,a
+         if 0<=(Y:=(c+a)//2)<10>(X:=(d+b)//2)>=0:g[Y][X]=v
      return g
