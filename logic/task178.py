@@ -1,5 +1,2 @@
-def f(g):
- h=p=()
- for r in g:h+=(r,)*(r!=p);p=r
- return h
-p=lambda g:f(zip(*f(zip(*g))))# dedup cols then rows
+def f(g):p=();return(p:=r for r in g if r!=p)
+p=lambda g:tuple(f(zip(*f(zip(*g)))))#d
