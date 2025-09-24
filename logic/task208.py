@@ -1,15 +1,19 @@
 # copy frame
 # duplicate rectangular frame to first empty spot
 def p(g):
- n=len(g)
- for c in range(1,10):
-  P=[(i,j)for i in range(n)for j in range(n)if g[i][j]==c]
-  if P:
-   r0=min(i for i,j in P);r1=max(i for i,j in P);c0=min(j for i,j in P);c1=max(j for i,j in P);h=r1-r0+1;w=c1-c0+1
-   if h>2<w and len(P)==2*(h+w)-4:
-    for i in range(n-h+1):
-     for j in range(n-w+1):
-      if(i,j)!=(r0,c0)and not any(g[i+x][j+y]for x in range(1,h-1)for y in range(1,w-1)):
-       for x in range(h):g[i+x][j]=g[i+x][j+w-1]=c
-       for y in range(w):g[i][j+y]=g[i+h-1][j+y]=c
-       return g
+ n=len(g);R=range
+ for c in R(1,10):
+  a=b=n;d=e=-1;m=0
+  for y in R(n):
+   for x in R(n):
+    if g[y][x]==c:
+     m+=1
+     a=min(a,y);d=max(d,y);b=min(b,x);e=max(e,x)
+  h=d-a+1;w=e-b+1
+  if h>2<w and m+4==2*(h+w):
+   for y in R(n-h+1):
+    for x in R(n-w+1):
+     if(y,x)!=(a,b)and not any(g[y+u][x+v]for u in R(1,h-1)for v in R(1,w-1)):
+      for u in R(h):g[y+u][x]=g[y+u][x+w-1]=c
+      for v in R(w):g[y][x+v]=g[y+h-1][x+v]=c
+      return g
