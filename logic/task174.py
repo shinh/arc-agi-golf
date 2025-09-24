@@ -1,7 +1,6 @@
 # Not bad, but not golfed yet.
 # 120
-def p(o):
-    for c in sum(o,[]):
-        g=o
-        for _ in g*8:g=[*zip(*g[(c in g[-1])-2::-1])]
-        if[g[::-1]for g in g]==g:return g
+def p(f):
+	for n in sum(f,[]):
+		for r in (i:=f)*8:i=[*zip(*i[(n in i[-1])-2::-1])]
+		if[i[::-1]for i in i]==i:return i
