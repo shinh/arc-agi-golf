@@ -1,2 +1,2 @@
-# fill middle between nonzero neighbors
-p=lambda g:[r[:1]+[a&c and 2or b for a,b,c in zip(r,r[1:],r[2:])]+r[-1:]for r in g]
+# fill between nonzero neighbors
+p=lambda g:[[[b,2][a*c>0]for a,b,c in zip([0]+r,r,r[1:]+[0])]for r in g]
