@@ -17,7 +17,15 @@
 # p=lambda g:g[:-1]+[[4*(len(g)-1==[*zip(*g)][x].count(0)) for x in range(len(g[0]))]]
 
 # 62
-p=lambda g:g[:-1]+[[4*(len(g)-1==x.count(0))for x in zip(*g)]]
+# p=lambda g:g[:-1]+[[4*(len(g)-1==x.count(0))for x in zip(*g)]]
+
+# 60
+# p=lambda g:g[:-1]+[[4*(x.count(max(x))==1)for x in zip(*g)]]
+# p=lambda g:g[:-1]+[[x.count(max(1,*x))%2*4for x in zip(*g)]]
+
+# 58
+p=lambda g:g[:-1]+[[sum(x)/max(1,*x)%2*4for x in zip(*g)]]
+
 
 #
 # def p(g):
