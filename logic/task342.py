@@ -1,5 +1,4 @@
-def p(g):
- # copy quads
+def p(g):#copy
  s=sum(g,[]);f=s.index;r,c=divmod(f(8),10);o=create(10,10)
- for v in {*s}-{0,8}:o[r+((i:=f(v))//10>r)][c+(i%10>c)]=v
+ for v in{*s}-{8}:o[r+(r<f(v)//10)][c+(c<f(v)%10)]|=v
  return o
