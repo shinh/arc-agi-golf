@@ -5,12 +5,11 @@ def p(g):# BFS region then copy scaled with rot90
     for y in R(h):
         for x in R(w):
             if g[y][x]==B:continue
-            q=[(y,x)]
-            c=[]
+            q=[(y,x)];c=[]
             for a,b in q:
                 for dy in-1,0,1:
                     for dx in-1,0,1:
-                        if dy|dx and-1<(ny:=a+dy)<h>-1<(nx:=b+dx)<w and g[ny][nx]!=B and(ny,nx)not in q:
+                        if dy|dx and-1<(ny:=a+dy)<h>-1<(nx:=b+dx)<w and g[ny][nx]-B and(ny,nx)not in q:
                             q+=[(ny,nx)]
                             c+=g[ny][nx],
             if len({*c})<2:continue
@@ -26,7 +25,7 @@ def p(g):# BFS region then copy scaled with rot90
 
             #print(f'box {y=} {x=} {ly=} {lx=} {bc=} {B=}')
 
-            o=[r*1 for r in g]
+            o=[r[:]for r in g]
             for t in R(4):
                 for s in R(1,5):
                     for ty in R(len(o)-s*ly+1):
