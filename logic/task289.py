@@ -1,1 +1,1 @@
-p=lambda g:(n:=len({*sum(g,[0])})-1,sum([[sum([[x]*n for x in r],[])]*n for r in g],[]))[1]#scale grid by number of colors
+p=lambda g:sum(([sum((n*[x]for x in r),[])]*n for n in{len({*sum(g,[])})-1}for r in g),[])#scale grid by number of colors
