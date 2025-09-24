@@ -6,7 +6,7 @@ def p(g):
  for r in g:
   if a(r):
    o+=[[0]*n]*(k==len(o))
-   for c,v in zip(C,r):o[k][c]+=v*(o[k][c]<1)
+   for c,v in zip(C,r):o[k][c]=o[k][c]or v
   else:k+=1
  return o
 
