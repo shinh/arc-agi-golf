@@ -1,8 +1,10 @@
-def p(g):# extend from first colored cell to right and down last column
+def p(g):# extend colors right/down
     c=0
     for r in g:
-        r[-1]=c
+        d=0
         for x,v in enumerate(r):
-            if v:r[x:]=[c:=v]*(len(r)-x);break
+            d=d or v
+            r[x]=d or r[x]
+        r[-1]=c=d or c
     return g
 
