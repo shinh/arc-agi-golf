@@ -72,7 +72,8 @@
 # 77
 # p=lambda g,c=0:[(q:=0)or[((c:=(c^v)*0**(q*v))>(q:=v))*3 for v in r]for r in g]
 
-p=lambda g,c=0:[[((c:=(c^v)*0**(q*v))>v)*3 for v,q in zip(r,[0]+r)]for r in g]
+# 72
+p=lambda g,c=0:[[((c:=c*2^v>q*v)>v)*3 for v,q in zip(r,[0]+r)]for r in g]
 
 # other (not working ideas):...
 
