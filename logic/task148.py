@@ -1,6 +1,6 @@
 def p(g):
     # link every 8 to the side wall then duplicate its row
-    w=len(g[0]);s=sum(g,[]);p=[divmod(i,w)for i,v in enumerate(s)if v&6==2];e=[divmod(i,w)for i,v in enumerate(s)if v&8]
+    w=len(g[0]);s=sum(g,[]);p=[divmod(i,w)for i,v in enumerate(s)if v==2];e=[divmod(i,w)for i,v in enumerate(s)if v&8]
     l,a=min((x,y)for y,x in p);r,b=max((x,-y)for y,x in p);o=-b-a
     if all((g[y][l]-2)*(x-l)for y,x in e):l=r;o=-o
     for y,x in e:
