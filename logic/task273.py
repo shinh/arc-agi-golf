@@ -3,6 +3,5 @@ def p(g):
     d={}
     for y,r in enumerate(g):
         if 4in r:
-            for R in g[d.get((a:=r.index(4),b:=9-r[::-1].index(4)),y)+1:y]:R[a+1:b]=[2]*~(a-b)
-            d[a,b]=y
+            for R in g[-~d.setdefault((a:=r.index(4),b:=r.index(4,-~a)),y):y]:R[-~a:b]=[2]*(~a+b)
     return g
