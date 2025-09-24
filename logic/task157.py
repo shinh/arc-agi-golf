@@ -9,7 +9,7 @@ def p(g):
                     for u,v in (i+1,j),(i-1,j),(i,j+1),(i,j-1):
                         if h>u>=0<w>v>=0 and g[u][v]>4:g[u][v]=0;q+=[(u,v)]
                 Y,X=zip(*q);a=min(Y);b=min(X);S+=[([(i-a,j-b)for i,j in q],max(Y)-a+1,max(X)-b+1)]
-    S.sort(key=lambda t:(-len(t[0]),-t[2]))
+    S.sort(key=lambda t:-len(t[0]))
     def F(i):
         nonlocal M,R
         if i==len(S):
