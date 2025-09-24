@@ -1,1 +1,1 @@
-def p(g):H,W=len(g),len(g[0]);return[[g[y][x]and g[-(y*2>=H)][-(x*2>=W)]for x in range(2,W-2)]for y in range(2,H-2)]# crop border color quadrants
+def p(g):R=range(h:=len(g)-4);return[[g[y+2][x+2]and g[(y<h/2)-1][(x<h/2)-1]for x in R]for y in R]# crop quads
