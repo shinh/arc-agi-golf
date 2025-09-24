@@ -6,6 +6,5 @@ def p(g):
             for x in range(8):
                 if(y>4or x>4)and all((v[i//4][i%4]>0)==(v[y+i//4][x+i%4]==c)for i in range(16)):
                     for i in range(9):
-                        if g[y+i//3][x+i%3]:
-                            g[y+i//3][x+i%3]=5
+                        g[y+i//3][x+i%3]=g[y+i//3][x+i%3]and 5
     return g
