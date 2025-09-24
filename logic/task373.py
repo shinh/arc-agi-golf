@@ -1,2 +1,2 @@
-# repeat pattern of first column
-p=lambda g:(c:=next(zip(*g)))and(c*3,c[::-1]*3)
+# copy col
+p=lambda g:(g:=next(zip(*g))*3,g[::-1])
