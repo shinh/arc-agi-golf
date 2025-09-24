@@ -1,2 +1,2 @@
-# dedupe+mirror
-p=lambda g,T=lambda a:[*zip(*{}.fromkeys(map(tuple,a)))],r=lambda a:a+a[-2::-1]:r([*zip(*r(T(T(g))))])
+#d+m
+p=lambda g,s=lambda a:[y for x,y in zip([0,*a],a)if x!=y]:s([*zip(*s(g))])
