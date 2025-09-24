@@ -2,4 +2,4 @@
 # Task242 53 bytes from theirs: 107 vs 54
 # Task351 37 bytes from theirs: 107 vs 70
 # Task400 37 bytes from theirs: 107 vs 70
-p=lambda g:[[rc for c,rc in zip(r,R[::-1])if c==3]for r,R in zip(g,g[::-1])if 3 in r]
+p=lambda g:[e for r in g*1if(e:=[d for c,d in zip(r,g.pop()[::-1])if c==3])]
