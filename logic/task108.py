@@ -1,2 +1,4 @@
-# max 2x2 -> 4x
-p=lambda g,t=(0,2,4,6,8):sum([[sum([[max(g[i][j:j+2]+g[i+1][j:j+2])]*4 for j in t],[])]*4 for i in t],[])
+# 64
+p=lambda g,r=range(20):[[g[y>>1|1][x>>1|1]for x in r]for y in r]
+# 68
+# p=lambda g,z=-1:g*z or p([[*zip(*g)][y>>1|1]for y in range(20)],z+1)
