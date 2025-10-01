@@ -7,5 +7,6 @@ ours=400.times.map{|i|
   File.size("submissions/task%03d.py"%(i+1))
 }
 z=1.upto(400).zip(best, ours)
-z.sort_by{|n,b,o|1.0*o/b}.each{|a|p a}
+# z.sort_by{|n,b,o|1.0*o/b}.each{|a|p a}
+z.sort_by{|n,b,o|b+(b==o ?1000:0)}.each{|a|p a}
 puts "[task#, best from spreadsheet, ours]"
