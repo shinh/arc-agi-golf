@@ -370,10 +370,10 @@ def remove_parens_with_ast(code):
         if code[idx] == "(":
             start_parens.append(idx)
         if code[idx] == ")":
-            start_idx = start_parens.pop()
-            new_code = code[:start_idx] + code[start_idx+1:idx] + code[idx+1:]
-            new_ast = None
-            try:
+            try: # this is a bit dubious as parens could be inside strings/etc.
+                new_ast = None
+                start_idx = start_parens.pop()
+                new_code = code[:start_idx] + code[start_idx+1:idx] + code[idx+1:]
                 new_ast = ast_parse(new_code)
             except:
                 pass
