@@ -60,7 +60,7 @@
 # 41 alt
 p=lambda g:[[3**(g<g[1:])<<(g==g[::-1])]]
 #                             g>g[2:])
-p=lambda g:[[3**(g<g[1:])<<(g>g[:2]*3)]]
+# p=lambda g:[[3**(g<g[1:])<<(g>g[:2]*3)]]
 
 
 # idea pop, and a,b,c=
