@@ -1,8 +1,8 @@
 def p(g):
- R=-1,0,1;L=[];s={x+y*1j for x,r in enumerate(g)for y,v in enumerate(r)if v}
+ s={x+y*1j for x,r in enumerate(g)for y,v in enumerate(r)if v};m=s|{0}
  while s:
   c={s.pop()}
-  while(t:={p+a+b*1j for p in c for a in R for b in R if a|b}&s):
+  while(t:={q for q in s for p in c if 0<abs(q-p)<2}):
    c|=t;s-=t
-  L+=c,
- return[[v and 1+(x+y*1j in min(L,key=len))for y,v in enumerate(r)]for x,r in enumerate(g)]
+  if len(c)<len(m):m=c
+ return[[v and 1+(x+y*1j in m)for y,v in enumerate(r)]for x,r in enumerate(g)]
