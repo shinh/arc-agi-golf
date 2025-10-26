@@ -1,5 +1,5 @@
 def p(a):
- w=len(a[0]);b=sum(a,[]);s=b.index(3);t=s%w*2+1;s=s//w*2+1
- for k,v in enumerate(b):
-  if v%3:i=k//w;j=k%w;a[s-i][j]=a[i][t-j]=a[s-i][t-j]=2
+ w=len(a[0]);s=sum(a,[]);t=s.index(3);r=t//w*2+1;t=t%w*2+1
+ for k,v in enumerate(s):
+  if v:p=a[r-k//w];p[k%w]=p[t-k%w]=a[k//w][t-k%w]=v
  return a
