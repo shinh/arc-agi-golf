@@ -4,15 +4,15 @@
 #
 # crop big blob then stretch the rare color as a cross
 def p(g):
-    h=len(g);w=len(g[0]);R=range
-    for sy in R(h):
-        for sx in R(w):
+    h=len(g);w=len(g[0])
+    for sy in range(h):
+        for sx in range(w):
             b=g[sy][sx]
-            for ey in R(h,sy+2,-1):
-                for ex in R(w,sx+2,-1):
-                    if{b}=={*g[sy][sx:ex],*g[ey-1][sx:ex],*[g[y][x]for y in R(sy,ey)for x in(sx,ex-1)]}:
-                        for c in(g[y][x]for y in R(sy,ey)for x in R(sx,ex)if g[y][x]-b):
-                            return [[c if any(g[y][k]-b for k in R(sx,ex))or any(g[k][x]-b for k in R(sy,ey))else g[y][x]for x in R(sx,ex)]for y in R(sy,ey)]
+            for ey in range(h,sy+2,-1):
+                for ex in range(w,sx+2,-1):
+                    if{b}=={*g[sy][sx:ex],*g[ey-1][sx:ex],*[g[y][x]for y in range(sy,ey)for x in(sx,ex-1)]}:
+                        c=next(g[y][x]for y in range(sy,ey)for x in range(sx,ex)if g[y][x]-b)
+                        return [[c if any(x-b for x in g[y][sx:ex])or any(r[x]-b for r in g[sy:ey])else g[y][x]for x in range(sx,ex)]for y in range(sy,ey)]
 
 # def p(g):
 #     h=len(g);w=len(g[0]);v=set();B=[];C=0
