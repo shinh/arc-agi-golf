@@ -5,9 +5,9 @@ def p(g):
    d+=y>p+1;p=y;a=r.index(5)+1
    for x in range(a,9-r[::-1].index(5)):
     if not s[i:=y*10+x]:L[d]+=i,
- m={sum(1<<x-min(f)for x in f):f for f in L}
+ m={tuple(x-min(f)for x in f):f for f in L}
  for k in {*s}-{0,5}:
-  q=[i for i in range(100)if s[i]==k];t=sum(1<<x-min(q)for x in q)
+  q=[i for i,v in enumerate(s)if v==k];t=tuple(x-min(q)for x in q)
   if t in m:
    for i in q:g[i//10][i%10]=0
    for i in m[t]:g[i//10][i%10]=k
