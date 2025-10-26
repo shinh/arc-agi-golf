@@ -1,1 +1,1 @@
-def p(g):a,b=[[x.index(1)+2for x in z if x.count(1)>4]for z in (zip(*g),g)];e=enumerate;return[[6*(i in a or j in b)*(v!=1)or v for j,v in e(r)]for i,r in e(g)]
+def p(g):a,b=[[x.index(1)+2for x in z if 1in x]for z in(zip(*g),g)];e=enumerate;return[[v-(i in a or j in b)*v//4 for j,v in e(r)]for i,r in e(g)]
