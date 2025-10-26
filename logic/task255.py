@@ -6,7 +6,7 @@ def p(g):
             for sx in range(-1,30):
                 for ex in range(sx+3,32):
                     if not any(g[0][max(sx,0):ex]):
-                        connected=0
+                        connected=t<2
                         for ey in range(30):
                             if any(fg==c for c in g[ey][max(sx,0):ex]):
                                 ey -= 1
@@ -15,7 +15,7 @@ def p(g):
                                 connected=1
                                 break
                             ey+=1
-                        if max_size<(ex-sx)*ey+ey and(t<2 or connected):
+                        if connected and max_size<(ex-sx)*ey+ey:
                             max_size=(ex-sx)*ey+ey
                             best_sx,best_ex,best_y,best_o=sx,ex,ey,o
             g=[list(r)for r in zip(*g[::-1])]
