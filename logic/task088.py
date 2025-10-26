@@ -1,6 +1,3 @@
-def p(g):
-    a=sum(g,[])
-    i=a.index(next(filter(abs,a)))
-    m=len(g[0])
-    e=len(a)+~a[::-1].index(a[i])
-    return [[r and a[i] for r in r[i%m+1:e%m]] for r in g[i//m+1:e//m]]
+def p(g):#crop interior
+ a=sum(g,[]);m=len(g[0]);c=a[i:=a.index(next(filter(abs,a)))];j=~a[::-1].index(c)
+ return[[x and c for x in r[i%m+1:j%m]]for r in g[i//m+1:j//m]]
