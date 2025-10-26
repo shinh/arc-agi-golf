@@ -8,10 +8,5 @@ def p(g):
         for y in r(-H,Y):
             for x in r(-W,X):
                 for q in s-{d}:
-                    k=n=0
-                    for i in r(H):
-                        for j in r(W):
-                            if Y>y+i>=0<=x+j<X:
-                                v=g[y+i][x+j];t=v==q;k+=(o[i//2][j//2]==d)^t;n+=t
-                    if k+n==n==c(q):return o
+                    if c(q)==sum(0<=y+i<Y and 0<=x+j<X and o[i//2][j//2]==d and g[y+i][x+j]==q for i in r(H) for j in r(W))==sum(0<=y+i<Y and 0<=x+j<X and o[i//2][j//2]==d for i in r(H) for j in r(W)):return o
     return g
