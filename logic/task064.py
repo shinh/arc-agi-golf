@@ -1,8 +1,8 @@
-def p(g):
- a=sum(g,[]);s=min(a,key=a.count);m=({*a}-{s,max(a,key=a.count)}).pop()
- for _ in'1111':
+def p(g):#fill
+ a=sum(g,[]);c=a.count;s=min(a,key=c);m=min({*a}-{s},key=c)
+ for _ in'0'*4:
   for r in g:
-   try:i=r.index(s);j=r.index(m);r[i+1:j]=[s]*(j-i-1)
+   try:i,j=r.index(s),r.index(m);r[i+1:j]=[s]*(j-i-1)
    except:0
-  g=[[*x]for x in zip(*g[::-1])]
+  g=[*map(list,zip(*g[::-1]))]
  return g
