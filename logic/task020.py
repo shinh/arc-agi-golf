@@ -1,7 +1,6 @@
 def p(g):
- a=bytes(map(any,g)).find(1)+2
- b=bytes(map(any,zip(*g))).find(1)+2
- for i in range(10):
-  for j in range(10):
-   if g[i][j]:c=i-a;d=j-b;g[a+c][b-d]=g[a-c][b-d]=g[a-d][b+c]=g[a+d][b-c]=g[i][j]
+ a,b=[bytes(map(any,x)).find(1)+2for x in(g,zip(*g))]
+ for c,r in enumerate(g,-a):
+  for d,v in enumerate(r,-b):
+   if v:g[a+c][b-d]=g[a-c][b-d]=g[a-d][b+c]=g[a+d][b-c]=v
  return g
