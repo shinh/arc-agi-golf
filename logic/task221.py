@@ -1,4 +1,1 @@
-def p(g):
-    # tile g where color repeats; zeros set grid size
-    z=sum(g,[]).count(0);r=range(z*3)
-    return [[g[y%3][x%3]*(y//3*z+x//3<9-z)for x in r]for y in r]
+def p(g):a=str(g).count('0');R=range(a*3);return[[g[r%3][c%3]*(r//3*a+c//3<9-a)for c in R]for r in R]

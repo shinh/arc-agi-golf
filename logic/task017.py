@@ -1,5 +1,3 @@
-def p(g,u=enumerate):# fill zeros from repeating block
-    j=i=1
-    while any(a*b*(a-b)for r in g for a,b in zip(r,r[j:])):j+=1
-    while any(a*b*(a-b)for r in zip(*g)for a,b in zip(r,r[i:])):i+=1
-    d={(y%i,x%j):v for y,r in u(g)for x,v in u(r)if v};return[[v or d[y%i,x%j]for x,v in u(r)]for y,r in u(g)]
+def p(g,a=1):
+ A=range(21);m={}
+ return all((v:=g[i][j])<1 or m.setdefault((i%a,j%a),v)==v for i in A for j in A)and[[g[i][j]or m[i%a,j%a]for j in A]for i in A]or p(g,a+1)

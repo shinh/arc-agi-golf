@@ -1,8 +1,6 @@
 def p(g):
- # fill each color's bounding box
- e=enumerate
- for k in{*sum(g,[])}-{0}:
-  y,x=zip(*((i,j)for i,r in e(g)for j,v in e(r)if v==k))
-  a=min(x);b=-~max(x)
-  for r in g[min(y):-~max(y)]:r[a:b]=[k]*(b-a)
+ w,b=len(g[0]),sum(g,[])
+ for v in{*b}-{0}:
+  i=b.index;a=i(v);d=i(v,a+1);y,l=sorted((a%w,d%w))
+  for r in g[a//w:d//w+1]:r[y:l+1]=[v]*(l-y+1)
  return g

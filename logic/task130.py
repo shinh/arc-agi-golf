@@ -1,1 +1,1 @@
-t=0,3,6;p=lambda g:[[max(b:=sum((r[x:x+3]for r in g[y:y+3]),[]),key=b.count)for x in t]for y in t]#3x3 mode
+p=lambda g:[[sorted(sum((r[j:j+3]for r in g[i:i+3]),[]))[4]for j in(0,3,6)]for i in(0,3,6)]

@@ -1,4 +1,4 @@
-def p(g,e=enumerate):
- s=sum(i*60+j for i,r in e(g)for j,v in e(r)if v)//2;y=s//60;x=s%30
- for i in-1,0,1:g[y+i][x]=g[y][x+i]=3
- return g#cross
+def p(a):
+ f=sum(a,[]);p=f.index(1);i,j=divmod(p+f.index(1,p+1)>>1,len(a[0]))
+ for k in-1,0,1:a[i][j+k]=a[i+k][j]=3
+ return a

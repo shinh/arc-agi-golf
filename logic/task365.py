@@ -1,5 +1,1 @@
-def p(j):
- #max 2s
- #scan corners to crop block
- e=enumerate
- return max((str(a:=[R[x:(r+[0]).index(0,x)]for R in j[y:(*[*zip(*j)][x],0).index(0,y)]]).count('2'),a)for y,r in e(j)for x,v in e(r)if v*(y*j[y-1][x]<1)*(x*r[x-1]<1))[1]
+p=lambda m,n=15:-n*max(m,key=lambda u:str(u).count('2'))or p([[*zip(*u)]for g in[m,[m]][n>14]if[s:=next((g.index(i)for i in g if sum(i)<1),31)]for u in[g[:s],g[s+1:]]if u],n-1)

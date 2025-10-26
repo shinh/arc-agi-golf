@@ -1,5 +1,2 @@
-def p(g):
- for a,b,c in zip(g,g[1:],g[2:]):#ring->cross
-  for x in range(8):
-   if b[x:x+3]==[1,0,1]<a[x:x+3]==c[x:x+3]:a[x:x+3]=c[x:x+3]=0,2,0;b[x:x+3]=2,2,2
- return g
+import re
+p=lambda g,t=1:-t*g or p(eval(re.sub(r'1, 1, 1(.{25})1, 0, 1(.{25})1, 1, 1',r'0,2,0\1 2,2,2\2 0,2,0',str(g))),t-1)

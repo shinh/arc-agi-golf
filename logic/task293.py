@@ -1,2 +1,1 @@
-# fill rows or columns from first cell
-p=lambda g,f=lambda r:[r[0]or v for v in r]:(c:=[*map(f,g)],[*zip(*map(f,zip(*g)))])[g==c]
+p=lambda e:[[x^(a*r[0]and a^r[0])for x,a in zip(r,e[0])]for r in e]

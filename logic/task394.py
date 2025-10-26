@@ -1,5 +1,2 @@
-#146
-def p(g,p=1):
-	for r in g:#rep
-		while all(r)*(r[:-p]!=r[p:]):p+=1
-	return[[max(r[x%p::p])for x,c in enumerate(r)if c<1]for r in g if 0in r]
+def p(g):
+ n=len(g);e=3-(n<7);y,x=divmod(sum(g,[]).index(0),n);b=g[y].count(0);return[g[y+a+e-(y+a>=n-e)*2*e][x:x+b]for a in range(b)]

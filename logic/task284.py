@@ -1,13 +1,11 @@
-# cross
 def p(g):
- a,b,c,d,e,f=sum(((i,j,v)for i,r in enumerate(g)for j,v in enumerate(r)if v),())
- t=(a-d)**2<(b-e)**2
- if t:g=[*map(list,zip(*g))];a,b,d,e=b,a,e,d
- if a>d:a,b,c,d,e,f=d,e,f,a,b,c
- x,m=b,a+d>>1
- for i in range(a,d+1):g[i][x]=[c,0,f][(i>=m)+(i>m+1)]
- g[m-1][x-2:x+3]=[c]*5;g[m+2][x-2:x+3]=[f]*5
- g[m][x-2:x+3:4]=[c]*2;g[m+1][x-2:x+3:4]=[f]*2
- if t:g=[*map(list,zip(*g))]
- return g
-
+ a=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v]
+ q=a[0][0]!=a[1][0]
+ if q:g=[*map(list,zip(*g))]
+ m=(a[1][1-q]-a[0][1-q]-1)>>1
+ for d in 1,-1:
+  y=a[d<0];x=y[q];j=y[1-q];w=j+d*m;c=g[x][j]
+  g[x][j:w:d]=[c]*m
+  for r in g[x-2:x+3]:r[w-d]=c
+  g[x-2][w]=g[x+2][w]=c
+ return (g,[*zip(*g)])[q]

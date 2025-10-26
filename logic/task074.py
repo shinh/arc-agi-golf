@@ -1,7 +1,7 @@
-R=range(30)
-def p(g):# mirror non9
- for k in R[:4]:
-  for i in R:
-   for j in R:
-    if (v:=g[i][j])^9 and (x:=(j,i^31,i^31,i)[k])<30>(y:=(i,j^31,j,j^31)[k]):g[x][y]=v
- return g
+r=range(30)
+m=min
+def p(a):
+ for _ in 0,1:
+  for i in r:
+   for j in r:x,y=max((h:=m(i,31-i)),(k:=m(j,31-j))),m(h,k);a[x][y]=a[i][j]=m(a[i][j],a[x][y])
+ return a

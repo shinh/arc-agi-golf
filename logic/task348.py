@@ -1,2 +1,1 @@
-# alt cols
-p=lambda g:(x:=g[0].index(7),h:=sum(r[x]>0for r in g),[[(abs(j-x)+y<h)*(7+(j+x&1))for j in range(len(r))]for y,r in enumerate(g)])[-1]
+def p(g):a=g[0].index(7);b=str(g).count('7');return[[(y<b-abs(x-a))*(7+(x+a&1))for x,_ in enumerate(g[0])]for y,_ in enumerate(g)]

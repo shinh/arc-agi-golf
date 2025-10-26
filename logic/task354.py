@@ -1,5 +1,4 @@
-def p(g):# flood top colors
- def f(i,j):
-  if 0<=i<10>j>=0>=g[i][j]^5:g[i][j]=c;f(i+1,j);f(i-1,j);f(i,j+1);f(i,j-1)
- [f(k//10+1,k%10)for k in range(90)if(c:=g[0][k%10])];return g
-
+def p(g):
+ for A in g[1:]:
+  while 5 in A:C=(*A,0).index(0,B:=A.index(5));A[B:C]=[max(g[0][B:C])]*(C-B)
+ return g

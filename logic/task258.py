@@ -1,2 +1,2 @@
-# fill between nonzero neighbors
-p=lambda g:[[[b,2][a*c>0]for a,b,c in zip([0]+r,r,r[1:]+[0])]for r in g]
+import re
+p=lambda j:eval(re.sub('1, 0(?=, 1)','1,2',str(j)))

@@ -1,2 +1,1 @@
-def p(E):#1 near 5
- r=range(len(E));return[[any(5 in R[j-(j>0):j+2]for R in E[i-(i>0):i+2])for j in r]for i in r]
+p=lambda g:[[g[i-i%3+1][j-j%3+1]>0 for j in range(9)]for i in range(9)]

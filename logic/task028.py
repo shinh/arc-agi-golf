@@ -1,1 +1,1 @@
-def p(g,R=range(10)):f=sum(g,[]);return[[((c%9<1)|645>>r&1)*max(f[r//5*50:][:50])for c in R]for r in R]# half max cross
+p=lambda g,R=range(10):[[((645>>r|513>>c)&1)*max(g[2|r//5*5])for c in R]for r in R]

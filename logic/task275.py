@@ -1,5 +1,1 @@
-def p(g):
- # combine quadrants
- n=min(len(g),len(g[0]));p,g=[r[:n]for r in g[:n]],[r[-n:]for r in g[-n:]]
- if'8'in str(p):p,g=g,p
- return[[x*y//8for x in a for y in b]for a in p for b in g]
+def p(j):A=min(len(j),len(j[0]));B=any(8in r[:A]for r in j[:A])*A;R=range(A*A);return[[j[D//A-B][C//A-B]*j[D%A-A+B][C%A-A+B]//8for C in R]for D in R]

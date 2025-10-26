@@ -1,6 +1,4 @@
-def p(g):
-# fill bottom row with 4s and draw diagonal of 2s
- i=1
- while i<len(g):g[-1][i]=4;g[~i][i]=2;i+=1
- return g
-
+def p(j):
+ A=len(j)
+ while A:=A-1: j[-1][A]=4; j[~A][A]=2
+ return j

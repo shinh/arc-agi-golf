@@ -1,8 +1,1 @@
-def p(g):
- # link 1s in both axes
- for _ in 0,0:
-  for r in g:
-   for a,b in zip(q:=[i for i,v in enumerate(r)if v&7],q[1:]):r[a+1:b]=[8]*(~a+b)
-  g=[*map(list,zip(*g))]
- return g
-
+def p(g):z=(*zip(*g),);a=any;e=enumerate;return[[v or 8*(a(r[:j])&a(r[j+1:])|a(z[j][:i])&a(z[j][i+1:]))for j,v in e(r)]for i,r in e(g)]

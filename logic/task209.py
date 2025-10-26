@@ -1,12 +1,13 @@
 def p(g):
-    # copy scaled pattern inside the frame defined by 4s
-    R=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==4]
-    if len(R)^4:return g
-    (a,c),(b,d)=min(R),max(R)
-    X=[0]*10;I=[(i,j,v)for i in range(a+1,b)for j in range(c+1,d)if(v:=g[i][j])if X.__setitem__(v,X[v]+1)or 1]
-    Y=[0]*10;O=[(i,j,v)for i,r in enumerate(g)for j,v in enumerate(r)if i<a or i>b or j<c or j>d if v if Y.__setitem__(v,Y[v]+1)or 1]
-    r=max(x//y for x,y in zip(X,Y)if x*y)
-    x,y=zip(*((i,j)for i,j,v in I if X[v]//Y[v]==r));e,f,k,l=min(x),max(x),min(y),max(y);x,y=zip(*((i,j)for i,j,v in O if X[v]//Y[v]==r));m,n,o,p=min(x),max(x),min(y),max(y)
-    H=-~(l-k)//-~(p-o);V=-~(f-e)//-~(n-m)
-    for i,j,v in[(V*(i-m)+x+e,H*(j-o)+y+k,v)for i,j,v in O for x in range(V)for y in range(H)]:g[i][j]=v
-    return[r[c:d+1]for r in g[a:b+1]]
+ a=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==4]
+ y,x=zip(*a);A,B=min(y),max(y);C,D=min(x),max(x);b=[r[C:D+1]for r in g[A:B+1]]
+ y,x=zip(*[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if(i<A or i>B or j<C or j>D)and v&-5]);e,f=min(y),max(y);h,k=min(x),max(x)
+ for z in 2,3,4:
+  H=(f-e+1)*z;W=(k-h+1)*z
+  for u in range(len(b)-H+1):
+   for v in range(len(b[0])-W+1):
+    if all(0<=i-u<H and 0<=j-v<W and t==g[e+(i-u)//z][h+(j-v)//z]for i,r in enumerate(b)for j,t in enumerate(r)if t&-5):
+     for i in range(H):
+      for j in range(W):b[u+i][v+j]=b[u+i][v+j]or g[e+i//z][h+j//z]
+     return b
+ return b

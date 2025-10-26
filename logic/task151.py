@@ -1,4 +1,4 @@
-def p(g):# draw ring around the all-1 row/col
- x,y=[[*map(all,h)].index(1)for h in(g,zip(*g))]
- for i in-1,1:g[x+i][y-1:y+2]=4,4,4;g[x][y+i]=4
- return g
+def p(a):
+ b=a.index(max(a));c=a[0].index(max(a[0]))
+ for i in-1,1:a[b+i][c-1:c+2]=4,4,4;a[b][c+i]=4
+ return a

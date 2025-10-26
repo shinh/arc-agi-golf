@@ -1,11 +1,5 @@
-def p(j,h=enumerate):
- A=c=0
- for E,k in h(j):
-  for W,l in h(k):A+=E*(l==3);c+=W*(l==3)
- A//=2;c//=2
- for E,k in h(j):
-  for W,l in h(k):
-   if l==2:
-    for J,a in(E,W),(A-E,W),(E,c-W),(A-E,c-W):j[J][a]=2
- return j
-
+def p(a):
+ w=len(a[0]);b=sum(a,[]);s=b.index(3);t=s%w*2+1;s=s//w*2+1
+ for k,v in enumerate(b):
+  if v%3:i=k//w;j=k%w;a[s-i][j]=a[i][t-j]=a[s-i][t-j]=2
+ return a

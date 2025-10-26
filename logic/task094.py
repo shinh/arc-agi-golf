@@ -1,10 +1,1 @@
-L=len;R=range
-# cross 16 ones with 6
-
-def p(g):
- for r in R(L(g)-4):
-  for c in R(L(g[0])-4):
-   if sum(g[r+i][c+j]==1for i in R(5)for j in R(5))==16:
-    for q in g:q[c+2]=q[c+2]==1 or 6
-    g[r+2]=[q==1 or 6 for q in g[r+2]]
- return g
+def p(g):a=[c.index(1)+2for c in zip(*g)if c.count(1)>4];b=[r.index(1)+2for r in g if r.count(1)>4];e=enumerate;return[[v-1and(i in a or j in b)and 6or v for j,v in e(r)]for i,r in e(g)]

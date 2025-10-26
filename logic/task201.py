@@ -1,23 +1,9 @@
-# crop the frame of 4s and move the other shape inside
 def p(g):
-    sx=sy=sx2=sy2=99;ex=ey=ex2=ey2=-1
-    for y in range(13):
-        for x in range(13):
-            if g[y][x]==4:
-                if x<sx:sx=x
-                if y<sy:sy=y
-                if ex<x:ex=x
-                if ey<y:ey=y
-    o=[r[sx:ex+1]for r in g[sy:ey+1]]
-    for y in range(13):
-        for x in range(13):
-            if g[y][x]and(x<sx or y<sy or ex<x or ey<y):
-                if x<sx2:sx2=x
-                if y<sy2:sy2=y
-                if ex2<x:ex2=x
-                if ey2<y:ey2=y
-    no_mirror=any(g[sy2+y][sx2]==o[y+1][0]for y in range(ey2-sy2+1))
-    for y in range(ey2-sy2+1):
-        for x in range(ex2-sx2+1):
-            o[y+1][[-x-2,x+1][no_mirror]]=g[y+sy2][x+sx2]
-    return o
+ A=[i for i,r in enumerate(g)if 4 in r];t=A[0];v=A[-1]
+ B=[i for i,c in enumerate(zip(*g))if 4 in c];s=B[0];u=B[-1]
+ o=[r[s:u+1]for r in g[t:v+1]]
+ for r in g[t:v+1]:r[s:u+1]=[0]*(u-s+1)
+ h=[*zip(*filter(any,zip(*filter(any,g))))]
+ m=any(a[0]==b[0]for a,b in zip(h,o[1:]))
+ for i,r in enumerate(h):o[i+1][1:-1]=(r,r[::-1])[not m]
+ return o

@@ -1,4 +1,3 @@
-def p(g):
-    # tile period
-    s=range(29);r=range(1,30)
-    return next([[d.get((y%q,x%p),0)for x in s]for y in s]for q in r for p in r if(d:={})or all(d.setdefault((y%q,x%p),v)==v for y in s for x in s if(v:=g[y][x])))
+import re
+# It seemed solvable with `p=lambda g:[eval(f'[{re.findall(re.sub("0","[^0]",str(r)[1:-1]), str(g))[0]}]') for r in g]`, but failed in 1 case.
+p=lambda g:[[max(l) for l in zip(*[eval(f'[{m}]') for m in re.findall(re.sub("(\d)",r"[0\1]", re.sub("0",".",str(r)[1:-1])), str(g))])] for r in g]

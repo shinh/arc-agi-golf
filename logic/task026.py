@@ -1,2 +1,1 @@
-# 0/9 mask
-p=lambda g:[[~(a|b)&8for a,b in zip(r,r[4:])]for r in g]
+p=lambda j:[[~(A.pop(0)|B)&8for B in A[4:]]for A in j]

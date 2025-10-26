@@ -1,3 +1,4 @@
-# fill rows/cols of zeros with 3
-def p(g):t=(*zip(*g),);return[[3if 0<i<len(g)-1>j>0 and any(r[1:-1])*any(t[j][1:-1])<1 else v for j,v in enumerate(r)]for i,r in enumerate(g)]
-
+def p(g):
+ t=g[1:-1];b=[*map(sum,zip(*t))][1:-1]
+ for r in t:a=r[1:-1];r[1:-1]=(x or(sum(a)<1or y<1)*3for x,y in zip(a,b))
+ return g

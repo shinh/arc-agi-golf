@@ -1,5 +1,1 @@
-def p(g):# expand patterns horizontally then vertically
- for _ in 0,1:
-  r=next(r for r in g if(S:=[i for i,v in enumerate(r)if v])[1:])
-  R=r[(a:=S[0]):S[-1]+1];r[:]=(R*32)[-a%len(R):][:len(r)];g=[*map(list,zip(*g))]
- return g
+p=lambda g,n=4:n and p([(b*9)[-a.index(b[0])%len(b):][:len(a)]if(b:=[*filter(abs,a)])[2:]else a for a in zip(*g[::-1])],n-1)or g

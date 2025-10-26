@@ -1,11 +1,4 @@
-def p(g):
-    # fill rectangles of zeros with 2
-    o=[r[:]for r in g]
-    for y in range(17):
-        for x in range(17):
-            if sum(g[y][x:x+2]+g[y+1][x:x+2]) or y and sum(g[y-1][x:x+2])<1 or x and g[y][x-1]+g[y+1][x-1]<1:continue
-            X=x+2;Y=y
-            while X<18>g[y][X]+g[y+1][X]<1:X+=1
-            while Y<18>sum(g[Y][x:X])<1:o[Y][x:X]=[2]*(X-x);Y+=1
-    return o
-
+def p(o):
+ for i,j in[(i,j)for i in range(17)for j in range(17)if not(o[i][j]|o[i][j+1]|o[i+1][j]|o[i+1][j+1])and(not j or o[i][j-1]|o[i+1][j-1])and(j>15 or o[i][j+2]|o[i+1][j+2])]:o[i][j:j+2]=o[i+1][j:j+2]=2,2
+ for i,j in[(i,j)for i in range(17)for j in range(17)if not(o[i][j]|o[i][j+1]|o[i+1][j]|o[i+1][j+1])and(not i or o[i-1][j]|o[i-1][j+1])and(i>15 or o[i+2][j]|o[i+2][j+1])]:o[i][j:j+2]=o[i+1][j:j+2]=2,2
+ return o

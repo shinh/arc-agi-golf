@@ -1,6 +1,1 @@
-def p(g):
- # fill zeros between outer 2s
- for r in g[1:9]:
-  if 2 in r:i=r.index(2)+1;j=~r[::-1].index(2);r[i:j]=[v or 9 for v in r[i:j]]
- return g
-
+p=lambda g:[r.__setitem__(i,9)for r in g[1:-1]for i in range(10)if r[i]<1*(2in r[:i])*(2in r[i+1:])]and g

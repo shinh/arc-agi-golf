@@ -1,3 +1,5 @@
-import re
-# slide the 2-object until it touches the 8-object
-p=lambda g,n=39,s=re.search:-n*g or p([*zip(*[[[c//8*8or q&2,c][not s("2, 0[^[(]*8",t:=str(g))or"2, 8"in t]for c,q in zip(R,[0,*R])]for R in g][::-1])],n-1)
+def p(g):
+ for _ in'1111':
+  x=bytes(map(max,g));a=x.find(2);b=x.rfind(2)+1;c=x.find(8)
+  g=[*zip(*((g,g[:a]+g[b:c]+g[a:b]+g[c:])[c>b]))][::-1]
+ return g

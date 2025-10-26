@@ -1,12 +1,11 @@
 def p(g):
-    # mirror shape across line of 2s
-    o=[[3]*10 for _ in g]
-    Y=X=()
-    for y,r in enumerate(g):
-        for x,v in enumerate(r):
-            if v==2:t=x;z=y
-            elif v:Y+=y,;X+=x,;c=v
-    v=z in Y
-    a=(t+(max,min)[t<min(X)](X),z+(max,min)[z<min(Y)](Y))[v^1]
-    for y,x in zip(Y,X):o[y][x]=o[[y,a-y][v^1]][[x,a-x][v]]=c
-    return o
+ d=sum(r.count(2)for r in g)
+ for _ in[0]*4:
+  g=[*zip(*g)][::-1]
+  for r in range(10):
+   t=g[r]
+   if sum(t)==t.count(2)*2==d*2:
+    for y in range(10-r):
+     t=g[r+y];i=r-y+1
+     if sum(t)>t.count(2)*2 and 0<=i<10:g[i]=t
+ return [[c or 3 for c in r]for r in g]

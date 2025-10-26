@@ -1,17 +1,7 @@
 def p(g):
- # complement bloom parity ring
- h=len(g);w=len(g[0]);o=[[0]*w for _ in g];a=h;b=0;c=w;d=0;u=sum({*sum(g,[])})
- for y,r in enumerate(g):
-  for x,k in enumerate(r):
-   if k:
-    a=min(a,y);b=max(b,y);c=min(c,x);d=max(d,x)
-    for i in y-1,y,y+1:
-     for j in x-1,x,x+1:
-      if h>i>-1<j<w:o[i][j]=u-k
-    o[y][x]=k
- for i in a,b:
-  for j in range(c,d+1):o[i][j]=o[i][j] or~min(j-c,d-j)&1 and 5
- for j in c,d:
-  for i in range(a,b+1):o[i][j]=o[i][j] or~min(i-a,b-i)&1 and 5
- return o
-
+ p=[(i,j,x)for i,r in enumerate(g)for j,x in enumerate(r)if x];a,c,_=min(p);b,d,_=max(p);s=g[a][c]+g[a][d]
+ for i,j,x in p:
+  t=s-x;g[i-1][j-1:j+2]=g[i][j-1:j+2]=g[i+1][j-1:j+2]=[t]*3;g[i][j]=x
+ for L in range(2,(d-c)//2+1,2):g[a][c+L]=g[a][d-L]=g[b][c+L]=g[b][d-L]=5
+ for L in range(2,(b-a)//2+1,2):g[a+L][c]=g[b-L][c]=g[a+L][d]=g[b-L][d]=5
+ return g

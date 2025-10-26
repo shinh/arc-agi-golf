@@ -1,1 +1,1 @@
-e=enumerate;p=lambda g:[[c*(sum(R[x-(x>0):x+2].count(c)for R in g[y-(y>0):y+2])>1)for x,c in e(r)]for y,r in e(g)]#0 singles
+e=enumerate;p=lambda g:[[c*(sum(sum(R[x-(x>0):x+2])for R in g[y-(y>0):y+2])>c)for x,c in e(r)]for y,r in e(g)]

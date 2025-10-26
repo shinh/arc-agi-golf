@@ -1,4 +1,1 @@
-def p(g):
-    # drop third-row 1s to bottom
-    g[-1],g[2]=[b>0 or a for a,b in zip(g[-1],g[2])],[0]*5
-    return g
+p=lambda g:g[:1]*3+[g[3],[5^b*4for b in g[2]]]

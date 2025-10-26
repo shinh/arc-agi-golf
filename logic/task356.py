@@ -1,7 +1,3 @@
-def p(g):
-    #l
-    for u in zip(*g),g:
-        g=[*map(list,zip(*g))]
-        for r,p in zip(g,u):
-            if 8 in p:a,b=p.index(8),len(p)-p[::-1].index(8);r[a:b]=[8]*(b-a)
-    return g
+R=range(10)
+a=any
+p=lambda g:[[8*(a(g[A][:B+1])&a(g[A][B:])|a((C:=[*zip(*g)][B])[:A])&a(C[A:]))for B in R]for A in R]

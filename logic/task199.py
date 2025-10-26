@@ -1,6 +1,4 @@
-def p(g,A=enumerate):#bar
- for y,r in A(g):
-  for x,v in A(r):
-   if~4&v:
-    for R in g[:y+1]:R[x&1::2]=[4]*len(R[x&1::2])
-    g[y+1][x]=v;return g
+def p(g):
+ s=sum(g,[]);v=max(s);i,j=divmod(s.index(v),len(g));g[i+1][j]=v
+ for r in g[:i+1]:r[j&1::2]=[4]*len(r[j&1::2])
+ return g

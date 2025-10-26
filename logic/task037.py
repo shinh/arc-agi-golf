@@ -1,9 +1,5 @@
-def p(g):# connect matching digits with straight lines
-	d={}
-	for y,r in enumerate(g):
-		for x,v in enumerate(r):
-			if v in d:
-				Y,X=d[v]
-				while X-x|Y-y:g[Y][X]=v;Y+=Y<y;Y-=Y>y;X+=X<x;X-=X>x
-			if v:d[v]=y,x
-	return g
+def p(g):
+ t=sum(g,[])
+ for v in {*t}-{0}:
+  a=t.index(v);d=t.index(v,a+1)-a;s=9+(d%9>0)*2;t[a:a+d+s:s]=[v]*-~(d//s)
+ return[*zip(*[iter(t)]*10)]

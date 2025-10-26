@@ -1,4 +1,3 @@
-def p(g):
- #diag mirror/mode
- a=sum(g,[]);r=range(21);return[[(a[0],g[i][j]or g[j][i]or max({*a}-{0},key=a.count))[i!=j]for j in r]for i in r]
-
+def p(g,a=441):
+ while a:a-=1;b=a//21;c=a%21;g[b][c]=g[b][c]or g[c][b]or g[b+1][c+1]
+ return g

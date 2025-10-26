@@ -1,5 +1,3 @@
-def p(g):# fill diagonals around 2
- i=sum(g,[]).index(2);g[i//5][i%5]=0
- for v in 3,8,6,7:
-  if 3>(X:=i//5+(v>6)*2-1)>-1<(Y:=i%5+(v&4)//2-1)<5:g[X][Y]=v
- return g
+def p(j):
+ r,c=divmod(sum(j,[]).index(2),5)
+ return[[(i%2^r%2)*(abs(k-c)==1)*[[3,8],[6,7]][k>c][i>r]for k in range(5)]for i in range(3)]

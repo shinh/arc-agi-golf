@@ -1,6 +1,1 @@
-def p(g):
-    # >=2 big neighbors ->3
-    for n in range(289):
-        if (r:=g[y:=n//17])[x:=n%17]==1<sum(r[x]>2 for r in g[y:y+2]+g[y-1:y])+(r[x-1:x]>[2])+(r[x+1:x+2]>[2]):
-            r[x]=3;return p(g)
-    return g
+p=lambda g:(C:=bytes(8in c for c in zip(*g)))and[[x+2*(x&1)*(8in r)*(C.find(1)<=i<=C.rfind(1))for i,x in enumerate(r)]for r in g]

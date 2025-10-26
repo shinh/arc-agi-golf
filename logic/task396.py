@@ -1,5 +1,5 @@
-# crop largest border of the most common color and recolor to rarest
-def p(g):
- s=[v for v in sum(g,[])if v];a=max(s,key=s.count);b=min(s,key=s.count);H=len(g);W=len(g[0])
- _,y,x,h,w=max((h*w,y,x,h,w)for y in range(H)for x in range(W)for h in range(2,-~H-y)for w in range(2,-~W-x)if g[y][x:x+w]==[a]*w==g[y+h-1][x:x+w]and all(r[x]==a==r[x+w-1]for r in g[y:y+h]))
- return[[[b,v][v!=a]for v in r[x:x+w]]for r in g[y:y+h]]
+def p(a):
+ h,w=len(a),len(a[0])
+ A=max((((D:=next((j for j in range(y,h)if a[j][x]!=f),h))-y)*((E:=next((i for i in range(x,w)if a[y][i]!=f),w))-x),f,y,x,D,E)for y in range(h)for x in range(w)if(f:=a[y][x]))
+ g=sum({*sum(a,[])})-A[1]
+ return[[[g,v][v!=A[1]]for v in r[A[3]:A[5]]]for r in a[A[2]:A[4]]]

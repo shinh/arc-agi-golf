@@ -1,4 +1,6 @@
 def p(g):
- # extend 8 pairs sideways
- [(r,s)[r[n]>0].__setitem__(n,1)for r,s in zip(g,g[1:])for x in range(7)if r[x]&s[x]for n in(x-1,x+1)if~n%8 and r[n]^s[n]]
+ for c in range(36):
+  i=c//6;j=c%6
+  s=g[i][j:j+2]+g[i+1][j:j+2]
+  if sum(s)>23:k=s.index(0);g[i+k//2][j+k%2]=1
  return g

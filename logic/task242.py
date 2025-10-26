@@ -1,6 +1,1 @@
-# Note task242 and task351 are very similar but best scores are quite different.
-# Task242 53 bytes from theirs: 107 vs 54
-# Task351 37 bytes from theirs: 107 vs 70
-# Task400 37 bytes from theirs: 107 vs 70
-def p(g):
-    return[[rc for c,rc in zip(r,rr[::-1])if c<1]for r,rr in zip(g,g[::-1])if 0 in r]
+p=lambda g:[r[::-1][r.index(0):][:r.count(0)]for r in g if 0 in r]

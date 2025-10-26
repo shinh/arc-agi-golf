@@ -1,2 +1,1 @@
-def f(g):p=();return(p:=r for r in g if r!=p)
-p=lambda g:tuple(f(zip(*f(zip(*g)))))#d
+p=lambda g,f=lambda d,x=0:[*zip(*[x:=b for b in d if x!=b])]:f(f(g))

@@ -1,2 +1,1 @@
-# copy col
-p=lambda g:(g:=next(zip(*g))*3,g[::-1])
+p=lambda g:(x:=min(zip(*g))*3,x[::-1])

@@ -1,5 +1,6 @@
-def p(g,k=1):
-    # crop inside markers
-    y,x=[[i for i,r in enumerate(t)if k in r]for t in(g,zip(*g))]
-    return p(g,k+1)if len(y)!=2 else[[k*(v>0)for v in r[x[0]+1:x[1]]]for r in g[y[0]+1:y[1]]]
-
+def p(g):
+    a=sum(g,[])
+    i=a.index(next(filter(abs,a)))
+    m=len(g[0])
+    e=len(a)+~a[::-1].index(a[i])
+    return [[r and a[i] for r in r[i%m+1:e%m]] for r in g[i//m+1:e//m]]

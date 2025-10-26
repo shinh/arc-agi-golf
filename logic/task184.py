@@ -1,12 +1,1 @@
-def p(g):
- # merge blocks separated by empty rows/cols, keep first colors
- a=sum;C=[];k=n=0
- for c in zip(*g):C+=k,;k+=a(c)<1;a(c)and(n:=k+1)
- o=[];k=0
- for r in g:
-  if a(r):
-   o+=[[0]*n]*(k==len(o))
-   for c,v in zip(C,r):o[k][c]=o[k][c]or v
-  else:k+=1
- return o
-
+p=lambda g:(R:=[-1,*[i for i,r in enumerate(g)if max(r)<1],len(g)],C:=[-1,*[i for i,c in enumerate(zip(*g))if max(c)<1],len(g[0])],[[max(max(r[x+1:y])for r in g[a+1:b])for x,y in zip(C,C[1:])]for a,b in zip(R,R[1:])])[-1]

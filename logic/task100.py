@@ -1,4 +1,1 @@
-#bbox rows*cols
-def p(g):
- return[[max({*sum(g,[])}-{0},key=lambda c:sum(c in r for r in g)*sum(c in col for col in zip(*g)))]*2]*2
-
+p=lambda g:[[max(range(1,10),key=lambda v:sum(v in r for r in g)*max(r.count(v)for r in g))]*2]*2

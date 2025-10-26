@@ -1,19 +1,14 @@
-# copy frame
-# duplicate rectangular frame to first empty spot
 def p(g):
- n=len(g);R=range
- for c in R(1,10):
-  a=b=n;d=e=-1;m=0
-  for y in R(n):
-   for x in R(n):
-    if g[y][x]==c:
-     m+=1
-     a=min(a,y);d=max(d,y);b=min(b,x);e=max(e,x)
-  h=d-a+1;w=e-b+1
-  if h>2<w and m+4==2*(h+w):
-   for y in R(n-h+1):
-    for x in R(n-w+1):
-     if(y,x)!=(a,b)and not any(g[y+u][x+v]for u in R(1,h-1)for v in R(1,w-1)):
-      for u in R(h):g[y+u][x]=g[y+u][x+w-1]=c
-      for v in R(w):g[y][x+v]=g[y+h-1][x+v]=c
-      return g
+ n=21
+ f=sum(g,[])
+ k=min({*f}-{0},key=f.count)
+ x=f.index(k)
+ y=440-f[::-1].index(k)
+ h=y//n-x//n-1
+ w=y%n-x%n-1
+ for i in range(n-h+1):
+  for j in range(n-w+1):
+   if sum(sum(r[j:j+w])for r in g[i:i+h])<1:
+    for r in range(i-1,i+h+1):g[r][j-1]=g[r][j+w]=k
+    for c in range(j-1,j+w+1):g[i-1][c]=g[i+h][c]=k
+ return g

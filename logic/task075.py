@@ -1,6 +1,1 @@
-def p(g):
- # copy TL 3x3 to 1s
- for y,r in enumerate(g):
-  for x,v in enumerate(r):
-   for dy in(0,1,2)*(v==1):g[y+dy-1][x-1:x+2]=g[dy][:3]
- return g
+p=lambda g:[[(v,g[i%3][(j-1)%3])[g[i//3*3+1][(j+2)//3*3-1]==1]for j,v in enumerate(r)]for i,r in enumerate(g)]

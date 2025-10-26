@@ -1,9 +1,2 @@
-#201
-def p(g):#extend diag from L corners per rot
-    r=range(9)
-    for o in[0]*4:
-        for y in r:
-            for x in r:
-                for p in((k:=g[y][x])*g[y+1][x]*g[y][x+1]and r[2:10-max(x,y)]or()):g[y+p][x+p]=k
-        g[:]=map(list,zip(*g[::-1]))
-    return g
+import re
+p = lambda g, t=3: (-t * g or p(eval(re.sub(r"0(?=(.{25}(.{29}){0,9})[1-9].{31}[1-9].{2}[1-9])", str(max(max(g))), str([*zip(*g[::-1])]))), t - 1))

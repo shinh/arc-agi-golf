@@ -1,23 +1,14 @@
-def p(g):# flood fill & match
-    g=sum(g,[]);z=[];o={};c=[0]*10
-    for i,t in enumerate(g):
-        if t<10:
-            s=[i];r=[i];g[i]+=10;e=1>t
-            while s:
-                i=s.pop()
-                for n in-11,-10,-9,-1,1,9,10,11:
-                    if 0<=(j:=i+n)<100 and-1<=j%10-i%10<=1:
-                        v=g[j]
-                        if v==t:s+=j,;g[j]+=10;r+=j,
-                        elif v%5:e=0
-                    else:e=0
-            k=tuple(j-r[0]for j in r)
-            if t%5:o[k]=o.get(k,[])+[(r,t)];c[t]+=1
-            elif e:z+=(r,k),
-    for r,k in z:
-        for q,t in o.get(k,()):
-            if c[t]==1:
-                for j in q+r:g[j]=t*(j in r)
-                break
-    return[[x%10 for x in g[i:i+10]]for i in range(0,100,10)]
-
+def p(g):
+ s=sum(g,[]);L=[(),()];p=-9;d=-1
+ for y,r in enumerate(g):
+  if 5 in r:
+   d+=y>p+1;p=y;a=r.index(5)+1
+   for x in range(a,9-r[::-1].index(5)):
+    if not s[i:=y*10+x]:L[d]+=i,
+ m={sum(1<<x-min(f)for x in f):f for f in L}
+ for k in {*s}-{0,5}:
+  q=[i for i in range(100)if s[i]==k];t=sum(1<<x-min(q)for x in q)
+  if t in m:
+   for i in q:g[i//10][i%10]=0
+   for i in m[t]:g[i//10][i%10]=k
+ return g

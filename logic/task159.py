@@ -1,10 +1,3 @@
-# rotate until target row then scale inside 2-frame
-
+B=enumerate
 def p(g):
-    o=g
-    for _ in[0]*120:o=[*zip(*o[-2+(2 in o[-1])::-1])]
-    c,*_=({*sum(g,[])}-{0,2})
-    for _ in[0]*120:g=[*zip(*g[-2+(c in g[-1])::-1])]
-    n=len(o)//len(g);w=len(g[0])*n+2
-    return [[2]*w]+[[2]+[c for c in r for _ in[0]*n]+[2]for r in g for _ in[0]*n]+[[2]*w]
-
+ A=sum(2in a for a in g);D,E=map(min,zip(*((a,d)for a,c in B(g)for d,e in B(c)if e&-3)));R=range(A);return[[(2,g[D+(3*i+1)//A][E+(3*j+1)//A])[(i>0<j)*(i<A-1>j)]for j in R]for i in R]

@@ -1,18 +1,16 @@
 def p(g):
-    # drop 1s below 9s and surround with 3
-    o=[r[:]for r in g];h=len(g);w=len(g[0]);R=range
-    for i,r in enumerate(g):
-        for j,v in enumerate(r):
-            if v>8:
-                q=[(i,j)];r[j]=1;a=b=i;c=d=j
-                for x,y in q:
-                    a,b,c,d=min(a,x),max(b,x),min(c,y),max(d,y)
-                    for t in o[x+1:]:t[y]+=t[y]<1
-                    for u in R(x-1,x+2):
-                        for v in R(y-1,y+2):
-                            if h>u>=0<=v<w and g[u][v]>8:g[u][v]=1;q+=(u,v),
-                n=d-c+1>>1
-                for u in R(a-n,b+n+1):
-                    for v in R(c-n,d+n+1):
-                        if h>u>=0<=v<w and g[u][v]<1:o[u][v]=3
-    return o
+ for i in range(len(g)):
+  for j in range(len(g[0])):
+   if g[i][j]==9 and (i<1 or g[i-1][j]-9)and(j<1 or g[i][j-1]-9):
+    w=1
+    while j+w<len(g[0]) and g[i][j+w]==9:w+=1
+    h=1
+    while i+h<len(g) and g[i+h][j]==9:h+=1
+    r=w//2
+    for y in range(i+h,len(g)):
+     for x in range(j,j+w):g[y][x]=max(g[y][x],1)
+    for y in range(i-r,i+h+r):
+     if 0<=y<len(g):
+      for x in range(j-r,j+w+r):
+       if 0<=x<len(g[0]):g[y][x]=max(g[y][x],3)
+ return g

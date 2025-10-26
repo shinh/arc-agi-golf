@@ -1,5 +1,2 @@
-def p(g):
-    # expand rare color rectangle outward
-    w=len(g[0]);c=min(a:=sum(g,[]),key=a.count)
-    p=a.index(c);q=a.index(c,-~p);Y=q//w
-    return[[[r[j],c][max(Y-i,i-Y,abs(j-q%w))%(Y-p//w)<1]for j in range(w)]for i,r in enumerate(g)]
+def p(a):
+    e=enumerate;s=[i for i,r in e(a)if any(r)];r=s[1];v=max(a[r]);return[[v*(max(abs(i-r),abs(j-a[r].index(v)))%(r-s[0])<1)for(j,_)in e(R)]for(i,R)in e(a)]

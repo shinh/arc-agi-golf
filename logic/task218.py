@@ -1,3 +1,1 @@
-def p(g):
-	#crop blank/dupe
-	return*(f:=lambda g:zip(*filter(sum,{}.fromkeys(map(tuple,g)))))(f(g)),
+p=lambda a:[*{}.fromkeys(filter(any,zip(*{}.fromkeys(filter(any,zip(*a))))))]

@@ -1,13 +1,1 @@
-def p(g):
-    # draw diag when 5 has empty arms
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c==5:
-                for d in 1,-1:
-                    a=y-d;b=x+d
-                    if r[b]+g[a][x]<1:
-                        for i,v in enumerate(g):
-                            j=i+b-a
-                            if 0<=j<10:v[j]=f
-            elif c:f=c
-    return[[c-5and c for c in r]for r in g]
+p=lambda g,e=enumerate:(lambda c,d,t:[[(x%5 and x,c)[i-j in((min(t)-2,)*(min(t)<d)+(max(t)+2,)*(max(t)>d))]for j,x in e(r)]for i,r in e(g)])(*next((v,i-j)for i,r in e(g)for j,v in e(r)if v%5),[i-j for i,r in e(g)for j,v in e(r)if v==5])

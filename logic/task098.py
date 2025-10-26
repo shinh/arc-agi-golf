@@ -1,3 +1,1 @@
-# 118
-# boundary via neighbor set
-p=lambda g,h=[[0]*30]:[[a*({*t}!={a})for a,*t in zip(r,r[1:]+[0],[0]+r,u,d)]for r,u,d in zip(g,g[1:]+h,h+g)]
+p=lambda g:[[c and(g[i-1][j]*g[-~i][j]*r[j-1]*r[-~j]<1)*c for j,c in enumerate(r)]for i,r in enumerate(g)]

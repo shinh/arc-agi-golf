@@ -1,4 +1,1 @@
-def p(g):# grow block
- r=g[0][:]
- for _ in r[2::2]:r[r.index(0)]=r[0];g+=r[:],
- return g
+p=lambda g:[g[0][:1]*n+g[0][:-n]or g[0]for n in range(len(g[0])//2)]

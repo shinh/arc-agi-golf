@@ -1,11 +1,7 @@
 def p(g):
-    # rot
-    P=[(y,x,v)for y,r in enumerate(g)for x,v in enumerate(r)if v]
-    if not P:return g
-    ys,xs,_=zip(*P);cx=(min(xs)+max(xs))>>1;cy=(min(ys)+max(ys))>>1
-    o=[[0]*10for _ in g]
-    for y,x,v in P:
-        x-=cx;y-=cy
-        o[cy+y][cx+x]=o[cy-x][cx+y]=o[cy-y][cx-x]=o[cy+x][cx-y]=v
-    return o
-
+ a=bytes(map(any,g)).find(1)+2
+ b=bytes(map(any,zip(*g))).find(1)+2
+ for i in range(10):
+  for j in range(10):
+   if g[i][j]:c=i-a;d=j-b;g[a+c][b-d]=g[a-c][b-d]=g[a-d][b+c]=g[a+d][b-c]=g[i][j]
+ return g

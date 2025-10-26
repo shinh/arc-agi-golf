@@ -1,14 +1,15 @@
 def p(g):
-    # mirror X
-    # reflect across 3x3 bounds
-    for v in sum(g,[]):
-        if v:
-            s={(y,x)for y,r in enumerate(g)for x,c in enumerate(r)if c==v}
-            y,x=min(s)
-            if{(y+2,x),(y,x+2),(y+2,x+2),(y+1,x+1)}<=s:
-                S=y*2+2;T=x*2+2
-                for Y,r in enumerate(g):
-                    for X,c in enumerate(r):
-                        if c:g[Y][X]=g[S-Y][X]=g[Y][T-X]=g[S-Y][T-X]=c
-                return g
-
+ n=len(g)
+ for i in range(1,n-1):
+  for j in range(1,n-1):
+   if g[i][j] and g[i][j]==g[i-1][j-1]==g[i-1][j+1]==g[i+1][j-1]==g[i+1][j+1]:
+    y,x=i,j
+ for i in range(n):
+  for j in range(n):
+   if g[i][j]:
+    g[i][2*x-j]=g[i][j]
+ for i in range(n):
+  for j in range(n):
+   if g[i][j]:
+    g[2*y-i][j]=g[i][j]
+ return g

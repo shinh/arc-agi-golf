@@ -1,9 +1,8 @@
 def p(g):
- # fill holes w/|size-4|
- def d(i,j):
-  if 0<=i<10>j>=0==g[i][j]:
-   g[i][j]=1;return[(i,j),*d(i+1,j),*d(i-1,j),*d(i,j+1),*d(i,j-1)]
-  return[]
- for k in range(100):
-  for i,j in(s:=d(k//10,k%10)):g[i][j]=abs(len(s)-4)
+ def f(i,j,a,d):
+  if g[i][j]-a:return 0
+  g[i][j]=d
+  return 1+(i and f(i-1,j,a,d))+(i<9 and f(i+1,j,a,d))+(j and f(i,j-1,a,d))+(j<9 and f(i,j+1,a,d))
+ for i in range(10):
+  for j in range(10):f(i,j,9,4-f(i,j,0,9))
  return g

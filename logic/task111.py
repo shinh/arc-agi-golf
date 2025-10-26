@@ -1,5 +1,1 @@
-def p(g):
- # flatten index and crop
- i=sum(g,[]).index(5);w=len(g[0])
- return[g[i//w+j][i%w-1:i%w+2]for j in(1,2,3)]
-
+p=lambda g:(t:=sum(g,[]),(i:=t.index(5)),[t[i+k:i+k+3]for k in(9,19,29)])[2]

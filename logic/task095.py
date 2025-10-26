@@ -1,5 +1,1 @@
-def p(g,E=enumerate):#ring
- for r,R in E(g):
-  for c,C in E(R):
-   for L in g[r-1:r+2]*(C>4):L[c-1:c+2]=1,1,1;R[c]=5
- return g
+p=lambda g,A=enumerate:[[C|any(any(R[A and A-1:A+2])for R in g[B and B-1:B+2])for A,C in A(r)]for B,r in A(g)]

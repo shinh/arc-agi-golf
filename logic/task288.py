@@ -1,6 +1,3 @@
 def p(g):
- #diagonals
- d=g[-2];x=a=d.index(max(d))
- for r in g[-3:~a-2:-1]:a-=1;r[a]=r[~a]=g[-1][x]
+ for i in range(a:=g[-2].count(0)//2):R=g[i-a-2];R[i]=R[~i]=g[-1][a]
  return g
-

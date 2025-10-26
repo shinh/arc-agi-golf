@@ -1,2 +1,1 @@
-def p(g):# crop rare color
- b=sum(g,[]);return[*zip(*filter(f:=lambda r,c=min({*b}-{0},key=b.count):c in r,zip(*filter(f,g))))]
+p=lambda g:[[x for x,c in zip(r,zip(*g))if len({*c})>2]for r in g if len({*r})>2]

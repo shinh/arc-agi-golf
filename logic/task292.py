@@ -1,3 +1,3 @@
-# 4->6 every 3rd cell
-p=lambda g:[[v+2*(v^4<1>i%3)for i,v in enumerate(r)]for r in g]
-
+def p(g):
+ for r in g:r[::3]=[x/2*3for x in r[::3]]
+ return g

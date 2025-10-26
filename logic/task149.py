@@ -1,3 +1,1 @@
-# count 6s
-t=0,4,8
-p=lambda g:[[sum(r[j:j+4].count(6)for r in g[i:i+4])>1for j in t]for i in t]
+p=lambda g:[[sum(sum(r[a:a+3])for r in g[b:b+3])>9for a in(0,4,8)]for b in(0,4,8)]

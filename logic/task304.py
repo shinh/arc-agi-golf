@@ -1,2 +1,1 @@
-# replicate g in each cell matching the most common color
-p=lambda g,r=range(9):[[g[i%3][j%3]*(max(f:=sum(g,[]),key=f.count)==g[i//3][j//3])for j in r]for i in r]
+p=lambda g:[[v*(x==max(a:=sum(g,[]),key=a.count))for x in r for v in c]for r in g for c in g]

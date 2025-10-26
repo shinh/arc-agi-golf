@@ -1,2 +1,1 @@
-def p(g):
-    a=g[0][0];return[[a]*-~sum(c!=a for c in g[0])]*-~sum(r[0]!=a for r in g) # fill top-left block
+p=lambda g:[[(l:=g[0][0])]*-~sum(x!=l for x in g[0])]*-~sum(r[0]!=l for r in g)

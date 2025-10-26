@@ -1,3 +1,1 @@
-# mids->3x3
-p=lambda g:[(sum(([c+5]*3+[5]for c in g[i&-4|1][1::4]),[])[:-1],r)[i==3]for i,r in enumerate(g)]
-
+p=lambda g:[[5+g[i&-4|1][j&-4|1]*(g[i][j]<5)for j in range(11)]for i in range(len(g))]

@@ -1,10 +1,5 @@
-def p(g):# extend colors right/down
-    c=0
-    for r in g:
-        d=0
-        for x,v in enumerate(r):
-            d=d or v
-            r[x]=d or r[x]
-        r[-1]=c=d or c
-    return g
-
+def p(g):
+ b=0
+ for r in g:
+  b=r[-1]=sum(r)or b;s=r.index(b);r[s:]=[b]*len(r[s:])
+ return g

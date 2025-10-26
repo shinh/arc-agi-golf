@@ -1,12 +1,12 @@
 def p(g):
-    # largest uniform rect
-    o=create(16,16);B=0
-    for y0 in range(16):
-        for x0 in range(16):
-            if c:=g[y0][x0]:
-                for y1 in range(y0+1,17):
-                    for x1 in range(x0+1,17):
-                        if all(r[x0:x1]==[c]*(w:=x1-x0)for r in g[y0:y1])and B<(y1-y0)*w:
-                            B=(y1-y0)*w;o=create(16,16)
-                            for y in range(y0,y1):o[y][x0:x1]=(c,)*w
-    return o
+ h=[0]*10
+ for r in range(15):
+  for c in range(15):
+   k=g[r][c]
+   if k and k==g[r+1][c]==g[r][c+1]==g[r+1][c+1]:h[k]+=1
+ v=h.index(max(h));o=[[0]*16for _ in g]
+ for r in range(15):
+  for c in range(15):
+   if g[r][c]==v==g[r+1][c]==g[r][c+1]==g[r+1][c+1]:
+    o[r][c]=o[r][c+1]=o[r+1][c]=o[r+1][c+1]=v
+ return o

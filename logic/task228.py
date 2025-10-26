@@ -1,6 +1,6 @@
-def p(g):
-    # find colored rectangle, clear inside, push inner corners outward
-    c=[(y,x)for y in range(10)for x in range(10)if g[y][x]];(T,L),(B,R)=c[0],c[-1]
-    g[T-1][L-1]=g[B-1][R-1];g[T-1][R+1]=g[B-1][L+1];g[B+1][L-1]=g[T+1][R-1];g[B+1][R+1]=g[T+1][L+1]
-    for r in g[T+1:B]:r[L+1:R]=[0]*(R-L-1)
-    return g
+def p(a):
+ r=next(filter(any,a));b=a.index(r);c=9-a[::-1].index(r)
+ d=r.index(max(r));e=9-r[::-1].index(max(r))
+ a[c+1][e+1],a[c+1][d-1],a[b-1][e+1],a[b-1][d-1]=a[b+1][d+1],a[b+1][e-1],a[c-1][d+1],a[c-1][e-1]
+ a[b+1][d+1]=a[b+1][e-1]=a[c-1][d+1]=a[c-1][e-1]=0
+ return a

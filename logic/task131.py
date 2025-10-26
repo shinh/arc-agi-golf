@@ -1,7 +1,5 @@
 def p(g):
- #drop3sunder2add8
- if (w:=len(g[0]))>(h:=len(g)):return [*zip(*p([*zip(*g)]))]
- s=sum(map(list,g),[])
- a=s.index(2)//w;b=s.index(3)//w;s=h-s[::-1].index(3)//w
- return p(g[::-1])[::-1]if b<a else g[:a+1]+g[b:s]+[(8,)*w]+[(0,)*w]*(h-a+b-s-2)
-
+ n=len(g);m=len(g[0])
+ if m>n:return[*zip(*p([*zip(*g)]))]
+ i=([2 in r for r in g]).index(1)
+ return p(g[::-1])[::-1]if any(3 in r for r in g[:i])else(g[:i+1]+[r for r in g if 3 in r]+[[8]*m]+[[0]*m]*n)[:n]

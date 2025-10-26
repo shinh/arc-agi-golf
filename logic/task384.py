@@ -1,2 +1,1 @@
-# crop bbox of nonzeros and double size
-p=lambda g:[[*sum(zip(r,r),())]for r in zip(*filter(any,zip(*g)))if any(r)for _ in'__']
+p=lambda g:sum([[sum(zip(r,r),())]*2 for r in zip(*filter(any,zip(*g)))if any(r)],[])

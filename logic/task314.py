@@ -1,7 +1,6 @@
-# fill centers if edges match
 def p(g):
- for k,r in enumerate(g):
-  for i in 0,1:
-   if(c:=max(r,key=r.count))!=r[i]==r[i+6]:r[i+3]=r[i]
-   if(t:=g[i][k])==g[i+6][k]!=c:g[i+3][k]=t
+ for i in 0,1,3,4,6,7:
+  for j in 0,1:
+   if g[i][j]==g[i][j+6]!=1:g[i][j+3]=g[i][j]
+   if g[j][i]==g[j+6][i]!=1:g[j+3][i]=g[j][i]
  return g

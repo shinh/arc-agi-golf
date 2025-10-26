@@ -1,7 +1,5 @@
-def p(g):
-    # fill rectangles enclosed by 4s
-    d={}
-    for y,r in enumerate(g):
-        if 4in r:
-            for R in g[-~d.setdefault((a:=r.index(4),b:=r.index(4,-~a)),y):y]:R[-~a:b]=[2]*(~a+b)
-    return g
+def p(a,f=0):
+ for r in a:
+  if 4in r:i=r.index;x=i(4);y=i(4,x+1);f^=1
+  elif f:r[x+1:y]=[2]*(y+~x)
+ return a

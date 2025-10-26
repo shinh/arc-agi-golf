@@ -1,4 +1,1 @@
-def p(g):#%3
-	for r in g[1:]:
-		if r[9]:r[:9]=[v%3for v in g[0][:9]]
-	return g
+p=lambda g:[[x+(r[-1]&v)%3for v,x in zip(g[0],r)]for r in g]

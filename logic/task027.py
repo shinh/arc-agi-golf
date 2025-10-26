@@ -1,6 +1,4 @@
 def p(g):
-    # mirror pattern and overlay symmetrically
-    r=range(10);a={(y,x)for y in r for x in r if g[y][x]}
-    sh=max((len(a&b),b)for d in range(19)if len(b:={(d-x,y)for y,x in a})==len(a))[1]
-    for y,x in sh-a:g[y][x]=2
-    return g
+ s={(i,j)for i in range(10)for j in range(10)if g[i][j]};o=s|{(9-j,i)for i,j in s}!=s|{(j,9-i)for i,j in s}
+ for i,j in s:g[j][9-i+o]=g[j][9-i+o]or 2
+ return g

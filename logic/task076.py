@@ -1,26 +1,23 @@
-# flood-fill largest island and stamp rotated/flip copies wherever its special colors appear
 def p(g):
-    h=len(g);w=len(g[0])
-    s={(i,j)for i in range(h)for j in range(w)if g[i][j]};t=s.copy();m=[]
-    while s:
-        q=[s.pop()]
-        for x,y in q:
-            for a in-1,0,1:
-                for b in-1,0,1:
-                    if a|b and(p:=(x+a,y+b))in s:s.remove(p);q+=p,
-        m=max(m,q,key=len)
-    C={g[i][j]for i,j in t if(i,j)not in m}
-    rs,cs=zip(*m);a=min(rs);b=min(cs)
-    B=[(r-a,c-b,g[r][c])for r,c in m]
-    G=[r[:]for r in g]
-    for _ in'01':
-        for _ in'0000':
-            if not(S:=[b for b in B if b[2]in C]):return g
-            a,b,k=S[0]
-            for i,j in[(i-a,j-b)for i in range(h)for j in range(w)if g[i][j]==k]:
-                if all(h>i+r>-1<j+c<w and g[i+r][j+c]==k for r,c,k in S):
-                    for r,c,k in B:
-                        if h>i+r>-1<j+c<w:G[i+r][j+c]=k
-            B=[(c,-r,k)for r,c,k in B]
-        B=[(r,-c,k)for r,c,k in B]
-    return G
+ h=len(g);w=len(g[0])
+ for y in range(h):
+  for x in range(w):
+   if g[y][x]&1:
+    v=[*map(list,g)];a=b=y;c=d=x;S=[(y,x)]
+    while S:
+     y,x=S.pop()
+     if-1<y<h>-1<x<w and v[y][x]:
+      v[y][x]=0;a=min(a,y);b=max(b,y);c=min(c,x);d=max(d,x)
+      S+=[(y+i,x+j)for i in(-1,0,1)for j in(-1,0,1)]
+    U=[r[c:d+1]for r in g[a:b+1]]
+    for _ in'00':
+     for _ in'0000':
+      H=len(U);W=len(U[0])
+      for Y in range(h-H+1):
+       for X in range(w-W+1):
+        if all((U[i][j]&1)or g[Y+i][X+j]==U[i][j]for i in range(H)for j in range(W)):
+         for i in range(H):g[Y+i][X:X+W]=U[i]
+      U=[*zip(*U[::-1])]
+     U=U[::-1]
+    return g
+ return g
