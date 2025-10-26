@@ -1,8 +1,7 @@
-def p(g):
- m=-1
+def p(g,m=-1):
  for r in g[::-1]:
-  o=[0]*len(r);n=-1
+  p,m,o=m,-1,[0]*len(r)
   for x,v in enumerate(r):
-   if v:n=x;o[x+(m>x)]=v
-  r[:]=o;m=n
+   if v:m=x;o[x+(p>x)]=v
+  r[:]=o
  return g
