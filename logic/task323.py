@@ -1,8 +1,8 @@
 def p(g):
- i,j=divmod(sum(g,[]).index(8),13)
+ k=sum(g,[]).index(8)#spir
  for d in-1,1:
-  r,c,k=i,j,169
-  while k:
-   r+=d*(2>k&2);c-=d*(1<k&2);k-=1
-   if 13>c>-1<r<13:g[r][c]=5
+  r,c=k//13,k%13
+  for t in range(169):
+   r+=d*(t%4<2);c-=d*(t%4>1)
+   if-1<r<13>c>-1:g[r][c]=5
  return g
