@@ -1,1 +1,1 @@
-p=lambda g:[[v and 3+5*(sum(r[j and j-1:j+2]+[x[j]for x in g[i and i-1:i+2]])>6)for j,v in enumerate(r)]for i,r in enumerate(g)]
+p=lambda g:[[v and[3,8][sum(r[j-(j>0):j+2]+[x[j]for x in g[i-(i>0):i+2]])>6]for j,v in enumerate(r)]for i,r in enumerate(g)]
