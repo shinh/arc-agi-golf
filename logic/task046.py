@@ -1,9 +1,11 @@
 def p(g):
- R=[];v=0;s=[]
- for c in(*zip(*g),0):
-  if c and any(c):s+=c,
+ # align anchors
+ r=[];v=0;s=[];z=0,0,0
+ for c in (*zip(*g),z):
+  if c!=z:s+=c,
   elif s:
-   c=max(n%5and n for t in s for n in t);l=5 in s[0] and s[0].index(5)
-   R+=[tuple((0<=y+l-v<3 and ((t[y+l-v]==5 and c)or t[y+l-v]))or 0 for y in(0,1,2))for t in s]
-   v+=(5 in s[-1] and s[-1].index(5))-l;s=[]
- return [*zip(*R)]
+   l=(5 in s[0])and s[0].index(5)
+   c=max(n-(n==5)*5 for t in s for n in t)
+   r+=[[(n==5)*c or n for n in(z+t+z)[l-v+3:l-v+6]]for t in s]
+   v+=((5 in s[-1])and s[-1].index(5))-l;s=[]
+ return[*zip(*r)]
