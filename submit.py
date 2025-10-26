@@ -68,7 +68,7 @@ def build_decompression_snippet_bytes(data, algorithm, args):
             escaped.append(byte)
         i += 1
     literal = b"bytes('" + bytes(escaped) + b"','l1')"
-    code += f"exec({algorithm}.decompress(".encode() + literal + args.encode() + b"))"
+    code += f"exec({algorithm}.decompress(".encode() + literal + args.encode() + b",-8))"
     return code
 
 
@@ -105,6 +105,7 @@ def compress_with_algorithm(code, algorithm="zlib"):
                 blocksplittinglast=False,
                 blocksplittingmax=100,
             )
+        compressed = compressed[2:-4]  # Strip header and checksum
         snippet, encoding = build_decompression_snippet(compressed, "zlib", args)
     elif algorithm == "lzma":
         compressed = lzma.compress(code.encode(), format=2)
