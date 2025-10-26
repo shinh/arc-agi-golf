@@ -1,11 +1,11 @@
 def p(g):
- d=sum(r.count(2)for r in g)
+ #mirror arm
+ d=sum(r.count(2)for r in g)*2
  for _ in[0]*4:
   g=[*zip(*g)][::-1]
   for r in range(10):
-   t=g[r]
-   if sum(t)==t.count(2)*2==d*2:
-    for y in range(10-r):
-     t=g[r+y];i=r-y+1
-     if sum(t)>t.count(2)*2 and 0<=i<10:g[i]=t
- return [[c or 3 for c in r]for r in g]
+   if sum(g[r])==d==g[r].count(2)*2:
+    for y in range(min(r,8-r)+1):
+     t=g[r+1+y]
+     if sum(t)>t.count(2)*2:g[r-y]=t
+ return[[c or 3for c in r]for r in g]
