@@ -1,5 +1,6 @@
 def p(a):
- h,w=len(a),len(a[0])
- A=max((((D:=next((j for j in range(y,h)if a[j][x]!=f),h))-y)*((E:=next((i for i in range(x,w)if a[y][i]!=f),w))-x),f,y,x,D,E)for y in range(h)for x in range(w)if(f:=a[y][x]))
- g=sum({*sum(a,[])})-A[1]
- return[[[g,v][v!=A[1]]for v in r[A[3]:A[5]]]for r in a[A[2]:A[4]]]
+ # locate the biggest solid rectangle and recolor it after cropping
+ h=len(a)
+ m,c,y,x,d,e=max((((D:=next((j for j in range(Y,h)if a[j][X]^f),h))-Y)*((E:=next((i for i in range(X,len(r))if r[i]^f),len(r)))-X),f,Y,X,D,E)for Y,r in enumerate(a)for X,f in enumerate(r)if f)
+ g=sum({*sum(a,[])})-c
+ return[[[g,v][v!=c]for v in r[x:e]]for r in a[y:d]]
