@@ -1,2 +1,2 @@
-# extend lines
-p=lambda g:(r:=g.index([5]*10),[_.__setitem__(x,v)for y in range(10)for x,v in enumerate(g[y])if v%5 for _ in g[y:(None,r)[v>1]:1-2*((y<r)^(v>1))]],g)[2]
+# extend segments away/toward the wall by color
+p=lambda g:(r:=g.index([5]*10),[_.__setitem__(x,v)for y in range(10)for x,v in enumerate(g[y])if v%5 for _ in g[y:(None,r)[v>1]:1-2*((y<r)^(v-1))]],g)[2]
