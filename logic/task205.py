@@ -11,14 +11,8 @@ def p(g):
             for ey in R(h,sy+2,-1):
                 for ex in R(w,sx+2,-1):
                     if{b}=={*g[sy][sx:ex],*g[ey-1][sx:ex],*[g[y][x]for y in R(sy,ey)for x in(sx,ex-1)]}:
-                        rs=set();cs=set();c=b
-                        for y in R(sy,ey):
-                            for x in R(sx,ex):
-                                if g[y][x]!=b:rs.add(y);cs.add(x);c=g[y][x]
-                        for y in R(sy,ey):
-                            for x in R(sx,ex):
-                                if y in rs or x in cs:g[y][x]=c
-                        return [row[sx:ex]for row in g[sy:ey]]
+                        for c in(g[y][x]for y in R(sy,ey)for x in R(sx,ex)if g[y][x]-b):
+                            return [[c if any(g[y][k]-b for k in R(sx,ex))or any(g[k][x]-b for k in R(sy,ey))else g[y][x]for x in R(sx,ex)]for y in R(sy,ey)]
 
 # def p(g):
 #     h=len(g);w=len(g[0]);v=set();B=[];C=0
