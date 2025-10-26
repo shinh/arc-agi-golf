@@ -1,7 +1,6 @@
 def p(g):
- a=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==4]
- y,x=zip(*a);A,B=min(y),max(y);C,D=min(x),max(x);b=[r[C:D+1]for r in g[A:B+1]]
- y,x=zip(*[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if(i<A or i>B or j<C or j>D)and v&-5]);e,f=min(y),max(y);h,k=min(x),max(x)
+ y,x=zip(*((i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v==4));A,B=min(y),max(y);C,D=min(x),max(x);b=[r[C:D+1]for r in g[A:B+1]]
+ y,x=zip(*((i,j)for i,r in enumerate(g)for j,v in enumerate(r)if(i<A or i>B or j<C or j>D)and v&-5));e,f=min(y),max(y);h,k=min(x),max(x)
  for z in 2,3,4:
   H=(f-e+1)*z;W=(k-h+1)*z
   for u in range(len(b)-H+1):
