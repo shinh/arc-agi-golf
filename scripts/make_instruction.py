@@ -10,20 +10,33 @@ import sota
 
 def read_ours():
     ours = []
-    for code, o in zip(sorted(glob.glob("logic/*.py")), sorted(glob.glob("ours//*.txt"))):
-        ours.append((2500 - int(open(o).read()), open(code).read()))
+    for code, sub in zip(sorted(glob.glob("logic/*.py")), sorted(glob.glob("submissions/*.py"))):
+        ours.append((os.path.getsize(sub), open(code).read()))
     return ours
 
 
 def main():
     parser = argparse.ArgumentParser(description="Make an instruction for AI.")
     parser.add_argument("task_id")
+    parser.add_argument("--select-important", action="store_true", help="Select an important task.")
     args = parser.parse_args()
-
-    task_id = "%03d" % int(args.task_id)
 
     ours = read_ours()
     theirs = sota.read_sota()
+
+    task_id = args.task_id
+
+    if args.select_important:
+        diffs = []
+        for i, ((our, _), their) in enumerate(zip(ours, theirs)):
+            diff = their - our
+            diffs.append((diff, i + 1))
+        diffs.sort()
+        # +1 for task157
+        task_id = "%03d" % diffs[int(task_id) + 1][1]
+        print(f"Selected important task {task_id}")
+    else:
+        task_id = "%03d" % int(task_id)
 
     categories = json.load(open("scripts/categories.json"))
 
