@@ -1,15 +1,12 @@
 def p(g):
- for i in range(len(g)):
-  for j in range(len(g[0])):
-   if g[i][j]==9 and(i<1 or g[i-1][j]-9)and(j<1 or g[i][j-1]-9):
-    w=h=1
-    while j+w<len(g[0])and g[i][j+w]==9:w+=1
-    while i+h<len(g)and g[i+h][j]==9:h+=1
-    r=w//2
-    for y in range(i+h,len(g)):
-     for x in range(j,j+w):g[y][x]=max(g[y][x],1)
-    for y in range(i-r,i+h+r):
-     if-1<y<len(g):
-      for x in range(j-r,j+w+r):
-       if-1<x<len(g[0]):g[y][x]=max(g[y][x],3)
+ for y,r in enumerate(g):
+  for x,v in enumerate(r):
+   if v-9 or y and g[y-1][x]==9 or x and r[x-1]==9:continue
+   a=b=1
+   while x+a<len(r)and r[x+a]==9:a+=1
+   while y+b<len(g)and g[y+b][x]==9:b+=1
+   for R in g[y+b:]:R[x:x+a]=[t or 1 for t in R[x:x+a]]
+   q=a//2
+   s=max(0,y-q);t=max(0,x-q)
+   for R in g[s:y+b+q]:R[t:x+a+q]=[max(k,3)for k in R[t:x+a+q]]
  return g
