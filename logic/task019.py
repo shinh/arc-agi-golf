@@ -1,5 +1,4 @@
 def p(g):
- # tile grid and add 8s diagonally
- h=len(g);w=len(g[0]);t=-1,1;R=range
- return [[g[y%h][x%w]or 8*any(g[(y+d)%h][(x+e)%w]for d in t for e in t if -1<y+d<h*2>-1<x+e<w*2) for x in R(w*2)]for y in R(h*2)]
-
+ # tile diag8
+ g=[r*2 for r in g]*2;h=len(g);w=len(g[0]);t=-1,1
+ return[[g[y][x]or 8*any(g[y+d][x+e]for d in t for e in t if h>y+d>-1<x+e<w)for x in range(w)]for y in range(h)]
