@@ -1,1 +1,1 @@
-def p(g):e=enumerate;a=min(i for i,r in e(g)for j,v in e(r)if v>2);b=min(i for i,r in e(g)for j,v in e(r)if v==2);c=min(j for i,r in e(g)for j,v in e(r)if v>2);d=min(j for i,r in e(g)for j,v in e(r)if v==2);s=[(i+a+1-b,j+c+1-d)for i,r in e(g)for j,v in e(r)if v==2];return[[((i,j)in s)*2or 3*(v>2)for j,v in e(r)]for i,r in e(g)]
+def p(g):e=enumerate;a,b=min((i,j)for i,r in e(g)for j,v in e(r)if v>2);y={(i,j)for i,r in e(g)for j,v in e(r)if v==2};c,d=map(min,zip(*y));return[[((i-a-1+c,j-b-1+d)in y)*2+3*(v>2)for j,v in e(r)]for i,r in e(g)]
