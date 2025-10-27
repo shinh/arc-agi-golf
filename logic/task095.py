@@ -1,1 +1,1 @@
-p=lambda g,A=enumerate:[[C|any(any(R[A and A-1:A+2])for R in g[B and B-1:B+2])for A,C in A(r)]for B,r in A(g)]
+p=lambda g,e=enumerate:[[c|any(sum(R[a-(a>0):a+2])for R in g[b-(b>0):b+2])for a,c in e(r)]for b,r in e(g)]
