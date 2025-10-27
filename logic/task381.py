@@ -1,1 +1,1 @@
-p=lambda g:[r.__setitem__(i,9)for r in g[1:-1]for i in range(10)if r[i]<1*(2in r[:i])*(2in r[i+1:])]and g
+p=lambda g:[r.__setitem__(i,9)for r in g[1:9]for i in range(9)if(2in r[:i])*(2in r[i+1:])>r[i]]and g
