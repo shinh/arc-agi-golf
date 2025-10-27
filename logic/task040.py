@@ -1,1 +1,1 @@
-p=lambda g,R=range(10):(a:=g[0][0],[[g[i][j]and(a,g[9][9])[(j,i)[a==g[0][9]]>4]for j in R]for i in R])[1]
+p=lambda g,R=range(10):[[g[i][j]and(g[0][0],g[9][9])[(j,i)[g[0][0]==g[0][9]]>4]for j in R]for i in R]
