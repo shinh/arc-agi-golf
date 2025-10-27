@@ -1,1 +1,1 @@
-def p(a):b=c=3;R=range(11);[(b:=b^i//4,c:=c^j//4)for i in R for j in R if a[i][j]>7];return[[5*(a[i][j]==5)or a[b*4+i//4][c*4+j//4]for j in R]for i in R]
+def p(a):R=range(11);t=36-sum(i//4*3+j//4 for i in R for j in R if a[i][j]>7);return[[5*(a[i][j]==5)or a[t//3*4+i//4][t%3*4+j//4]for j in R]for i in R]
