@@ -1,1 +1,1 @@
-def p(g):m=[B for y in range(12)for x in range(12)if(t:=sum(B:=[r[x:x+3]for r in g[y:y+3]],[]))and(c:=max(t))and sum(t)==t.count(c)*c==sum(r[x and x-1:x+4].count(c)for r in g[y and y-1:y+4])*c];return max(m,key=m.count)
+R=range(12);p=lambda g:max(m:=[B for y in R for x in R if sum(t:=sum(B:=[r[x:x+3]for r in g[y:y+3]],[]))==sum(r[x-(x>0):x+4].count(c:=max(t))for r in g[y-(y>0):y+4])*c>0],key=m.count)
