@@ -1,3 +1,2 @@
-import re
-h=lambda x:eval(re.sub('8(, 0)+, 8',lambda m:m[0].replace('0','3'),str(x)))
-p=lambda g:[*zip(*h([*zip(*h(g))]))]
+h=lambda g:[[c or(8in r[:i])*(8in r[i+1:])*3for i,c in enumerate(r)]for r in g]
+p=lambda g:h(zip(*h(zip(*g))))
