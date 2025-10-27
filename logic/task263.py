@@ -1,1 +1,1 @@
-def p(g):b=[z for r in zip(*[iter(g)]*3) for z in zip(*(zip(*[iter(x)]*3)for x in r))];s=[sum(map(bool,sum(z,())))for z in b];return b[s.index(min(s,key=s.count))]
+def p(g):t=lambda q:zip(*[iter(q)]*3);b,s=zip(*((z,sum(map(bool,sum(z,()))))for r in t(g)for z in zip(*map(t,r))));return b[s.index(min(s,key=s.count))]
