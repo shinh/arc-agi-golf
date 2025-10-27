@@ -58,5 +58,5 @@
 # use magic formulas to not repeat similar logic 3 times
 
 # 141, still improvement possible in magic formulas and possibly recursion method/logic
-A=[0,8,9]
+A=0,8,9
 p=lambda g,i=0: g*(i-399) or p([[[c1:=A[-~(j:=i//80)//2],a][a!=9-c1 or b!=A[-j%3]] for a,b in zip(r,(0,*r))] for r in zip(*g[::-1])],i+1)
