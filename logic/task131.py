@@ -1,1 +1,1 @@
-p=lambda g:(m:=len(g[0]))>(n:=len(g))and[*zip(*p([*zip(*g)]))]or'3'in str(g[:(i:=[2in r for r in g].index(1))])and p(g[::-1])[::-1]or(g[:i+1]+[r for r in g if 3in r]+[m*[8]]+n*[m*[0]])[:n]
+p=lambda g:(m:=len(g[0]))>(n:=len(g))and[*zip(*p([*zip(*g)]))]or'3'in'%s'%g[:(i:=[2in r for r in g].index(1))]and p(g[::-1])[::-1]or(g[:i+1]+[r for r in g if 3in r]+[m*[8]]+n*[m*[0]])[:n]
