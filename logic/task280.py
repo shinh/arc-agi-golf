@@ -1,13 +1,14 @@
 def p(g):
- for _ in range(4):
+ for _ in[0]*4:
   for y,r in enumerate(g):
    n=w=0
    for x,c in enumerate(r):
-    if c==3:n+=1;w=0
-    if c==0:
+    n+=c>2
+    if c<1:
      if w:
-      for d in range(-n,n+1):g[y+d][x]=2+(d!=0)
+      for z in g[y-n:y+n+1]:z[x]=3
+      g[y][x]=2
      n*=w
-    w|=c==2
+    w*=c<3;w|=c==2
   g=[*map(list,zip(*g[::-1]))]
  return g
