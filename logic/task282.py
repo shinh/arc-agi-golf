@@ -1,1 +1,2 @@
-p=lambda g:[*zip(*[iter((S:=[0]*81,[S.__setitem__(i+d,5-d%2*4)for i in range(81)if sum(g,[])[i]for d in(1,9,10,8,-1,-9,-10,-8)])[0])]*9)]
+import re
+p=lambda g,t=9:t and p(eval(re.sub(r"(.{7})(.{22})0, 5, 0(.{22})\1",r"5,1,5\2 1,0,1\3 5,1,5",str(g))),t-1)or g
