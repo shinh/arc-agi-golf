@@ -1,2 +1,2 @@
-def p(g):
- f=dict.fromkeys;A=[*f(sum(g,[]))];return([A],[*zip(A)])[A!=[*f(g[0])]]
+# unique colors row or column
+p=lambda g,f={}.fromkeys:(a:=f(sum(g,[])))and([*zip(a)],[[*a]])[a==f(g[0])]
