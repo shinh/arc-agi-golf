@@ -1,1 +1,1 @@
-p=lambda g:[[(v,g[i%3][(j-1)%3])[g[i//3*3+1][(j+2)//3*3-1]==1]for j,v in enumerate(r)]for i,r in enumerate(g)]
+p=lambda g:[[(g[i][j],g[i%3][(j-1)%3])[g[i+1-i%3][j+1-(j-1)%3]==1]for j in range(13)]for i in range(9)]
