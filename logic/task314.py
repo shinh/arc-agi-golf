@@ -1,6 +1,6 @@
 def p(g):#fill
-	for i in 0,1,3,4,6,7:
-		for j in 0,1:
-			if(a:=g[i][j])==g[i][j+6]!=1:g[i][j+3]=a
-			if(b:=g[j][i])==g[j+6][i]!=1:g[j+3][i]=b
-	return g
+ for k in range(12):
+  r=k//2*3//2
+  if(a:=g[r][c:=k%2])==g[r][c+6]!=1:g[r][c+3]=a
+  if(b:=g[c][r])==g[c+6][r]!=1:g[c+3][r]=b
+ return g
