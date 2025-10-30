@@ -1,3 +1,1 @@
-def p(g):
- for a,b in zip(g,g[10:]):s=max(a,b);d=max(s[:9],s[10:19],s[~8:]);b[:]=a[:]=d+([4]+d)*s.count(4)
- return g
+def p(g):return (r:=[(d:=max(s[:9],s[10:19],s[~8:]))+([4]+d)*s.count(4)for s in map(max,g,g[10:])])+[g[9]]+r
