@@ -1,30 +1,24 @@
-# copy motif into rectangular holes and extend rays
-
 def p(g):
-    bg=g[0][0]
-    # Find the color of the center of the motif.
-    for y,r in enumerate(g):
-        for x,(c,nc,pc)in enumerate(zip(r,r[1:],[bg]+r)):
-            if bg!=c!=nc==pc!=bg and r.count(pc)>4:bc,mc=pc,c
-    # Find the center of the motif.
-    for y,r in enumerate(g):
-        for x,(c,nc,pc)in enumerate(zip(r,r[1:],[bg]+r)):
-            if c==mc!=nc==pc!=bc:u,v=y,x
-    # Copy the motif and extend rays.
-    h=len(g);w=len(g[0]);R=range(-2,3);o=[r[:]for r in g]
-    for y,r in enumerate(g):
-        for x,c in enumerate(r):
-            if c==mc and r[x-1]==bc:
-                for dy in R:
-                    for dx in R:
-                        Y=y+dy;X=x+dx
-                        if g[u+dy][v+dx]!=bg and h>Y>=0 and w>X>=0 and g[Y][X]==bc:o[Y][X]=g[u+dy][v+dx]
-                for dy,dx in((0,1),(1,0),(-1,0),(0,-1)):
-                    rc=o[y+dy][x+dx]
-                    if rc==o[y+dy*2][x+dx*2]:
-                        Y=y+dy*3;X=x+dx*3
-                        while h>Y>=0 and w>X>=0 and g[Y][X]==bc:o[Y][X]=rc;Y+=dy;X+=dx
-    # Remove the motif
-    for dy in R:
-        for dx in R:o[u+dy][v+dx]=bg
-    return o
+ b=g[0][0]
+ for y,r in enumerate(g):
+  for x,(a,d,p0) in enumerate(zip(r,r[1:],[b]+r)):
+   if b!=a!=d==p0!=b and r.count(p0)>4:c,m=p0,a
+ for y,r in enumerate(g):
+  for x,(a,d,p0) in enumerate(zip(r,r[1:],[b]+r)):
+   if a==m!=d==p0!=c:u,v=y,x
+ o=[r[:]for r in g]
+ R=range(-2,3)
+ for y,r in enumerate(g):
+  for x,(a,p0) in enumerate(zip(r,[b]+r)):
+   if a==m and p0==c:
+    for i in R:
+     for j in R:
+      if g[u+i][v+j]!=b and g[y+i][x+j]==c:o[y+i][x+j]=g[u+i][v+j]
+    for i,j in((0,1),(1,0),(-1,0),(0,-1)):
+     q=o[y+i][x+j]
+     if q==o[y+i*2][x+j*2]:
+      Y=y+i*3;X=x+j*3
+      while g[Y][X]==c:o[Y][X]=q;Y+=i;X+=j
+ for i in R:
+  for j in R:o[u+i][v+j]=b
+ return o

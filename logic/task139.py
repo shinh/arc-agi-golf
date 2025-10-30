@@ -1,6 +1,7 @@
-def p(g):# fill 3x3 windows with 7
- for k in range(49):
-  a=g[k//7:][:3];j=k%7;w=[r[j:j+3]for r in a]
-  if min(map(sum,w+[*zip(*w)])):
-   for r in a:r[j:j+3]=[x or 7for x in r[j:j+3]]
+def p(g):
+ b=1>(g[1][0]|g[2][0]|g[3][0])
+ c=9+2*b,41+18*b
+ for i in range(18):
+  d=c[i>8]+(i//3%3)*9+i%3
+  r=g[d//9];r[d%9]=r[d%9] or 7
  return g

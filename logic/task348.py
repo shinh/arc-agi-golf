@@ -1,1 +1,1 @@
-def p(g):a=g[0].index(7);b=sum(map(any,g));return[[y<b-abs(x-a)and 7+(x+a&1)for x in range(len(r))]for y,r in enumerate(g)]
+def p(g):a=g[0].index(7);return[[y<sum(map(any,g))-abs(x-a)and(7+(x+a&1))for x,r in enumerate(g[0])]for y in range(len(g))]

@@ -1,8 +1,4 @@
-R=range(1,12)
-#fill
-def p(a):
- for i in R:
-  for j in R:
-   if a[i-1][j]==(r:=a[i])[j-1]==5>r[j]:
-    for q in a[i:i+(s:=r[j:].index(5))]:q[j:j+s]=[5+s]*s
- return a
+def p(g):
+ for u,r,d in zip(g,g[1:],g[2:]):
+  for a,b in zip(t:=(i for i in range(12)if u[i]*r[i]*d[i]),t):r[a+1:b]=[(i:=b+~a)+5]*i
+ return g

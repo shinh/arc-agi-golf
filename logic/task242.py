@@ -1,1 +1,1 @@
-p=lambda g:[r[::-1][r.index(0):][:r.count(0)]for r in g if 0 in r]
+p=lambda g:[r[::-1][r.index(0):][:3]for r in g if 0in r]

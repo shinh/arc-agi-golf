@@ -1,10 +1,9 @@
 def p(g):
- f=sum(g,[])
- k=min({*f}-{0},key=f.count)
- x=f.index(k)
- y=440-f[::-1].index(k)
- h=y//21-x//21-1
- w=y%21-x%21-1
+ a=sum(g,[])
+ k=min(a,key=a.count)
+ i=a.index(k)
+ w=g[i//21].count(k)-2
+ h=a.count(k)//2-w-2
  for i in range(22-h):
   for j in range(22-w):
    if not sum(sum(r[j:j+w])for r in g[i:i+h]):

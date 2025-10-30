@@ -1,13 +1,12 @@
-def p(g):# copy block to 5
- r=range
- for y in r(10):
-  for x in r(10):
-   if g[y][x]%5:
+def p(g):
+ for i in range(10):
+  for j in range(10):
+   if g[i][j]%5:
     h=w=1
-    while y+h<10 and g[y+h][x]%5:h+=1
-    while x+w<10 and g[y][x+w]%5:w+=1
-    for Y in r(11-h):
-     for X in r(11-w):
-      if g[Y][X]==5:
-       for L in r(h):g[Y+L][X:X+w]=g[y+L][x:x+w]
+    while i+h<10 and g[i+h][j]%5:h+=1
+    while j+w<10 and g[i][j+w]%5:w+=1
+    for y in range(10):
+     for x in range(10):
+      if g[y][x]==5:
+       for k in range(h):g[y+k][x:x+w]=g[i+k][j:j+w]
     return g
