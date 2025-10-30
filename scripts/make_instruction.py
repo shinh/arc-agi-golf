@@ -5,6 +5,8 @@ import glob
 import json
 import os
 
+import numpy as np
+
 import sota
 
 
@@ -25,6 +27,25 @@ def find_similar_tasks_by_categories(task_id, categories, theirs, ours):
         mutual_cats = categroy and set(cs)
         if mutual_cats:
             ti = int(t) - 1
+            ratio = theirs[ti] / ours[ti][0]
+            similar_tasks.append((ratio, ours[ti][1], list(mutual_cats), t))
+    return similar_tasks
+
+
+def find_similar_tasks_by_similarities(task_id, categories, theirs, ours):
+    categroy = set(categories[task_id])
+    similarities = np.load("scripts/similarity_dd.npy")
+
+    cos_similar_task_indices = [i for s, i in sorted(zip(similarities[int(task_id) - 1], range(400)))[-25:]]
+
+    similar_tasks = []
+    for t, cs in categories.items():
+        if t == task_id:
+            continue
+        mutual_cats = categroy and set(cs)
+
+        ti = int(t) - 1
+        if ti in cos_similar_task_indices:
             ratio = theirs[ti] / ours[ti][0]
             similar_tasks.append((ratio, ours[ti][1], list(mutual_cats), t))
     return similar_tasks
@@ -55,7 +76,10 @@ def main():
 
     categories = json.load(open("scripts/categories.json"))
 
-    similar_tasks = find_similar_tasks_by_categories(task_id, categories, theirs, ours)
+    if True:
+        similar_tasks = find_similar_tasks_by_similarities(task_id, categories, theirs, ours)
+    else:
+        similar_tasks = find_similar_tasks_by_categories(task_id, categories, theirs, ours)
     similar_tasks.sort()
     # print(similar_tasks)
 
