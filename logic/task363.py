@@ -1,5 +1,5 @@
 def p(g):
- s=sum(g,[]);e=[i for i in range(100)if s[i]==2];y=min(i//10 for i in e);x=min(i%10 for i in e);e=[i-x-y*10 for i in e];a=[]
+ s=sum(g,[]);e=[i for i in range(100)if s[i]==2];m=min(e);x=min(i%10 for i in e);e=[i-x-m+m%10 for i in e];a=[]
  for t in range(100):
   if all(t+u<100and t%10+u%10<10and s[t+u]<1for u in e):
    a+=t,
