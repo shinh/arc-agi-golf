@@ -1,2 +1,2 @@
-def p(j):# L corners
- a,b,c,d=map(max,zip(*((x*(x==y==u),x*(x==u==v),x*(x==y==v),v*(y==u==v))for r,s in zip(j,j[1:])for x,y,u,v in zip(r,r[1:],s,s[1:]))));return(a,a,c,c),(a,0,0,c),(b,0,0,d),(b,b,d,d)
+def p(j):#L
+ a,b,c,d=map(max,zip(*((a*(a==b==c),a*(a==b==d),a*(a==c==d),d*(b==c==d))for r,s in zip(j,j[1:])for a,b,c,d in zip(r,s,r[1:],s[1:]))));return(a,a,c,c),(a,0,0,c),(b,0,0,d),(b,b,d,d)
