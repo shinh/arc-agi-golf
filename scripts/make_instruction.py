@@ -15,6 +15,21 @@ def read_ours():
     return ours
 
 
+def find_similar_tasks_by_categories(task_id, categories, theirs, ours):
+    categroy = set(categories[task_id])
+
+    similar_tasks = []
+    for t, cs in categories.items():
+        if t == task_id:
+            continue
+        mutual_cats = categroy and set(cs)
+        if mutual_cats:
+            ti = int(t) - 1
+            ratio = theirs[ti] / ours[ti][0]
+            similar_tasks.append((ratio, ours[ti][1], list(mutual_cats), t))
+    return similar_tasks
+
+
 def main():
     parser = argparse.ArgumentParser(description="Make an instruction for AI.")
     parser.add_argument("task_id")
@@ -40,18 +55,7 @@ def main():
 
     categories = json.load(open("scripts/categories.json"))
 
-    categroy = set(categories[task_id])
-
-    similar_tasks = []
-    for t, cs in categories.items():
-        if t == task_id:
-            continue
-        mutual_cats = categroy and set(cs)
-        if mutual_cats:
-            ti = int(t) - 1
-            ratio = theirs[ti] / ours[ti][0]
-            similar_tasks.append((ratio, ours[ti][1], list(mutual_cats), t))
-
+    similar_tasks = find_similar_tasks_by_categories(task_id, categories, theirs, ours)
     similar_tasks.sort()
     # print(similar_tasks)
 
