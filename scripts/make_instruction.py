@@ -24,7 +24,7 @@ def find_similar_tasks_by_categories(task_id, categories, theirs, ours):
     for t, cs in categories.items():
         if t == task_id:
             continue
-        mutual_cats = categroy and set(cs)
+        mutual_cats = categroy & set(cs)
         if mutual_cats:
             ti = int(t) - 1
             ratio = theirs[ti] / ours[ti][0]
@@ -76,7 +76,7 @@ def main():
 
     categories = json.load(open("scripts/categories.json"))
 
-    if True:
+    if False:
         similar_tasks = find_similar_tasks_by_similarities(task_id, categories, theirs, ours)
     else:
         similar_tasks = find_similar_tasks_by_categories(task_id, categories, theirs, ours)
