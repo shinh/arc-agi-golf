@@ -1,4 +1,1 @@
-def p(g):
- R=[-1]+[i for i,r in enumerate(g)if max(r)<1]
- C=[-1]+[i for i,c in enumerate(zip(*g))if max(c)<1]
- return[[max(g[i+1][j+1:j+4]+g[i+3][j+1:j+4])for j in C]for i in R]
+def p(g):f=lambda a:[-1]+[i for i,x in enumerate(a)if max(x)<1];return[[max(g[i+1][j+1:j+4]+g[i+3][j+1:j+4])for j in f(zip(*g))]for i in f(g)]
