@@ -1,3 +1,4 @@
+# best zopfli seed 6 -> 215 bytes
 e=enumerate
 def p(g,s=1):
  for _ in[0]*4:
