@@ -9,7 +9,7 @@ def p(g):
      for j in range(10):
       if 3==g[i][j]:
        for s in-1,1:
-        if-1<i+m<10>j+s*m>-1 and 3==g[i+m][j+s*m]:
-         if-1<i-m<10>j+2*s*m>-1:g[i-m][j+2*s*m]=8
-         if-1<i+2*m<10>j-s*m>-1:g[i+2*m][j-s*m]=8
+        if-1<(a:=i+m)<10 and-1<(b:=j+s*m)<10 and 3==g[a][b]:
+         if-1<(a:=i-m)<10 and-1<(b:=j+2*s*m)<10:g[a][b]=8
+         if-1<(a:=i+2*m)<10 and-1<(b:=j-s*m)<10:g[a][b]=8
     return g
