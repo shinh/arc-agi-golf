@@ -3,9 +3,9 @@ def p(g):
  def f():
   if not s:return g
   n=min(s)
-  for e,c in((0,w,2*w),2),((0,1,2),2),((0,1,w,w+1),8):
+  for *e,c in(0,w,2*w,2),(0,1,2,2),(0,1,w,w+1,8):
    if s>={n+o for o in e}:
-    for o in e:s.remove(n+o);g[(n+o)//w][(n+o)%w]=c
+    for o in e:s.remove(o:=n+o);g[o//w][o%w]=c
     if f():return g
-    for o in e:s.add(n+o);g[(n+o)//w][(n+o)%w]=5
+    for o in e:s.add(o:=n+o);g[o//w][o%w]=5
  return f()
