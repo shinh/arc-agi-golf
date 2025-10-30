@@ -1,1 +1,2 @@
-p=lambda g,k=0:k>1and g or p([*zip(*([*map(max,*filter(lambda s:max(a*b*(a^b)for a,b in zip(r,s))<1,g))]for r in g))],k+1)
+# row/col propagation
+p=lambda g,k=0:k<2and p([*zip(*(map(max,*filter(lambda s:max(a*b*(a^b)for a,b in zip(r,s))<1,g))for r in g))],k+1)or g
