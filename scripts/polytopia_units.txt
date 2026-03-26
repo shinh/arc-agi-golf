@@ -1,0 +1,11 @@
+Warrior
+Rider
+Archer
+Defender
+Swordsman
+Catapult
+Knight
+Mind Bender
+Cloak
+Dagger
+Giant
