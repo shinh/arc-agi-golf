@@ -1,3 +1,4 @@
+# fill the bridge between the two anchors
 def p(g):
  a,b=[(i,j)for i,r in enumerate(g)for j,v in enumerate(r)if v]
  q=a[0]!=b[0]
